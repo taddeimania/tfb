@@ -1,13 +1,12 @@
-from players.models import *
 import random
 from django.db.models import Q
+from players.models import League, Team, Roster, Curweek, Stats, Schedule, Player, Matchup
+from myproject.settings import PROJECT_ROOT
 
 def create_matchup_schedule(list_of_teams, _league):
     # matchup logic sorted by spreadsheet.  Thanks @sarahtaddei for being a spreadsheet wizard
-    try:
-        infile = open('../matchupschedule.csv', 'r')
-    except:
-        infile = open('/home/jtaddei/webapps/django/myproject/matchupschedule.csv')
+    infile = open(PROJECT_ROOT + '/matchupschedule.csv', 'r')
+
     for line in infile:
         line = line.split(',')
         MU = Matchup(week = line[0], league = _league, team_one = list_of_teams[int(line[1])-1],
@@ -18,14 +17,12 @@ def create_matchup_data():  #no args lol
     shuffled_team_list = [0,0,0,0,0,0,0,0,0,0]
     i = 0
     all_leagues = League.objects.all()
-    all_leagues = [_ for _ in all_leagues]
     for league in all_leagues:
         if not league.is_valid_league():
             all_leagues.remove(league)
 
     for league in all_leagues:
         team_list = Team.objects.filter(league=league)
-        team_list = [_ for _ in team_list]
         seed = random.sample(range(1,11),10)
         for team in team_list:
             shuffled_team_list.remove(0)
@@ -63,15 +60,16 @@ def calc_matchup_results(matchup, t1, t2):
         t1.total_points += t1pts
         t1.total_points_against += t2pts
     else:
+        week=Curweek.objects.get(pk=1).curweek
         try:
-            t1qb = Roster.objects.get(week=Curweek.objects.get(pk=1).curweek, team=t1, player__pos='QB1')
-            t1qb = Stats.objects.get(player=t1qb.player, week=week.curweek).pasyds
-        except:
+            t1qb = Roster.objects.get(week=week, team=t1, player__pos='QB1')
+            t1qb = Stats.objects.get(player=t1qb.player, week=week).pasyds
+        except Exception:
             t1qb = 0
         try:
-            t2qb = Roster.objects.get(week=Curweek.objects.get(pk=1).curweek, team=t2, player__pos='QB1')
-            t2qb = Stats.objects.get(player=t2qb.player, week=week.curweek).pasyds
-        except:
+            t2qb = Roster.objects.get(week=week, team=t2, player__pos='QB1')
+            t2qb = Stats.objects.get(player=t2qb.player, week=week).pasyds
+        except Exception:
             t2qb = 1
 
         if int(t1qb) > int(t2qb):
@@ -111,7 +109,6 @@ def copy_roster(team):
     """
     next_week = int(Curweek.objects.get(pk=1).curweek) + 1
     roster_to_copy = Roster.objects.filter(week = Curweek.objects.get(pk=1).curweek, team = team)
-    roster_to_copy = [_ for _ in roster_to_copy]
     for player in roster_to_copy:
         R = Roster(week = next_week, team = team, player = player.player)
         R.save()
