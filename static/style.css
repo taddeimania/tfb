@@ -1,0 +1,416 @@
+@charset "utf-8";
+@font-face {
+	font-family: nintendo;
+	src: url('chicpix.ttf');
+}
+@font-face {
+	font-family: nintendo2;
+	src: url('Gamegirl.ttf');
+}
+diva{
+    border: 1px solid red;
+}
+
+#resultscontainer{}
+
+.category {
+    font-family: sans-serif;
+    font-size: 1.25em;
+}
+
+.posts {
+    font-family: sans-serif;
+    font-size: 1.25em;
+}
+#menu-container{}
+.nav-top {
+    position:relative;
+    margin-top:-15px;
+    margin-left:25px;
+}
+#banner .image {
+    position:relative;
+    margin-top:15px;
+    margin-bottom:10px;
+    margin-left:30px;
+}
+#left-ph{
+    float:left;
+    width:55px;
+    height:100%;
+}
+#content-container{
+    max-width: 1050px;
+    min-width: 600px;
+    margin-left:55px;
+}
+input[type=text]{
+  font-family:nintendo, sans-serif;
+  font-size:18pt;
+}
+.normal{
+    font-family:sans-serif;
+    font-size:12pt;
+}
+select{
+  font-family:nintendo, sans-serif;
+  font-size:18pt;
+}
+
+body {
+ background-image:url('/static/pictures/tecmobg.gif');
+ color:#000000;
+ margin-top:2px;
+ margin-left:2px;
+ margin-right:2px;
+ margin-bottom:2px;
+ font-family:nintendo, "Lucida Console";
+ font-size:10px;
+}
+
+td {
+ font-size:10px;
+} 
+td.white {
+ color:white;
+} 
+tr.schedule {
+ font-size:12px;
+} 
+th{
+ font-size:28px;
+ color:white;
+}
+header {
+ font-size:12px;
+}
+img{
+ border:0px;
+}
+.header1 {
+ font-size:12px;
+ font-family: nintendo, sans-serif;;
+}
+.header1light {
+ font-size:12px;
+ color:white;
+ font-family: nintendo, sans-serif;;
+}
+.header2 {
+ font-size:28px;
+}
+.header2light {
+ font-family:nintendo, sans-serif;
+ font-size:28px;
+ color:white;
+}
+.headerinjured {
+    background-color: red;
+    color: white;
+}
+a:link {color:#000099} 
+a.dark:link {color:#FFFFFF} 
+a.dark:visited {color:#FFFFFF} 
+a.dark:hover {color:#FFFFFF} 
+a:visited {color:#000066} 
+a:hover {color:#6600CC} 
+a:active {color:#3333FF} 
+
+table.stats {
+
+}
+table.teaminsert{
+	background-color:white;
+	border-style: solid; 
+	border-color: black;
+}
+.draftconfirmteam{
+    float:left;
+    margin-left: 40px;
+    margin-top: 15px;
+}
+th.draftconfirmheader{
+    color: black;
+    font-size: 1.55em;
+}
+#footer {
+    position:relative;
+    bottom:0;
+    width:101%;
+    left:-10px;
+    height:60px;   /* Height of the footer */
+    margin-top:100px;
+    background-image:url('/static/pictures/TM.png');
+    background-repeat: repeat-x;
+}
+
+#home{
+	position:absolute;
+	top:55px;
+	left:110px;
+}
+	#home .nav{
+		position:absolute;
+		top:180px;
+		left:100px;
+		border-width:0px;
+	}
+#joinleague{
+    display:inline-block;
+    vertical-align: top;
+    }
+    #joinleague .join{
+        position:relative;
+        margin-top:10px;
+        margin-left:15px;
+    }
+
+#league {
+    display:inline-block;
+    vertical-align: top;
+    position:relative;
+    margin-top:10px;
+    margin-left:15px;
+}
+    .league_breakdown{ }
+    .matchup{ }
+    .transactions{
+    }
+    .weeks{
+    }
+
+#league_admin{
+    display:inline-block;
+    vertical-align: top;
+    position:relative;
+    margin-top:10px;
+    margin-left:15px;
+}
+
+#log-in { }
+	.loginform {
+		position:relative;
+		top:10px;
+		left:15px;
+	}
+#matchup{
+    display:inline-block;
+    vertical-align: top;
+    position:relative;
+    margin-top:10px;
+    margin-left:15px;
+}
+    .team_one{}
+    .team_two{}
+    table.matchupstats{
+        text-align:center;
+    }
+#myteam{
+    display:inline-block;
+    vertical-align: top;
+    position:relative;
+    margin-top:10px;
+    margin-left:15px;
+}
+    .myroster {}
+
+#pickup {
+    display:inline-block;
+    vertical-align: top;
+    }
+    .availplayers{
+        position:relative;
+        margin-top:10px;
+        margin-left:15px;
+    }
+    .playerstats{
+        background-image:url('/static/pictures/tecmobg.gif');
+        position:relative;
+        margin-top:10px;
+        margin-left:15px;
+    }
+#player { }
+	#player .stats{
+		border-style: solid; 
+		border-color: black;
+	}
+	#player img{
+		border-style:solid;
+		border-width: 2px;
+	}
+#profile {
+    display:inline-block;
+    vertical-align: top;
+    position:relative;
+    margin-top:10px;
+    margin-left:15px;
+    }
+	.nametag {
+	}
+	.quickroster {
+		background-image:url('/static/pictures/tecmobg.gif');
+	}
+	.record {
+	}
+	.profilevars {
+	}
+    .uteam_roster{
+    }
+
+#profile_edit {
+    display:inline-block;
+    vertical-align: top;
+}
+    .edit_box{
+        position:relative;
+        margin-top:10px;
+        margin-left:15px;
+    }
+    .edit_box img{
+        border-style: solid;
+        border-width: 2px;
+    }
+    .edit_box span{
+        align:right;
+    }
+    .face_box{
+        position:relative;
+        margin-top:10px;
+        margin-left:15px;
+    }
+    .face_box img{
+        border-style: solid;
+        border-width: 2px;
+        height:50;
+        width:50;
+    }
+#team-left{
+    width:550px;
+}
+tr.even1{
+    background-color: #d3d3d3;
+}
+tr.odd1{
+    background-color: white;
+}
+
+#research{
+    display:inline-block;
+    vertical-align: top;
+}
+#proteam {
+    display:inline-block;
+    vertical-align: top;
+    }
+	.helmet {
+        position:relative;
+        margin-top:10px;
+        margin-left:15px;
+        float:left;
+	}
+	.player {
+        background-image:url('/static/pictures/tecmobg.gif');
+        position:relative;
+        margin-top:10px;
+        margin-left:15px;
+	}
+	.proteamstats {
+		position:relative;
+		margin-top:10px;
+		margin-left:15px;
+        float:left;
+	}
+	.roster {
+		position:relative;
+        margin-top:10px;
+        margin-left:36px;
+        float:left;
+	}
+#sysadmin{
+    display:inline-block;
+    vertical-align: top;
+}
+#border{display:table; padding: 0px 0px; margin:0px;}
+    #top-row {display:table-row;}
+
+    #top-row .left{
+        display:table-cell;
+        height:12px;
+        width:12px;
+        background-image:url('/static/pictures/TL.png');
+        background-repeat:no-repeat;
+        padding: 0px 0px;
+        margin:0px;
+    }
+    #top-row .mid{
+        display:table-cell;
+        height:12px;
+        background-image:url('/static/pictures/TM.png');
+        background-repeat:repeat-x;
+        padding: 0px 0px;
+        margin:0px;
+    }
+    #top-row .right{
+        display:table-cell;
+        height:12px;
+        width:12px;
+        background-image:url('/static/pictures/TR.png');
+        background-repeat:no-repeat;
+        padding: 0px 0px;
+        margin:0px;
+    }
+
+    #mid-row {display:table-row;}
+
+    #mid-row .left{
+        display:table-cell;
+        height:12px;
+        width:12px;
+        background-image:url('/static/pictures/ML.png');
+        background-repeat:repeat-y;
+        padding: 0px 0px;
+        margin:0px;
+    }
+    #mid-row .mid{
+        display:table-cell;
+        height:12px;
+        padding: 0px 0px;
+        margin:0px;
+    }
+    #mid-row .right{
+        display:table-cell;
+        height:12px;
+        width:12px;
+        background-image:url('/static/pictures/MR.png');
+        background-repeat:repeat-y;
+        padding: 0px 0px;
+        margin:0px;
+    }
+    #btm-row {display:table-row;}
+
+    #btm-row .left{
+        display:table-cell;
+        height:12px;
+        width:12px;
+        background-image:url('/static/pictures/BL.png');
+        background-repeat:repeat-y;
+        padding: 0px 0px;
+        margin:0px;
+    }
+    #btm-row .mid{
+        display:table-cell;
+        height:12px;
+        background-image:url('/static/pictures/BM.png');
+        background-repeat:repeat-x;
+        padding: 0px 0px;
+        margin:0px;
+    }
+    #btm-row .right{
+        display:table-cell;
+        height:12px;
+        width:12px;
+        background-image:url('/static/pictures/BR.png');
+        background-repeat:repeat-y;
+        padding: 0px 0px;
+        margin:0px;
+    }

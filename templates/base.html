@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+    <link rel="stylesheet" type="text/css" href="/static/pybb.css" />
+    <link rel="stylesheet" type="text/css" href="/static/jquery-ui-1.8.17.custom.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <link rel="shortcut icon" href="/static/pictures/favicon.ico">
+    {% block head %}{% endblock %}
+    <script type="text/javascript">
+        function closeFancyboxAndReload(){
+            $.fancybox.close();
+            window.location.reload();
+        }
+    </script>
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-29163752-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+</head>
+
+<body>
+    <div id='menu-container'>
+        <div id='menubar' class='nav-top'>
+            {% load includetag %}
+            {% include "tecmo_outline_table.html" %}
+            {% part data %}
+            <table>
+                <tr valign=bottom>
+                    <td>{% if user.is_authenticated %}
+                            <a href="/home"><img src="/static/pictures/home.gif"></a>  |
+                            <a href="/league"><img src="/static/pictures/league.gif"></a>  |
+                            <a href="/myteam"><img src="/static/pictures/myteam.gif"></a>  |
+                            <a href="/matchup"><img src="/static/pictures/matchup.gif"></a>  |
+                            <a href="/playerpage"><img src="/static/pictures/players.gif"></a>  |
+                            <a href="/profile"><img src="/static/pictures/profile.gif"></a>
+                            {% else %}
+                            <a href="/home"><img src="/static/pictures/home.gif"></a>  |
+                            <a href="/playerpage"><img src="/static/pictures/players.gif"></a>  |
+                            <a href="/login"><img src="/static/pictures/login.gif"></a>
+                            {% endif %}
+                    </td>
+                </tr>
+            </table>
+            {% endpart %}
+            {% endinclude %}
+        </div>
+
+        <div id='banner'>
+            <img src="/static/pictures/banner.gif" class="image"><br/>
+            <!-- Maintenance Banner -->
+            <!-- <span class='header2light'><center>SITE IS UNDERGOING MAINTENANCE</center></span> -->
+            <!-- -->
+        </div>
+    </div>
+
+    <!-- Main portlet -->
+    <div id='content-container'>
+        {% block content %}{% endblock content %}
+    </div>
+    <!-- Footer containing neat stuff -->
+    <div id='footer' align='center'>
+        <br/><br/><span class="header1light">Tecmo Fantasy Bowl is developed, designed, and maintained by <a href="mailto:jtaddei@gmail.com">Joel Taddei</a>.<br/>
+        For more details on the inner workings please see the <a href="/about">About</a> page.
+        </span>
+    </div>
+</body>
+</html>

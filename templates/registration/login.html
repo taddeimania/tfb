@@ -1,0 +1,55 @@
+{% extends "registration/base_login_block.html" %}
+{% load url from future %}
+{% load includetag %}
+
+{% block title %}Login{% endblock %}
+
+{% block log_in %}
+<div id='log-in' class='loginform'>
+	{% include "tecmo_outline_table.html" %}
+	{% part data %} 
+	<table>
+		<tr>
+			<td>
+				{% if form.errors %}
+				<p>Your username and password didn't match. Please try again.</p>
+				{% endif %}
+	
+				<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+				{% csrf_token %}
+				<table>
+				<tr>
+					<td><span class='header1light'>USERNAME:</span></td>
+					<td>{{ form.username }}</td>
+				</tr>
+				<tr>
+					<td><span class='header1light'>PASSWORD:</span></td>
+					<td>{{ form.password }}</td>
+				</tr>
+				</table>
+	
+				<input type="submit" value="login" />
+				<input type="hidden" name="next" value="{{ next }}" />
+				</form>
+			</td>
+		</tr>
+	</table>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}
+
+{% block logged_in %}
+    <div id='log-in' class='loginform'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table bgcolor="black">
+                    <tr>
+                        <td><span class='header1light'>You are currently logged in.  <a href="/logout" class='dark'>Logout?</a></span>
+                        </td>
+                    </tr>
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}

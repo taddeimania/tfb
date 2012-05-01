@@ -1,0 +1,31 @@
+{% extends "base_pickup_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+
+{% block header_auth %}
+<div id='pickup' class='availplayers'>
+	{% include "tecmo_outline_table.html" %}
+
+	{% part data %} 
+		<iframe src="/list/{{ posid }}" width=390 height=315 frameborder=0 name="list">
+			<p>Your browser does not support iframes.</p>
+		</iframe> 
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}
+
+{% block playerinfo %}
+<div id='pickup' class='playerstats'>
+	{% include "tecmo_outline_table.html" %}
+	{% part data %}
+		 <iframe src="/blue" width=500 height=340 frameborder=0 name="card">
+					  <p>Your browser does not support iframes.</p>
+		</iframe>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}
+

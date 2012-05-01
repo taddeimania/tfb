@@ -1,0 +1,145 @@
+from players.models import *
+import random
+from django.db.models import Q
+
+def create_matchup_schedule(list_of_teams, _league):
+    # matchup logic sorted by spreadsheet.  Thanks @sarahtaddei for being a spreadsheet wizard
+    try:
+        infile = open('../matchupschedule.csv', 'r')
+    except:
+        infile = open('/home/jtaddei/webapps/django/myproject/matchupschedule.csv')
+    for line in infile:
+        line = line.split(',')
+        MU = Matchup(week = line[0], league = _league, team_one = list_of_teams[int(line[1])-1],
+            team_one_points = 0, team_two = list_of_teams[int(line[2])-1], team_two_points = 0, winner = None)
+        MU.save()
+
+def create_matchup_data():  #no args lol
+    shuffled_team_list = [0,0,0,0,0,0,0,0,0,0]
+    i = 0
+    all_leagues = League.objects.all()
+    all_leagues = [_ for _ in all_leagues]
+    for league in all_leagues:
+        if not league.is_valid_league():
+            all_leagues.remove(league)
+
+    for league in all_leagues:
+        team_list = Team.objects.filter(league=league)
+        team_list = [_ for _ in team_list]
+        seed = random.sample(range(1,11),10)
+        for team in team_list:
+            shuffled_team_list.remove(0)
+            shuffled_team_list.insert(seed[i],team)
+            i += 1
+
+        create_matchup_schedule(shuffled_team_list, league)
+
+    import menu
+    menu.create_bye_weeks()
+
+
+def calc_matchup_results(matchup, t1, t2):
+
+    t1pts = t1.calc_week_points()
+    t2pts = t2.calc_week_points()
+
+    matchup.team_one_points = t1pts
+    matchup.team_two_points = t2pts
+
+    if t1pts > t2pts:
+        matchup.winner = t1
+        t1.win += 1
+        t1.total_points += t1pts
+        t1.total_points_against += t2pts
+        t2.loss += 1
+        t2.total_points += t2pts
+        t2.total_points_against += t1pts
+    elif t2pts > t1pts:
+        matchup.winner = t2
+        t2.win += 1
+        t2.total_points += t2pts
+        t2.total_points_against += t1pts
+        t1.loss += 1
+        t1.total_points += t1pts
+        t1.total_points_against += t2pts
+    else:
+        try:
+            t1qb = Roster.objects.get(week=Curweek.objects.get(pk=1).curweek, team=t1, player__pos='QB1')
+            t1qb = Stats.objects.get(player=t1qb.player, week=week.curweek).pasyds
+        except:
+            t1qb = 0
+        try:
+            t2qb = Roster.objects.get(week=Curweek.objects.get(pk=1).curweek, team=t2, player__pos='QB1')
+            t2qb = Stats.objects.get(player=t2qb.player, week=week.curweek).pasyds
+        except:
+            t2qb = 1
+
+        if int(t1qb) > int(t2qb):
+            matchup.winner = t1
+            t1.win += 1
+            t1.total_points += t1pts
+            t1.total_points_against += t2pts
+            t2.loss += 1
+            t2.total_points += t2pts
+            t2.total_points_against += t1pts
+        else:
+            matchup.winner = t2
+            t2.win += 1
+            t2.total_points += t2pts
+            t2.total_points_against += t1pts
+            t1.loss += 1
+            t1.total_points += t1pts
+            t1.total_points_against += t2pts
+
+def process_weekly_matchups():
+    week = Curweek.objects.get(pk=1)
+    MU = Matchup.objects.filter(week = week.curweek)
+    for matchup in MU:
+        t1 = Team.objects.get(pk = matchup.team_one.id)
+        t2 = Team.objects.get(pk = matchup.team_two.id)
+        calc_matchup_results(matchup, t1, t2)
+        copy_roster(t1)
+        copy_roster(t2)
+        t1.save()
+        t2.save()
+        matchup.save()
+
+    increment_curweek()
+
+def copy_roster(team):
+    """ Copies roster from previous week
+    """
+    next_week = int(Curweek.objects.get(pk=1).curweek) + 1
+    roster_to_copy = Roster.objects.filter(week = Curweek.objects.get(pk=1).curweek, team = team)
+    roster_to_copy = [_ for _ in roster_to_copy]
+    for player in roster_to_copy:
+        R = Roster(week = next_week, team = team, player = player.player)
+        R.save()
+
+def create_locks(pro_team_matchup):
+    """ Creates 0'd out stat records once a player has started playing.
+    """
+    pro_team_matchup = Schedule.objects.get(pk = pro_team_matchup)
+    players = Player.objects.filter(Q(pro_team = pro_team_matchup.home)|Q(pro_team = pro_team_matchup.away))
+    for player in players:
+        guid = int(str(pro_team_matchup.week) + '0' + str(random.randint(1, 9147483)))
+        lock = Stats(player = player, week = pro_team_matchup.week, tm2 = 'INP', health = 'OK', guid = guid)
+        lock.save()
+
+def recalculate_weekly_matchups():
+    week = Curweek.objects.get(pk=1)
+    MU = Matchup.objects.filter(week = week.curweek)
+    for matchup in MU:
+        t1 = Team.objects.get(pk = matchup.team_one.id)
+        t2 = Team.objects.get(pk = matchup.team_two.id)
+        t1pts = t1.calc_week_points()
+        t2pts = t2.calc_week_points()
+
+        matchup.team_one_points = t1pts
+        matchup.team_two_points = t2pts
+        matchup.save()
+
+def increment_curweek():
+    week = Curweek.objects.get(pk=1)
+    week.curweek += 1
+    week.save()

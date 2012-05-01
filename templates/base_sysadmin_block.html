@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+{% if user.is_authenticated %}
+	{% block header_auth %}{% endblock %}
+    {% block gamelocks %}{% endblock %}
+    {% block panel %}{% endblock %}
+{% else %}
+	{% block header_noauth %}{% endblock %}
+{% endif %}
+
+{% endblock %}

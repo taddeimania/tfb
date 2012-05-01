@@ -1,0 +1,228 @@
+{% extends "base_player_block.html" %}
+
+{% block title %}Player Data{% endblock %}
+
+{% block structure %}
+    <div id='player'>
+        <center>
+            <table border="0" width="490" cellpadding=5 style="border: thick solid" bordercolor="black" bgcolor="white">
+                <tr valign="top">
+                    <td width="122" valign="middle" align="center"><img src="/static/pictures/{{ player.picture|upper }}.gif" border=5><br><header>STATUS: {{ health }}</header>
+                    </td>
+                    <td width="300" rowspan="2">
+                        <table width="100%"></br>
+                            <tr>
+                                <td>
+                                    <table width="100%" cellpadding=5 bgcolor="lightgrey" class="stats">
+                                        <tr>
+                                            <td colspan="2"><header>Season Stats</header></td>
+                                        </tr>
+                                        <tr>
+                                            {% if player.pos == 'QB1' or player.pos == 'QB2' %}
+                                                    <td width="70%">Pass Attempts:</td>
+                                                    <td width="30%" align="right">{{ seasontotalstats.Allpc }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="70%">Pass Completions:</td>
+                                                    <td width="30%" align="right">{{ seasontotalstats.Allpa }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="70%">Pass Yards:</td>
+                                                    <td width="30%" align="right">{{ seasontotalstats.Allpasyds }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="70%">Pass Touchdowns:</td>
+                                                    <td width="30%" align="right">{{ seasontotalstats.Allpastd }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="70%">Rush Yards:</td>
+                                                    <td width="30%" align="right">{{ seasontotalstats.Allrusyds }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="70%">Rush Touchdowns:</td>
+                                                    <td width="30%" align="right">{{ seasontotalstats.Allrustd }}</td>
+                                                </tr>
+                                                <tr>
+                                                <td width="70%">Interceptions:</td>
+                                                <td width="30%" align="right">{{ seasontotalstats.Allintcp }}</td>
+                                            {% endif %}
+                                            {% if player.pos == 'RB1' or player.pos == 'RB2' or player.pos == 'RB3' or player.pos == 'RB4'%}
+                                                    <td width="60%">Carries:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrusat }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Rush Yards:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrusyds }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Rush Touchdowns:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrustd }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Receptions:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrec }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Receiving Yards:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrecyds }}</td>
+                                                </tr>
+                                                <tr>
+                                                <td width="70%">Receiving Touchdowns:</td>
+                                                <td width="30%" align="right">{{ seasontotalstats.Allrectd }}</td>
+                                            {% endif %}
+                                            {% if player.pos == 'WR1' or player.pos == 'WR2' or player.pos == 'WR3' or player.pos == 'WR4' %}
+
+                                                <td width="60%">Rush Attempts:</td>
+                                                <td width="40%" align="right">{{ seasontotalstats.Allrusat }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Rush Yards:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrusyds }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Rush Touchdowns:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrustd }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Receptions:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrec }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Receiving Yards:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrecyds }}</td>
+                                                </tr>
+                                                <tr>
+                                                <td width="70%">Receiving Touchdowns:</td>
+                                                <td width="30%" align="right">{{ seasontotalstats.Allrectd }}</td>
+                                            {% endif %}
+                                            {% if player.pos == 'TE1' or player.pos == 'TE2' %}
+                                                    <td width="60%">Receptions:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrec }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Receiving Yards:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrecyds }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="70%">Receiving Touchdowns:</td>
+                                                    <td width="30%" align="right">{{ seasontotalstats.Allrectd }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Rush Attempts:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrusat }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Rush Yards:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allrusyds }}</td>
+                                                </tr>
+                                                <tr>
+                                                <td width="60%">Rush Touchdowns:</td>
+                                                <td width="40%" align="right">{{ seasontotalstats.Allrustd }}</td>{% endif %}
+                                            {% if player.pos == 'K' %}
+                                                <td width="60%">Extra Points:</td>
+                                                <td width="40%" align="right">{{ seasontotalstats.Allxpm }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%">Field Goals:</td>
+                                                    <td width="40%" align="right">{{ seasontotalstats.Allfgm }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="70%"></td>
+                                                    <td width="30%" align="right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%"></td>
+                                                    <td width="40%" align="right"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="60%"></td>
+                                                    <td width="40%" align="right"></td>
+                                                </tr>
+                                                <tr>
+                                                <td width="60%"></td>
+                                                <td width="40%" align="right"></td>
+                                            {% endif %}
+                                        </tr>
+                                        <tr>
+                                            <td width="60%">------------------</td>
+                                            <td width="40%" align="right"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="60%" height="41">Fantasy Points:</td>
+                                            <td width="40%" align="right"><span class='header1'>{{ seasontotalstats.Allfanpts }}</span></td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="100" rowspan="2">
+                        <table width="100%">
+                            <tr>
+                                <td colspan=2><center><header>Schedule</header></center></td>
+                            </tr>
+                            {% for var in schedule %}
+                                <tr align="right">
+                                    {% if curweek >= forloop.counter %}
+                                        <td bgcolor="lightgrey">
+                                            {% for pt in weekpts %}
+                                                {% if forloop.counter == forloop.parentloop.counter and pt.tm2 != 'BYE'%}
+                                                    {% if pt.health != 'INJURED' %}
+                                                        ({{ pt.fanpts }})
+                                                    {% else %}
+                                                        <span class="headerinjured">({{ pt.fanpts }})</span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                            <b>{{ var.week }}</b></center>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            <center>{{ forloop.counter }}</center>
+                                        </td>
+                                    {% endif %}
+                                {% if p.pro_team_id == var.away %}
+                                    <td>@ <a href="/team/{{ var.home }}" target="_parent">{{ var.home }}</a></td>
+                                {% else %}
+                                    <td><a href="/team/{{ var.away }}" target="_parent">{{ var.away }}</a></td>
+                                {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        <table width="100%">
+                            <tr valign="top">
+                                <td><center><span class='header1'>{{ p.player_name }}<br/>( {{ player.pos }} )</span><br/><header>{{ p.pro_team.long }}<br/></header></center></td>
+                            </tr>
+                            <tr valign="top">
+                                <td><center><span class='header1'>Owned By:</span></br><header><a href="/uteam/{{ owner.id }}" target=_parent>{{ owner.name }}</a></header></center><br/>
+                                    {% if dropbutton %}<form action='.' method='POST'>{% csrf_token %}<input type="hidden" name="del_player" value="{{ p.id }}"/><input type="submit" value="Drop" /></form>{% endif %}
+                                </td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </center>
+    </div>
+{% endblock %}
+
+{% block dropconf %}
+    <table width=100% bgcolor=black>
+        <tr bgcolor=white>
+            <td width=50><img src="/static/pictures/{{ p.picture|upper }}.gif" width=50 height=50></td><td><span class='header1'><a href="/player/{{ p.id }}" target="card">{{ p.player_name}}</a></span></td>
+        </tr>
+        <tr bgcolor=white>
+            <td width=50 colspan=2><span class='header2'>{% if success %}<center>{{ success }}</center>{% else %}<center>Player Dropped Successfully!</center>{% endif %}</span></td>
+        </tr>
+    </table>
+    <br/>
+    <table width=100% bgcolor=black>
+        <tr bgcolor=white  valign=center>
+            <td width=50><span class='header2'><a href="#" onClick="parent.closeFancyboxAndReload()"><center>Go Back</center></a></span></td>
+        </tr>
+    </table>
+{% endblock %}

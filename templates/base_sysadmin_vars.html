@@ -1,0 +1,89 @@
+{% extends "base_sysadmin_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+{% block header_auth %}
+    <div id='sysadmin' class='stats'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table width=150>
+                    {% for file in file_list %}
+                        {% if forloop.first %}
+                            <tr>
+                                <td>
+                                    <span class='header2light'>Stats</span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr valign=center>
+                            <td>
+                                <a href="/sysadmin/process/{{ file }}">{{ file }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+
+{% endblock %}
+
+{% block gamelocks %}
+    <div id='sysadmin' class='locks'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table width=150>
+                    {% for team in lock_list %}
+                        {% if forloop.first %}
+                            <tr>
+                                <td>
+                                    <span class='header2light'>Locks</span>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr valign=center>
+                            <td>
+                                <a href="/sysadmin/lock/{{ team.id }}">{{ team.away }} vs. {{ team.home }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}
+
+{% block panel %}
+    <div id='sysadmin' class='panel'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table width=250>
+                    <tr>
+                        <td>
+                            <span class='header2light'>Admin Panel</span>
+                        </td>
+                    </tr>
+                    <tr valign=center>
+                        <td>
+                            {% if create_matchup %}<a href="/sysadmin/matchup/create">Create Matchup Schedule</a><br/><br/>{% endif %}
+                            {% if process_matchups %}<a href="/sysadmin/matchup">Finalize Weekly Matchups</a><br/><br/>{% endif %}
+                            <a href="/sysadmin/recalc">Recalculate Weekly Matchups Points</a>
+                        </td>
+                    </tr>
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}
+
+{% block header_noauth %}
+<div id='profile'>
+	{% include "tecmo_outline_table.html" %}
+	{% part class %}nametag{% endpart %}
+	{% part data %} 
+			<p><span class='header2light'>Welcome, new user. Please <a href='/login'>log in.</a></span></p>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}

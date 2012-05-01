@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+{% block content %}
+<div id='profile' class='nametag'>
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+            <table bgcolor=white width=700>
+                <tr valign=center>
+                    <td >
+                        <span class='header2'>About Tecmo Fantasy Bowl:</span><br/><br/>
+                        <span class='normal'>
+                        Tecmo Fantasy Bowl started in the winter of 2010 when I decided to try and keep fantasy football
+                        style statistics on parsed tecmo super bowl files.  I ran the entire project through OpenOffice spreadsheets
+                        with the intentions of running little "pen and paper" style leagues with my friends. Immediately
+                        I realized what a daunting task this would be without some form of automation. <br/><br/>
+
+                        So I did some research on databases and a little light programming so I could run through the stat files
+                        and update the database based on how each player did that week. So that was what I was left with,
+                        a database that housed the stat data that I couldn't do much with. That's when I though 'Hey, I
+                        could probably make a website on top of this'.<br/><br/>
+
+                        Since the majority of the stat parser/updater was written in Python I figured why not keep going
+                        and see what I could do with this web framework for python called Django.  Well turns out I could
+                        do a whole HELL of a lot! With Python driving 100% of the backend I found that I could perform
+                        large scale operations that had some bearing to website users that were interested in playing
+                        fantasy football with these stats as well!<br/><br/>
+                            
+                        It's been a very slow and careful process but this site has grown from a notepad++ written stat parser
+                        to a fully functioning (I wish!) fantasy football website based on Tecmo Super Bowl computer simulations.
+                        <br/><br/>
+                            
+                        I hope you have as fun a time of playing on this site as I did in creating it.  I always welcome
+                        constructive feedback and would encourage you to send me your ideas of how this site could be better.
+                            
+                        <br/><br/><span class='header2'><a href='mailto:jtaddei@gmail.com'>-Joel</a></span>
+
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        {% endpart %}
+    {% endinclude %}
+</div>
+
+{% endblock %}

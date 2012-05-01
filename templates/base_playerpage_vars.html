@@ -1,0 +1,464 @@
+{% extends "base_playerpage_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl! {% endblock %}
+
+{% block head %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $( "#playersearch" ).autocomplete({
+            source: {{ players|safe }}
+        });
+    });
+</script>
+{% endblock %}
+
+{% block header_auth %}
+<div id='research' class='stats'>
+    <span class='header2light'>
+
+        {% if playersearch %}
+            <table>
+                <tr>
+                    <td>
+                        <img src="/static/pictures/{{ playerobj.picture|upper }}.gif" style="border: solid black 3px">
+                    </td>
+                    <td valign="top">
+                         <span class='header2light'>{{ playerobj }} ( {{ playerobj.pos }} )<br/>{{ playerobj.pro_team.long }}</span>
+                    </td>
+                </tr>
+            </table> {% endif %}
+    </span>
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+            {% if search %}
+                <table>
+                    <tr>
+                        <td>
+                            <span class='header2light'>Search By Name:</span>
+                            <form action='.' method='POST'>{% csrf_token %}
+                                <div class="ui-widget">
+                                    <input id="playersearch" type="text" name="playersearch" value="" size="25" maxlength="25"/><br/>
+                                    <input type="hidden" name="search" value="search"/><input type="submit" value="Search" />
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br/>
+                            <span class='header2light'>List All Position:</span>
+                            <ul>
+                                <li class='header1light'><a href="/playerpage/QB" class="dark">QB</a></li>
+                                <li class='header1light'><a href="/playerpage/RB" class="dark">RB</a></li>
+                                <li class='header1light'><a href="/playerpage/WR" class="dark">WR</a></li>
+                                <li class='header1light'><a href="/playerpage/TE" class="dark">TE</a></li>
+                                <li class='header1light'><a href="/playerpage/K" class="dark">K</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br/>
+                            <span class='header2light'><a href="/playerpage/top" class="dark">Top 10</a></span><br/>
+                            {% if user.is_authenticated %}
+                            <span class='header2light'><a href="/playerpage/topavail" class="dark">Top 10 Available</a></span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            {% endif %}
+            {% if not search %}
+            <table width=850 bgcolor="white" cellpadding=5px>
+                <tr bgcolor="black">
+                    <form action='.' method='POST'>{% csrf_token %}
+                        <div class="ui-widget">
+                            <input id="playersearch" type="text" name="playersearch" value="" size="25" maxlength="25"/><br/>
+                            <input type="hidden" name="search" value="search"/><input type="submit" value="Search" />
+                        </div>
+                    </form>
+                    {% if not top %}
+                    {% if playersearch %}<td class='white'>WEEK</td>{% else %}<td class='white'></td>{% endif %}
+                    {% if playersearch %}<td class='white'>VS</td>{% endif %}
+                    <td class='white'>HEALTH</td>
+                    <td class='white'>PC</td>
+                    <td class='white'>PA</td>
+                    <td class='white'>PASTD</td>
+                    <td class='white'>INT</td>
+                    <td class='white'>PASYD</td>
+                    <td class='white'>REC</td>
+                    <td class='white'>RECYD</td>
+                    <td class='white'>RECTD</td>
+                    <td class='white'>KRTD</td>
+                    <td class='white'>PRTD</td>
+                    <td class='white'>RUSAT</td>
+                    <td class='white'>RUSYD</td>
+                    <td class='white'>RUSTD</td>
+                    <td class='white'>XPM</td>
+                    <td class='white'>FGM</td>
+                    <td class='white'>Points</td>
+                        {% endif %}
+                </tr>
+            {% endif %}
+            {% if playersearch %}
+                {% for week in playerstats %}
+                    <tr style="border-style:solid; border-color: green; border-width: 1px" class="{% if forloop.counter|divisibleby:2 %}even1{% else %}odd1{% endif %}">
+                        <td>{{ week.week }}</td>
+                        <td>{{ week.tm2 }}</td>
+                        <td>{{ week.health }}</td>
+                        <td>{{ week.pa }}</td>
+                        <td>{{ week.pc }}</td>
+                        <td>{{ week.pastd }}</td>
+                        <td>{{ week.intcp }}</td>
+                        <td>{{ week.pasyds }}</td>
+                        <td>{{ week.rec }}</td>
+                        <td>{{ week.recyds }}</td>
+                        <td>{{ week.rectd }}</td>
+                        <td>{{ week.krtd }}</td>
+                        <td>{{ week.prtd }}</td>
+                        <td>{{ week.rusat }}</td>
+                        <td>{{ week.rusyds }}</td>
+                        <td>{{ week.rustd }}</td>
+                        <td>{{ week.xpm }}</td>
+                        <td>{{ week.fgm }}</td>
+                        <td>{{ week.fanpts }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            {% if pos %}
+                 {% for player in playerstats %}
+                     <tr style="border-style:solid; border-color: green; border-width: 1px" class="{% if forloop.counter|divisibleby:2 %}even1{% else %}odd1{% endif %}">
+                         <td><a href="/playerpage/{{ player.id }}">{{ player }}</a></td>
+                         <td>{{ player.health }}</td>
+                         <td>{{ player.Allpa }}</td>
+                         <td>{{ player.Allpc }}</td>
+                         <td>{{ player.Allpastd }}</td>
+                         <td>{{ player.Allintcp }}</td>
+                         <td>{{ player.Allpasyds }}</td>
+                         <td>{{ player.Allrec }}</td>
+                         <td>{{ player.Allrecyds }}</td>
+                         <td>{{ player.Allrectd }}</td>
+                         <td>{{ player.Allkrtd }}</td>
+                         <td>{{ player.Allprtd }}</td>
+                         <td>{{ player.Allrusat }}</td>
+                         <td>{{ player.Allrusyds }}</td>
+                         <td>{{ player.Allrustd }}</td>
+                         <td>{{ player.Allxpm }}</td>
+                         <td>{{ player.Allfgm }}</td>
+                         <td>{{ player.Allfanpts }}</td>
+                {% endfor %}
+            {% endif %}
+            </table>
+        {% endpart %}
+    {% endinclude %}
+    <br/>
+    {% if top %}
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}<br/><br/>
+                <span class='header2light'>Top {% if avail %}Available {% endif %}<a href="/playerpage/QB" class="dark">QBs</a></span>
+                <table width=850 bgcolor="white" cellpadding=5px>
+                    <tr bgcolor="black">
+                        <td colspan="3"></td>
+                        <td class="white" colspan="5" style="text-align: center">Passing</td>
+                        <td class="white" colspan="3" style="text-align: center">Receiving</td>
+                        <td class="white" colspan="2" style="text-align: center">Special</td>
+                        <td class="white" colspan="3" style="text-align: center">Rushing</td>
+                        <td class="white" colspan="2" style="text-align: center">Kicking</td>
+                        <td class="white" style="text-align: center"></td>
+                    </tr>
+                    <tr bgcolor="black">
+                        <td class="white">#</td>
+                        <td class="white"></td>
+                        <td class="white">BYE</td>
+                        <td class='white'>PC</td>
+                        <td class='white'>PA</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>INT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>#</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TDs</td>
+                        <td class='white'>KRTD</td>
+                        <td class='white'>PRTD</td>
+                        <td class='white'>ATT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>XP</td>
+                        <td class='white'>FG</td>
+                        <td class='white'>Points</td>
+                    </tr>
+                    {% for player in topqbs %}
+                        <tr style="border-style:solid; border-width: 1px" class="{% if forloop.counter|divisibleby:2 %}even1{% else %}odd1{% endif %}">
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="/playerpage/{{ player.id }}">{{ player }}</a></td>
+                        <td>{{ player.Bye }}</td>
+                        <td>{{ player.Allpa }}</td>
+                        <td>{{ player.Allpc }}</td>
+                        <td>{{ player.Allpastd }}</td>
+                        <td>{{ player.Allintcp }}</td>
+                        <td>{{ player.Allpasyds }}</td>
+                        <td>{{ player.Allrec }}</td>
+                        <td>{{ player.Allrecyds }}</td>
+                        <td>{{ player.Allrectd }}</td>
+                        <td>{{ player.Allkrtd }}</td>
+                        <td>{{ player.Allprtd }}</td>
+                        <td>{{ player.Allrusat }}</td>
+                        <td>{{ player.Allrusyds }}</td>
+                        <td>{{ player.Allrustd }}</td>
+                        <td>{{ player.Allxpm }}</td>
+                        <td>{{ player.Allfgm }}</td>
+                        <td>{{ player.Allfanpts }}</td>
+                    {% endfor %}
+                    </tr>
+                </table><br/><br/>
+                <span class='header2light'>Top {% if avail %}Available {% endif %}<a href="/playerpage/RB" class="dark">RBs</a></span>
+                <table width=850 bgcolor="white" cellpadding=5px>
+                    <tr bgcolor="black">
+                        <td colspan="3"></td>
+                        <td class="white" colspan="5" style="text-align: center">Passing</td>
+                        <td class="white" colspan="3" style="text-align: center">Receiving</td>
+                        <td class="white" colspan="2" style="text-align: center">Special</td>
+                        <td class="white" colspan="3" style="text-align: center">Rushing</td>
+                        <td class="white" colspan="2" style="text-align: center">Kicking</td>
+                        <td class="white" style="text-align: center"></td>
+                    </tr>
+                    <tr bgcolor="black">
+                        <td class="white">#</td>
+                        <td class="white"></td>
+                        <td class="white">BYE</td>
+                        <td class='white'>PC</td>
+                        <td class='white'>PA</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>INT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>#</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TDs</td>
+                        <td class='white'>KRTD</td>
+                        <td class='white'>PRTD</td>
+                        <td class='white'>ATT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>XP</td>
+                        <td class='white'>FG</td>
+                        <td class='white'>Points</td>
+                    </tr>
+                    {% for player in toprbs %}
+                        <tr style="border-style:solid; border-width: 1px" class="{% if forloop.counter|divisibleby:2 %}even1{% else %}odd1{% endif %}">
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="/playerpage/{{ player.id }}">{{ player }}</a></td>
+                        <td>{{ player.Bye }}</td>
+                        <td>{{ player.Allpa }}</td>
+                        <td>{{ player.Allpc }}</td>
+                        <td>{{ player.Allpastd }}</td>
+                        <td>{{ player.Allintcp }}</td>
+                        <td>{{ player.Allpasyds }}</td>
+                        <td>{{ player.Allrec }}</td>
+                        <td>{{ player.Allrecyds }}</td>
+                        <td>{{ player.Allrectd }}</td>
+                        <td>{{ player.Allkrtd }}</td>
+                        <td>{{ player.Allprtd }}</td>
+                        <td>{{ player.Allrusat }}</td>
+                        <td>{{ player.Allrusyds }}</td>
+                        <td>{{ player.Allrustd }}</td>
+                        <td>{{ player.Allxpm }}</td>
+                        <td>{{ player.Allfgm }}</td>
+                        <td>{{ player.Allfanpts }}</td>
+                    {% endfor %}
+                    </tr>
+                </table><br/><br/>
+                <span class='header2light'>Top {% if avail %}Available {% endif %}<a href="/playerpage/WR" class="dark">WRs</a></span>
+                <table width=850 bgcolor="white" cellpadding=5px>
+                    <tr bgcolor="black">
+                        <td colspan="3"></td>
+                        <td class="white" colspan="5" style="text-align: center">Passing</td>
+                        <td class="white" colspan="3" style="text-align: center">Receiving</td>
+                        <td class="white" colspan="2" style="text-align: center">Special</td>
+                        <td class="white" colspan="3" style="text-align: center">Rushing</td>
+                        <td class="white" colspan="2" style="text-align: center">Kicking</td>
+                        <td class="white" style="text-align: center"></td>
+                    </tr>
+                    <tr bgcolor="black">
+                        <td class="white">#</td>
+                        <td class="white"></td>
+                        <td class="white">BYE</td>
+                        <td class='white'>PC</td>
+                        <td class='white'>PA</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>INT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>#</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TDs</td>
+                        <td class='white'>KRTD</td>
+                        <td class='white'>PRTD</td>
+                        <td class='white'>ATT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>XP</td>
+                        <td class='white'>FG</td>
+                        <td class='white'>Points</td>
+                    </tr>
+                    {% for player in topwrs %}
+                        <tr style="border-style:solid; border-width: 1px" class="{% if forloop.counter|divisibleby:2 %}even1{% else %}odd1{% endif %}">
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="/playerpage/{{ player.id }}">{{ player }}</a></td>
+                        <td>{{ player.Bye }}</td>
+                        <td>{{ player.Allpa }}</td>
+                        <td>{{ player.Allpc }}</td>
+                        <td>{{ player.Allpastd }}</td>
+                        <td>{{ player.Allintcp }}</td>
+                        <td>{{ player.Allpasyds }}</td>
+                        <td>{{ player.Allrec }}</td>
+                        <td>{{ player.Allrecyds }}</td>
+                        <td>{{ player.Allrectd }}</td>
+                        <td>{{ player.Allkrtd }}</td>
+                        <td>{{ player.Allprtd }}</td>
+                        <td>{{ player.Allrusat }}</td>
+                        <td>{{ player.Allrusyds }}</td>
+                        <td>{{ player.Allrustd }}</td>
+                        <td>{{ player.Allxpm }}</td>
+                        <td>{{ player.Allfgm }}</td>
+                        <td>{{ player.Allfanpts }}</td>
+                    {% endfor %}
+                    </tr>
+                </table><br/><br/>
+                <span class='header2light'>Top {% if avail %}Available {% endif %}<a href="/playerpage/TE" class="dark">TEs</a></span>
+                <table width=850 bgcolor="white" cellpadding=5px>
+                    <tr bgcolor="black">
+                        <td colspan="3"></td>
+                        <td class="white" colspan="5" style="text-align: center">Passing</td>
+                        <td class="white" colspan="3" style="text-align: center">Receiving</td>
+                        <td class="white" colspan="2" style="text-align: center">Special</td>
+                        <td class="white" colspan="3" style="text-align: center">Rushing</td>
+                        <td class="white" colspan="2" style="text-align: center">Kicking</td>
+                        <td class="white" style="text-align: center"></td>
+                    </tr>
+                    <tr bgcolor="black">
+                        <td class="white">#</td>
+                        <td class="white"></td>
+                        <td class="white">BYE</td>
+                        <td class='white'>PC</td>
+                        <td class='white'>PA</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>INT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>#</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TDs</td>
+                        <td class='white'>KRTD</td>
+                        <td class='white'>PRTD</td>
+                        <td class='white'>ATT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>XP</td>
+                        <td class='white'>FG</td>
+                        <td class='white'>Points</td>
+                    </tr>
+                    {% for player in toptes %}
+                        <tr style="border-style:solid; border-width: 1px" class="{% if forloop.counter|divisibleby:2 %}even1{% else %}odd1{% endif %}">
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="/playerpage/{{ player.id }}">{{ player }}</a></td>
+                        <td>{{ player.Bye }}</td>
+                        <td>{{ player.Allpa }}</td>
+                        <td>{{ player.Allpc }}</td>
+                        <td>{{ player.Allpastd }}</td>
+                        <td>{{ player.Allintcp }}</td>
+                        <td>{{ player.Allpasyds }}</td>
+                        <td>{{ player.Allrec }}</td>
+                        <td>{{ player.Allrecyds }}</td>
+                        <td>{{ player.Allrectd }}</td>
+                        <td>{{ player.Allkrtd }}</td>
+                        <td>{{ player.Allprtd }}</td>
+                        <td>{{ player.Allrusat }}</td>
+                        <td>{{ player.Allrusyds }}</td>
+                        <td>{{ player.Allrustd }}</td>
+                        <td>{{ player.Allxpm }}</td>
+                        <td>{{ player.Allfgm }}</td>
+                        <td>{{ player.Allfanpts }}</td>
+                    {% endfor %}
+                    </tr>
+                </table><br/><br/>
+                <span class='header2light'>Top {% if avail %}Available {% endif %}<a href="/playerpage/K" class="dark">Ks</a></span>
+                <table width=850 bgcolor="white" cellpadding=5px>
+                    <tr bgcolor="black">
+                        <td colspan="3"></td>
+                        <td class="white" colspan="5" style="text-align: center">Passing</td>
+                        <td class="white" colspan="3" style="text-align: center">Receiving</td>
+                        <td class="white" colspan="2" style="text-align: center">Special</td>
+                        <td class="white" colspan="3" style="text-align: center">Rushing</td>
+                        <td class="white" colspan="2" style="text-align: center">Kicking</td>
+                        <td class="white" style="text-align: center"></td>
+                    </tr>
+                    <tr bgcolor="black">
+                        <td class="white">#</td>
+                        <td class="white"></td>
+                        <td class="white">BYE</td>
+                        <td class='white'>PC</td>
+                        <td class='white'>PA</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>INT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>#</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TDs</td>
+                        <td class='white'>KRTD</td>
+                        <td class='white'>PRTD</td>
+                        <td class='white'>ATT</td>
+                        <td class='white'>YDs</td>
+                        <td class='white'>TD</td>
+                        <td class='white'>XP</td>
+                        <td class='white'>FG</td>
+                        <td class='white'>Points</td>
+                    </tr>
+                    {% for player in topks %}
+                        <tr style="border-style:solid; border-width: 1px" class="{% if forloop.counter|divisibleby:2 %}even1{% else %}odd1{% endif %}">
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="/playerpage/{{ player.id }}">{{ player }}</a></td>
+                        <td>{{ player.Bye }}</td>
+                        <td>{{ player.Allpa }}</td>
+                        <td>{{ player.Allpc }}</td>
+                        <td>{{ player.Allpastd }}</td>
+                        <td>{{ player.Allintcp }}</td>
+                        <td>{{ player.Allpasyds }}</td>
+                        <td>{{ player.Allrec }}</td>
+                        <td>{{ player.Allrecyds }}</td>
+                        <td>{{ player.Allrectd }}</td>
+                        <td>{{ player.Allkrtd }}</td>
+                        <td>{{ player.Allprtd }}</td>
+                        <td>{{ player.Allrusat }}</td>
+                        <td>{{ player.Allrusyds }}</td>
+                        <td>{{ player.Allrustd }}</td>
+                        <td>{{ player.Allxpm }}</td>
+                        <td>{{ player.Allfgm }}</td>
+                        <td>{{ player.Allfanpts }}</td>
+                    {% endfor %}
+                    </tr>
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    {% endif %}
+
+    <br/>{% if not search %}<span class="header2light"><a href="/playerpage" class='dark'>← Back to Search Index</a></span>{% endif %}
+</div>
+
+{% endblock %}
+<!--
+<table width=500 bgcolor=black cellpadding=5px>
+
+    <tr>
+        <td class='white'>#</td>
+        <td class='white'>Team Name</td>
+        <td class='white'>W-L-T</td>
+        <td class='white'>PF</td>
+        <td class='white'>PA</td>
+    </tr>
+    {% for team in teams reversed%}
+        <tr bgcolor="white">
+            <td width="5%"><b>{{ forloop.counter }}</b></td>
+            <td width="70%"><span class='header1'>{% if team.name == myteam.name %}<a href="/myteam">{{ team.name }} ({{ team.owner.user.username }})</a>{% else %}<a href="/uteam/{{ team.id }}">{{ team.name }} ({{ team.owner.user.username }})</a></span>{% endif %}</td>
+            <td width="10%">{{ team.win }}-{{ team.loss }}</td>
+            <td>{{ team.total_points }}</td>
+            <td>{{ team.total_points_against }}</td>
+        </tr>
+    {% endfor %}
+</table>
+-->

@@ -1,0 +1,74 @@
+{% extends "base_profile_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+{% block head %}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/source/jquery.fancybox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="/static/source/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".fancybox").fancybox();
+            $(".various").fancybox({
+                maxWidth	: 400,
+                maxHeight	: 425,
+                fitToView	: false,
+                width		: '70%',
+                height		: '70%',
+                autoSize	: false,
+                closeClick	: false,
+                openEffect	: 'none',
+                closeEffect	: 'none',
+                openSpeed   : 'fast',
+                closeSpeed  : 'fast'
+            });
+            $.fancybox.hideLoading()
+        });
+    </script>
+
+{% endblock %}
+
+{% block header_auth %}
+<div id='profile' class='nametag'>
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+            <table bgcolor=black width=400>
+                <tr valign=center>
+                    <td >
+                        {% if user.userprofile.userpic == '' %}<img src="/static/pictures/nfl.gif">{% else %}<img src="/static/pictures/{{ user.userprofile.userpic|upper }}.gif" width=75 height=75>{% endif %}
+                        {% if team == 'None' %}
+                            </td>
+                            <th>
+                                {{ user.first_name }} {{ user.last_name }}<br/><span class='header1light'><a href="/joinleague" class="dark">Join a League</a></br>Create a League</span>
+                            </th>
+                        {% else %}
+                            </td>
+                            <th>
+                                {{ team.name }}<br/><span class='header1light'>{{ user.first_name }} {{ user.last_name }}</span>
+                            </th>
+                        {% endif %}
+                </tr>
+                <tr>
+                    <td colspan=2>
+                        <hr style="border:solid;border-width:1px;color:#ffffff">
+                        <a href='/profile/edit' class=dark><font size="3">Edit your profile</font></a>
+                    </td>
+                </tr>
+            </table>
+        {% endpart %}
+    {% endinclude %}
+</div>
+
+{% endblock %}
+
+
+{% block header_noauth %}
+<div id='profile' class='nametag'>
+	{% include "tecmo_outline_table.html" %}
+	{% part data %} 
+			<p><span class='header2light'>Welcome, new user. Please <a href='/login'>log in.</a></span></p>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}

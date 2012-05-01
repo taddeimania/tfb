@@ -1,0 +1,100 @@
+{% extends "base_myteam_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+{% block head %}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/source/jquery.fancybox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="/static/source/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".fancybox").fancybox();
+            $(".various").fancybox({
+                maxWidth	: 545,
+                maxHeight	: 377,
+                fitToView	: false,
+                width		: '70%',
+                height		: '70%',
+                autoSize	: false,
+                closeClick	: false,
+                openEffect	: 'none',
+                closeEffect	: 'none',
+                openSpeed   : 'fast',
+                closeSpeed  : 'fast'
+            });
+            $.fancybox.hideLoading()
+        });
+    </script>
+
+{% endblock %}
+
+{% block roster %}
+    <div id='profile' class='quickroster'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table width=460 bgcolor=black>
+                    <tr>
+                        <th colspan=4><center>My Roster:</center>
+                        </th>
+                    </tr>
+                    {% if drop_reason %}
+                        <tr bgcolor="black">
+                            <td colspan=4><span class='header1light'>{{ drop_reason }}</span></td>
+                        </tr>
+                    {% endif %}
+                    {% if team == 'None' %}
+                        <tr bgcolor=white>
+                            <td width=30><span class='header2'></span></td>
+                            <td width=50><img src="/static/pictures/nfl.gif" width=50 height=50></td>
+                            <td><center><span class='header2'>Team Data not found!</span></center></td>
+                        </tr>
+                    {% else %}
+                        <tr {% if roster.QB.tm2 == 'BYE' %}bgcolor="#808080"{% else %}bgcolor="white"{% endif %}>
+                            <td width=30><span class='header2'><a class="various fancybox.iframe" href="/list/qb"><center>QB:</center></a></span></td>
+                            <td width=50>{% if roster.QB != None %}<img src="/static/pictures/{{ roster.QB.pic|upper }}.gif" width=50 height=50></td>
+                                <td><form action='.' method='POST'>{% csrf_token %}<span class='header2'><a class="various fancybox.iframe" href="/player/{{ roster.QB.id }}">{{ roster.QB.name }}</a></span><td width=1><input type="hidden" name="del_player" value="{{ roster.QB.id }}"/><input type="submit" value="Drop" /></form></td></td>
+                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a href="/pickup/qb">Add QB</a></span></td><td></td>{% endif %}
+                        </tr>
+                        <tr {% if roster.RB.tm2 == 'BYE' %}bgcolor="#808080"{% else %}bgcolor="white"{% endif %}>
+                            <td ><span class='header2'><a class="various fancybox.iframe" href="/list/rb"><center>RB:</center></a></span></td>
+                            <td >{% if roster.RB != None %}<img src="/static/pictures/{{ roster.RB.pic|upper }}.gif" width=50 height=50></td>
+                                <td ><form action='.' method='POST'>{% csrf_token %}<span class='header2'><a class="various fancybox.iframe" href="/player/{{ roster.RB.id }}">{{ roster.RB.name}}</a></span><td width=1><input type="hidden" name="del_player" value="{{ roster.RB.id }}"/><input type="submit" value="Drop" /></form></td></td>
+                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a href="/pickup/rb">Add RB</a></span></td><td></td>{% endif %}
+                        </tr>
+                        <tr {% if roster.RB1.tm2 == 'BYE' %}bgcolor="#808080"{% else %}bgcolor="white"{% endif %}>
+                            <td ><span class='header2'><a class="various fancybox.iframe" href="/list/rb"><center>RB:</center></a></span></td>
+                            <td >{% if roster.RB1 != None %}<img src="/static/pictures/{{ roster.RB1.pic|upper }}.gif" width=50 height=50></td>
+                                <td><form action='.' method='POST'>{% csrf_token %}<span class='header2'><a class="various fancybox.iframe" href="/player/{{ roster.RB1.id }}">{{ roster.RB1.name}}</a></span><td width=1><input type="hidden" name="del_player" value="{{ roster.RB1.id }}"/><input type="submit" value="Drop" /></form></td></td>
+                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a href="/pickup/rb">Add RB</a></span></td><td></td>{% endif %}
+                        </tr>
+                        <tr {% if roster.WR.tm2 == 'BYE' %}bgcolor="#808080"{% else %}bgcolor="white"{% endif %}>
+                            <td ><span class='header2'><a class="various fancybox.iframe" href="/list/wr"><center>WR:</center></a></span></td>
+                            <td >{% if roster.WR != None %}<img src="/static/pictures/{{ roster.WR.pic|upper }}.gif" width=50 height=50></td>
+                                <td><form action='.' method='POST'>{% csrf_token %}<span class='header2'><a class="various fancybox.iframe" href="/player/{{ roster.WR.id }}">{{ roster.WR.name}}</a></span></td><td width=1><input type="hidden" name="del_player" value="{{ roster.WR.id }}"/><input type="submit" value="Drop" /></form></td></td>
+                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a href="/pickup/wr">Add WR</a></span></td><td></td>{% endif %}
+                        </tr>
+                        <tr {% if roster.WR1.tm2 == 'BYE' %}bgcolor="#808080"{% else %}bgcolor="white"{% endif %}>
+                            <td ><span class='header2'><a class="various fancybox.iframe" href="/list/wr"><center>WR:</center></a></span></td>
+                            <td >{% if roster.WR1 != None %}<img src="/static/pictures/{{ roster.WR1.pic|upper }}.gif" width=50 height=50></td>
+                                <td><form action='.' method='POST'>{% csrf_token %}<span class='header2'><a class="various fancybox.iframe" href="/player/{{ roster.WR1.id }}">{{ roster.WR1.name}}</a></span></td><td width=1><input type="hidden" name="del_player" value="{{ roster.WR1.id }}"/><input type="submit" value="Drop" /></form></td></td>
+                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a href="/pickup/wr">Add WR</a></span></td><td></td>{% endif %}
+                        </tr>
+                        <tr {% if roster.TE.tm2 == 'BYE' %}bgcolor="#808080"{% else %}bgcolor="white"{% endif %}>
+                            <td ><span class='header2'><a class="various fancybox.iframe" href="/list/te"><center>TE:</center></a></span></td>
+                            <td >{% if roster.TE != None %}<img src="/static/pictures/{{ roster.TE.pic|upper }}.gif" width=50 height=50></td>
+                                <td><form action='.' method='POST'>{% csrf_token %}<span class='header2'><a class="various fancybox.iframe" href="/player/{{ roster.TE.id }}">{{ roster.TE.name}}</a></span></td><td width=1><input type="hidden" name="del_player" value="{{ roster.TE.id }}"/><input type="submit" value="Drop" /></form></td></td>
+                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a href="/pickup/te">Add TE</a></span></td><td></td>{% endif %}
+                        </tr>
+                        <tr {% if roster.K.tm2 == 'BYE' %}bgcolor="#808080"{% else %}bgcolor="white"{% endif %}>
+                            <td><span class='header2'><a class="various fancybox.iframe" href="/list/k"><center>K:</center></a></span></td>
+                            <td>{% if roster.K != None %}<img src="/static/pictures/{{ roster.K.pic|upper }}.gif" width=50 height=50></td>
+                                <td><form action='.' method='POST'>{% csrf_token %}<span class='header2'><a class="various fancybox.iframe" href="/player/{{ roster.K.id }}">{{ roster.K.name}}</a></span></td><td width=1><input type="hidden" name="del_player" value="{{ roster.K.id }}"/><input type="submit" value="Drop" /></form></td></td>
+                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a href="/pickup/k">Add K</a></span></td><td></td>{% endif %}
+                        </tr>
+                    {% endif %}
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}

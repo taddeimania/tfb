@@ -1,0 +1,91 @@
+{% extends "base_joinleague_block.html" %}
+{% load includetag %}
+{% block head %}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/source/jquery.fancybox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="/static/source/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".fancybox").fancybox();
+            $(".various").fancybox({
+                maxWidth	: 745,
+                maxHeight	: 377,
+                fitToView	: false,
+                width		: '70%',
+                height		: '70%',
+                autoSize	: false,
+                closeClick	: false,
+                openEffect	: 'none',
+                closeEffect	: 'none',
+                openSpeed   : 'fast',
+                closeSpeed  : 'fast'
+            });
+            $.fancybox.hideLoading()
+        });
+    </script>
+{% endblock %}
+{% block title %}Join an available league.{% endblock %}
+
+{% block vartest %}
+<div id='joinleague' class='join'>
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <table width=800>
+            <tr>
+                <td colspan=2><center><img src="/static/pictures/joinaleague.gif"></center>
+                </td>
+            </tr>
+            <tr height=30>
+                <td>
+                </td>
+            </tr>
+            {% if alreadyinleague != None %}
+                <td width=60%><span class='header1light'>I'm sorry {{ T.owner.user.first_name }}, You already seem to be a member of the following league:<br/><br/>{{ alreadyinleague.league.lname }}<br/><br/><a href="/profile" class=dark>Go back to your profile</a></span>
+            {% else %}
+            <tr valign=center>
+                {% if query and not success %}
+                <span class='header2light'>---Invalid Invite Code---</span>
+                {% endif %}
+                {% if not success %}
+                <td width=60%><span class='header2light'>Invite code:</span>
+                </td>
+                <td align=right>
+                <form method="post" action=".">
+                {% csrf_token %}
+                <input type="text" name='invite_code'>
+                <input type="submit" value="Join" />
+                <input type="hidden" name="next" value="{{ next }}" />
+                </form>
+                </td>
+                <tr>
+                    <td colspan=2>
+                        <form method="post" action=".">
+                        {% csrf_token %}
+                        {% for league in leaguelist %}
+                        {% if forloop.first %}
+                        <Center><span class='header2light'>-OR-<br/>Join a public league<br/><br/></span></Center>
+                        {% endif %}
+                        <input type="radio" name="public_league" value="{{ league.id }}" />
+                        <span class='header2light'><a class="various fancybox.iframe dark" href="/leaguelist/{{ league.id }}">{{ league.name }} {{ league.teamcount }}/{{ league.maxteam }}</a><br/></span>
+                        <br/>
+                        {% if forloop.last %}
+                        <input type="submit" value="Join" style="font-size: 18px; font-family: Nintendo; width: 80px; height: 40px; font-weight: bold;"/>
+                        </form>
+                        {% endif %}
+                        {% empty %}
+                            <br/><span class='header2light'>No leagues...  Create a league? Not yet</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endif %}
+                {% if query and not failmessage %}
+                    <td width=60%><span class='header1light'>Congratulations {{ T.owner.user.first_name }}, You have successfully been added to the league:<br/><br/>{{ L.lname }}<br/><br/><a href="/profile" class=dark>Go back to your profile</a></span>
+                    </td>
+                {% endif %}
+                {% endif %}
+            </tr>
+        </table>
+    {% endpart %}
+    {% endinclude %}
+</div>
+{% endblock %}

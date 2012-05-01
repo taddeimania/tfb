@@ -1,0 +1,319 @@
+{% extends "base_matchup_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}!{% endblock %}
+
+{% block head %}
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/source/jquery.fancybox.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="/static/source/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".fancybox").fancybox();
+            $(".various").fancybox({
+                maxWidth	: 545,
+                maxHeight	: 377,
+                fitToView	: false,
+                width		: '70%',
+                height		: '70%',
+                autoSize	: false,
+                closeClick	: false,
+                openEffect	: 'none',
+                closeEffect	: 'none',
+                openSpeed   : 'fast',
+                closeSpeed  : 'fast'
+            });
+            $.fancybox.hideLoading()
+        });
+    </script>
+
+{% endblock %}
+
+{% block team_one %}
+<div id='matchup' class='team_two'>
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+    <table width=400 bgcolor=black cellpadding=5px>
+        <tr>
+            <td colspan=3><span class='header2light'><a href="/uteam/{{ team_one.id }}" class='dark'>{{ team_one.name }}</a></span></td>
+        </tr>
+        <table bgcolor=black width=100% class='matchupstats'>
+            <tr>
+                <td class='white'></td>
+                <td class='white'></td>
+                <td class='white'>YD</td>
+                <td class='white'>TD</td>
+                <td class='white'>INT</td>
+                <td class='white'>RYDS</td>
+                <td class='white'>RTD</td>
+                <td class='white'>Points</td>
+            </tr>
+            <tr {% if team_one_roster.QB.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                <td width="5%">QB</td>
+                <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_one_roster.QB.id }}">{{ team_one_roster.QB.name }}{% if team_one_roster.QB.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                <td width="8%">{{ team_one_roster.QB.pasyds }}</td>
+                <td width="8%">{{ team_one_roster.QB.pastd }}</td>
+                <td width="8%">{{ team_one_roster.QB.intcp }}</td>
+                <td width="8%">{{ team_one_roster.QB.rusyds }}</td>
+                <td width="8%">{{ team_one_roster.QB.rustd }}</td>
+                <td>{{ team_one_roster.QB.fanpts }}</td>
+            </tr>
+            <tr><td></td></tr><tr><td></td></tr>
+            <tr>
+                <td class='white'></td>
+                <td class='white'></td>
+                <td class='white'></td>
+                <td class='white'>RECYDS</td>
+                <td class='white'>RECTD</td>
+                <td class='white'>RUSYDS</td>
+                <td class='white'>RUSTDS</td>
+                <td class='white'>Points</td>
+            </tr>
+            <tr {% if team_one_roster.RB.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                <td width="5%">RB</td>
+                <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_one_roster.RB.id }}">{{ team_one_roster.RB.name }}{% if team_one_roster.RB.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                <td width="8%"></td>
+                <td width="8%">{{ team_one_roster.RB.recyds }}</td>
+                <td width="8%">{{ team_one_roster.RB.rectd }}</td>
+                <td width="8%">{{ team_one_roster.RB.rusyds }}</td>
+                <td width="8%">{{ team_one_roster.RB.rustd }}</td>
+                <td>{{ team_one_roster.RB.fanpts }}</td>
+            </tr>
+            <tr {% if team_one_roster.RB1.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                <td width="5%">RB</td>
+                <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_one_roster.RB1.id }}">{{ team_one_roster.RB1.name }}{% if team_one_roster.RB1.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                <td width="8%"></td>
+                <td width="8%">{{ team_one_roster.RB1.recyds }}</td>
+                <td width="8%">{{ team_one_roster.RB1.rectd }}</td>
+                <td width="8%">{{ team_one_roster.RB1.rusyds }}</td>
+                <td width="8%">{{ team_one_roster.RB1.rustd }}</td>
+                <td>{{ team_one_roster.RB1.fanpts }}</td>
+            </tr>
+            <tr {% if team_one_roster.WR.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                <td width="5%">WR</td>
+                <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_one_roster.WR.id }}">{{ team_one_roster.WR.name }}{% if team_one_roster.WR.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                <td width="8%"></td>
+                <td width="8%">{{ team_one_roster.WR.recyds }}</td>
+                <td width="8%">{{ team_one_roster.WR.rectd }}</td>
+                <td width="8%">{{ team_one_roster.WR.rusyds }}</td>
+                <td width="8%">{{ team_one_roster.WR.rustd }}</td>
+                <td>{{ team_one_roster.WR.fanpts }}</td>
+            </tr>
+            <tr {% if team_one_roster.WR1.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                <td width="5%">WR</td>
+                <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_one_roster.WR1.id }}">{{ team_one_roster.WR1.name }}{% if team_one_roster.WR1.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                <td width="8%"></td>
+                <td width="8%">{{ team_one_roster.WR1.recyds }}</td>
+                <td width="8%">{{ team_one_roster.WR1.rectd }}</td>
+                <td width="8%">{{ team_one_roster.WR1.rusyds }}</td>
+                <td width="8%">{{ team_one_roster.WR1.rustd }}</td>
+                <td>{{ team_one_roster.WR1.fanpts }}</td>
+            </tr>
+            <tr {% if team_one_roster.TE.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                <td width="5%">TE</td>
+                <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_one_roster.TE.id }}">{{ team_one_roster.TE.name }}{% if team_one_roster.TE.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                <td width="8%"></td>
+                <td width="8%">{{ team_one_roster.TE.recyds }}</td>
+                <td width="8%">{{ team_one_roster.TE.rectd }}</td>
+                <td width="8%">{{ team_one_roster.TE.rusyds }}</td>
+                <td width="8%">{{ team_one_roster.TE.rustd }}</td>
+                <td>{{ team_one_roster.TE.fanpts }}</td>
+            </tr>
+            <tr>
+                <td class='white'></td>
+                <td class='white'></td>
+                <td class='white'></td>
+                <td class='white'></td>
+                <td class='white'></td>
+                <td class='white'>XP</td>
+                <td class='white'>FG</td>
+                <td class='white'>Points</td>
+            </tr>
+            <tr {% if team_one_roster.K.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                <td width="5%">K</td>
+                <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_one_roster.K.id }}">{{ team_one_roster.K.name }}{% if team_one_roster.K.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                <td width="8%"></td>
+                <td width="8%"></td>
+                <td width="8%"></td>
+                <td width="8%">{{ team_one_roster.K.xpm }}</td>
+                <td width="8%">{{ team_one_roster.K.fgm }}</td>
+                <td>{{ team_one_roster.K.fanpts }}</td>
+            </tr>
+            <tr>
+                <td colspan=6><span class='header2light'>Total Points:</span></td>
+                <td colspan=2><span class='header2light'>{{ t1pts }}</span></td>
+            </tr>
+        </table>
+    </table>
+
+    {% endpart %}
+    {% endinclude %}  
+</div>
+{% endblock %}
+
+{% block team_two %}
+    <div id='matchup' class='team_two'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table width=400 bgcolor=black cellpadding=5px>
+                    <tr>
+                        <td colspan=3><span class='header2light'><a href="/uteam/{{ team_two.id }}" class='dark'>{{ team_two.name }}</span></td>
+                    </tr>
+                    <table bgcolor=black width=100% class='matchupstats'>
+                        <tr>
+                            <td class='white'></td>
+                            <td class='white'></td>
+                            <td class='white'>YD</td>
+                            <td class='white'>TD</td>
+                            <td class='white'>INT</td>
+                            <td class='white'>RYDS</td>
+                            <td class='white'>RTD</td>
+                            <td class='white'>Points</td>
+                        </tr>
+                        <tr {% if team_two_roster.QB.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                            <td width="5%">QB</td>
+                            <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_two_roster.QB.id }}">{{ team_two_roster.QB.name }}{% if team_two_roster.QB.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                            <td width="8%">{{ team_two_roster.QB.pasyds }}</td>
+                            <td width="8%">{{ team_two_roster.QB.pastd }}</td>
+                            <td width="8%">{{ team_two_roster.QB.intcp }}</td>
+                            <td width="8%">{{ team_two_roster.QB.rusyds }}</td>
+                            <td width="8%">{{ team_two_roster.QB.rustd }}</td>
+                            <td>{{ team_two_roster.QB.fanpts }}</td>
+                        </tr>
+                        <tr><td></td></tr><tr><td></td></tr>
+                        <tr>
+                            <td class='white'></td>
+                            <td class='white'></td>
+                            <td class='white'></td>
+                            <td class='white'>RECYDS</td>
+                            <td class='white'>RECTD</td>
+                            <td class='white'>RUSYDS</td>
+                            <td class='white'>RUSTDS</td>
+                            <td class='white'>Points</td>
+                        </tr>
+                        <tr {% if team_two_roster.RB.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                            <td width="5%">RB</td>
+                            <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_two_roster.RB.id }}">{{ team_two_roster.RB.name }}{% if team_two_roster.RB.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                            <td width="8%"></td>
+                            <td width="8%">{{ team_two_roster.RB.recyds }}</td>
+                            <td width="8%">{{ team_two_roster.RB.rectd }}</td>
+                            <td width="8%">{{ team_two_roster.RB.rusyds }}</td>
+                            <td width="8%">{{ team_two_roster.RB.rustd }}</td>
+                            <td>{{ team_two_roster.RB.fanpts }}</td>
+                        </tr>
+                        <tr {% if team_two_roster.RB1.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                            <td width="5%">RB</td>
+                            <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_two_roster.RB1.id }}">{{ team_two_roster.RB1.name }}{% if team_two_roster.RB1.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                            <td width="8%"></td>
+                            <td width="8%">{{ team_two_roster.RB1.recyds }}</td>
+                            <td width="8%">{{ team_two_roster.RB1.rectd }}</td>
+                            <td width="8%">{{ team_two_roster.RB1.rusyds }}</td>
+                            <td width="8%">{{ team_two_roster.RB1.rustd }}</td>
+                            <td>{{ team_two_roster.RB1.fanpts }}</td>
+                        </tr>
+                        <tr {% if team_two_roster.WR.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                            <td width="5%">WR</td>
+                            <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_two_roster.WR.id }}">{{ team_two_roster.WR.name }}{% if team_two_roster.WR.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                            <td width="8%"></td>
+                            <td width="8%">{{ team_two_roster.WR.recyds }}</td>
+                            <td width="8%">{{ team_two_roster.WR.rectd }}</td>
+                            <td width="8%">{{ team_two_roster.WR.rusyds }}</td>
+                            <td width="8%">{{ team_two_roster.WR.rustd }}</td>
+                            <td>{{ team_two_roster.WR.fanpts }}</td>
+                        </tr>
+                        <tr {% if team_two_roster.WR1.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                            <td width="5%">WR</td>
+                            <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_two_roster.WR1.id }}">{{ team_two_roster.WR1.name }}{% if team_two_roster.WR1.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                            <td width="8%"></td>
+                            <td width="8%">{{ team_two_roster.WR1.recyds }}</td>
+                            <td width="8%">{{ team_two_roster.WR1.rectd }}</td>
+                            <td width="8%">{{ team_two_roster.WR1.rusyds }}</td>
+                            <td width="8%">{{ team_two_roster.WR1.rustd }}</td>
+                            <td>{{ team_two_roster.WR1.fanpts }}</td>
+                        </tr>
+                        <tr {% if team_two_roster.TE.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                            <td width="5%">TE</td>
+                            <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_two_roster.TE.id }}">{{ team_two_roster.TE.name }}{% if team_two_roster.TE.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                            <td width="8%"></td>
+                            <td width="8%">{{ team_two_roster.TE.recyds }}</td>
+                            <td width="8%">{{ team_two_roster.TE.rectd }}</td>
+                            <td width="8%">{{ team_two_roster.TE.rusyds }}</td>
+                            <td width="8%">{{ team_two_roster.TE.rustd }}</td>
+                            <td>{{ team_two_roster.TE.fanpts }}</td>
+                        </tr>
+                        <tr>
+                            <td class='white'></td>
+                            <td class='white'></td>
+                            <td class='white'></td>
+                            <td class='white'></td>
+                            <td class='white'></td>
+                            <td class='white'>XP</td>
+                            <td class='white'>FG</td>
+                            <td class='white'>Points</td>
+                        </tr>
+                        <tr {% if team_two_roster.K.health == 'INJURED' %}bgcolor="red"{% else %}bgcolor="white"{% endif %}>
+                            <td width="5%">K</td>
+                            <td width="35%"><a class="various fancybox.iframe" href="/player/{{ team_two_roster.K.id }}">{{ team_two_roster.K.name }}{% if team_two_roster.K.tm2 == 'BYE' %}</a> (B){% endif %}</td>
+                            <td width="8%"></td>
+                            <td width="8%"></td>
+                            <td width="8%"></td>
+                            <td width="8%">{{ team_two_roster.K.xpm }}</td>
+                            <td width="8%">{{ team_two_roster.K.fgm }}</td>
+                            <td>{{ team_two_roster.K.fanpts }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan=6><span class='header2light'>Total Points:</span></td>
+                            <td colspan=2><span class='header2light'>{{ t2pts }}</span></td>
+                        </tr>
+                    </table>
+                </table>
+
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}
+{% block header_noauth %}
+<div id='league' class='topleft'>
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <p><span class='header2light'>Welcome, new user. Please <a href='/login'>log in.</a></span></p>
+    {% endpart %}
+    {% endinclude %}  
+</div>
+{% endblock %}
+
+{% block weekly_matchups %}
+    {% if allmatchups %}
+        <div id='league' class='matchup'>
+            {% include "tecmo_outline_table.html" %}
+                {% part data %}
+                    <table width=845 bgcolor=black cellpadding=5px>
+                        <tr bgcolor="white">
+                            <td colspan=2><center>
+                                <table cellpadding="2" width=100%>
+                                <tr>
+                                    {% for mu in allmatchups %}
+                                        <td><center>
+                                        <table>
+                                            <tr>
+                                                <td width=88%><a href="/matchup/{{ mu.id }}">{% if mu.team_one.name == '' %}No Name Set{% else %}{{ mu.team_one.name }}{% endif %}</a></td>
+                                                <td>{{ mu.team_one_points }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td width=88%><a href="/matchup/{{ mu.id }}">{% if mu.team_two.name == '' %}No Name Set{% else %}{{ mu.team_two.name }}{% endif %}</a></td>
+                                                <td>{{ mu.team_two_points }}</td>
+                                            </tr>
+                                        </table>
+                                        </center></td>
+                                    {% endfor %}
+                                </tr>
+                                </table>
+                            </center>
+                            </td>
+                        </tr>
+                    </table>
+                {% endpart %}
+            {% endinclude %}
+        </div>
+    {% endif %}
+{% endblock %}

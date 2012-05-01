@@ -1,0 +1,12 @@
+{% extends "base_blank.html" %}
+{% block content %}
+    {% if drop %}
+        {% block dropconf %}{% endblock %}
+    {% else %}
+        {% block structure %}{% endblock %}
+    {% endif %}
+{% endblock %}
+
+
+
+

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+{% if user.is_authenticated %}
+    {% if myteam != 'None' %}
+        {% block header_auth %}{% endblock %}
+        {% block weekly_matchups %}{% endblock %}
+        {% block transactions %}{% endblock %}
+    {% else %}
+        {% block join_a_league %}{% endblock %}
+    {% endif %}
+{% else %}
+	{% block header_noauth %}{% endblock %}
+{% endif %}
+
+{% endblock %}

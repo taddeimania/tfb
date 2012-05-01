@@ -1,0 +1,169 @@
+{% extends "base_draft_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+{% block head %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $( "input.draftplayer" ).autocomplete({
+                source: {{ avail_players|safe }}
+
+            });
+        });
+
+        $("#valid_" + $(this).attr("id")).show();
+    </script>
+{% endblock %}
+
+{% block header_auth %}
+<div id='profile' class='nametag'>
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+            <table bgcolor=black width=850>
+                <tr valign=center>
+                    <th colspan="2">Welcome to Tecmo Fantasy Draft
+                    </th>
+                </tr>
+                {% if instructions %}
+                <tr bgcolor='white'>
+                    <td>
+                        <blockquote><span class="header1">In the next screen you will begin entering your draft picks, please make sure you understand these
+                            following guidelines before beginning:</span><br/><br/>
+                            <li class="header1">The draft order is generated randomly.</li><br/>
+                            <li class="header1">The order is linear <b>NOT SNAKE</b>! This means after the first round you go back to the first picker... the last in the order does not get 2 picks in a row.</li><br/>
+                            <li class="header1">You can either enter all of your draft's picks in one sitting or revisit if you need a break.</li><br/>
+                            <li class="header1">If you can coordinate it you can enter the picks real time as you are conducting the draft.</li><br/>
+                            <li class="header1">TODO: Create a page where people in your league can view available players.</li><br/>
+                            <li class="header1">After you enter all of your picks you will have to confirm them before submitting them.</li><br/>
+                            <blockquote><li class="header1">When you submit your draft, the picks will be generated into team rosters.</li><br/>
+                            <li class="header1">There are 7 rounds.  Make sure your league drafts 1 QB, 2 RB, 2 WR, 1 TE, & 1 K - No other configuration will work.</li><br/>
+                            <li class="header1">To piggy back off the above guideline: IF YOU ENTER AN INCORRECT TEAM MAKEUP THE DRAFT WILL NOT ALLOW YOU TO PROCEED.</li><br/>
+                            <li class="header1">Make sure you receive confirmation that your draft has been processed.  If your draft has not been converted into a roster you will not be considered a valid league.</li></blockquote><br/>
+                            <li class="header1">When you are ready to begin drafting click the BEGIN DRAFTING button below.</li><br/>
+                        </blockquote>
+                        <br/>
+                        <form action='.' method='POST'>{% csrf_token %}<Center><input type="hidden" name="start" value="start"/><input type="submit" value="BEGIN DRAFTING!" style="font-size:18px;font-family:nintendo; width:250px; height:40px; font-weight:bold;"/></Center></form><br/><br/>
+                    </td>
+                </tr>
+                {% endif %}
+            {% if order %}
+            <form action='' method='POST'>{% csrf_token %}
+            {% for team in order %}
+                {% if forloop.first %}
+                <tr>
+                    <th colspan="2">
+                        Round {{ cur_round }}
+                    </th>
+                </tr>
+                {% endif %}
+                <tr bgcolor="white">
+                    <td width='20%'>
+                        <span class="header1"><center>{{ team.draft_team.team.name }}</center></span>
+                    </td>
+                    <td>
+                    <div class="ui-widget">
+                        <input id="tags{{ forloop.counter }}" class="draftplayer"  type="text" name="{{ cur_round }}_{{ team.draft_team.id }}" value="{% for key,value in pick.items %}{% if team.draft_team.id == key %}{{ value }}{% endif %}{% endfor %}" size="40" maxlength=30/>
+                    </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>{% if cur_round != 1 %}<input type="submit" name="prev" value="Previous"/>{% endif %}</td>
+                <td align="right">{% if cur_round != 9 %}<input type="submit" name="next" value="Next"/>{% else %}<input type="submit" value="Confirm"/>{% endif %}</td>
+            </tr>
+            </form>
+            {% endif %}
+            {% if confirmation %}
+                <tr>
+                    <th colspan="2">
+                        CONFIRM YOUR DRAFT
+                    </th>
+                </tr>
+                    <td align="center" colspan="2">
+                        {% for draftteam in confirm_list %}
+                            <div class="draftconfirmteam">
+                                <table width=350>
+                                    <tr bgcolor="white">
+                                        <th class="draftconfirmheader" colspan=2>
+                                           {{ draftteam.teamname }}
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="white" width="10%" align="center">1</td>
+                                        <td bgcolor="white">
+                                            <blockquote>{{ draftteam.round_one }}</blockquote>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="white" width="10%" align="center">2</td>
+                                        <td bgcolor="white">
+                                            <blockquote>{{ draftteam.round_two }}</blockquote>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="white" width="10%" align="center">3</td>
+                                        <td bgcolor="white">
+                                            <blockquote>{{ draftteam.round_three }}</blockquote>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="white" width="10%" align="center">4</td>
+                                        <td bgcolor="white">
+                                            <blockquote>{{ draftteam.round_four }}</blockquote>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="white" width="10%" align="center">5</td>
+                                        <td bgcolor="white">
+                                            <blockquote>{{ draftteam.round_five }}</blockquote>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="white" width="10%" align="center">6</td>
+                                        <td bgcolor="white">
+                                            <blockquote>{{ draftteam.round_six }}</blockquote>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td bgcolor="white" width="10%" align="center">7</td>
+                                        <td bgcolor="white">
+                                            <blockquote>{{ draftteam.round_seven }}</blockquote>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr><td></td></tr>
+                <form action='.' method='POST'>{% csrf_token %}
+                <tr>
+                    <td align="center"><span class="header1light">Click <u>Confirm</u> to convert your draft into a roster. </span></td>
+                    <td><input type="submit" name="confirm" value="Confirm" style="font-size:12px;font-family:nintendo; width:80px; height:40px; font-weight:bold;"/></td>
+                </tr>
+                </form>
+            {% endif %}
+            </table>
+        {% endpart %}
+    {% endinclude %}
+</div>
+
+{% if errors %}
+<script>
+    alert('{% for alert in errors %}{{ alert }}\n{% endfor %}');
+</script>
+{% endif %}
+
+{% endblock %}
+
+{% block header_noauth %}
+<div id='profile'>
+	{% include "tecmo_outline_table.html" %}
+	{% part class %}nametag{% endpart %}
+	{% part data %} 
+			<p><span class='header2light'>Welcome, new user. Please <a href='/login'>log in.</a></span></p>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base_blank.html" %}
+{% block title %}Welcome to Tecmo Fantasy Bowl{% endblock %}
+
+{% block content %}
+<div id='home'>
+	<table background="/static/pictures/background.gif" width=652 height=417>
+		<tr>
+			<td>
+
+			</td>
+		</tr>
+	</table>
+	<table class="nav" width=200 height=165 valign="top" align="center">
+		<tr>
+			<td>
+				<a href="http://blog.tecmofantasybowl.com"><img src="/static/pictures/blog.gif"></a>
+				<a href="http://www.tecmofantasybowl.com/forum"><img src="/static/pictures/forum.gif"></a>
+				{% if user.is_authenticated %}
+				<a href="/profile"><img src="/static/pictures/mainprofile.gif"></a>
+				{% else %}
+				<a href="/login"><img src="/static/pictures/mainlogin.gif"></a>
+				{% endif %}
+			</td>
+		</tr>
+	</table>
+</div>
+
+{% endblock %}

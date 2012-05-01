@@ -1,0 +1,130 @@
+{% extends "base_profile_edit_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+{% block header_auth %}
+<div id='profile_edit' class='edit_box'>
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+            {% if success %}Profile Updated Successfully{% endif %}
+            <form action='' method='POST'>{% csrf_token %}
+            <table>
+                <tr>
+                    <td align="right">
+                        <span class='header1light'>Profile Photo:</span>
+                    </td>
+                    <td>
+                        <img src="/static/pictures/{{ profile.userpic|upper }}.gif" height=75 width=75>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <span class='header1light'>First Name:</span>
+                    </td>
+                    <td>
+                        <input type="text" name="first_name" value="{{ user.first_name }}" size="10" maxlength=30/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <span class='header1light'>Last Name:</span>
+                    </td>
+                    <td>
+                        <input type="text" name="last_name" value="{{ user.last_name }}" size="10" maxlength=30/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <span class='header1light'>Team Name:</span>
+                    </td>
+                    <td>
+                        <input type="text" name="team_name" value="{{ team.name }}" size="20" maxlength=45/>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <span class='header1light'>Team Slogan:</span>
+                    </td>
+                    <td>
+                        <input type="text" name="team_slogan" value="{{ team.slogan }}" size="20" maxlength=200/>
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" name="save" value="update"/><input type="submit" value="Submit" />
+        {% endpart %}
+    {% endinclude %}
+</div>
+<div id='profile_edit' class='face_box'>
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+                <table>
+                    <tr>
+                        <td>
+                            <input type="radio" name="face" value="1" /><br />
+                        </td>
+                        <td>
+                            <img src='/static/pictures/1.gif' width=75px height=75px>
+                        </td>
+                        <td>
+                            <input type="radio" name="face" value="X1" /><br />
+                        </td>
+                        <td>
+                            <img src='/static/pictures/X1.gif' width=75px height=75px>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" name="face" value="2F" /><br />
+                        </td>
+                        <td>
+                            <img src='/static/pictures/2F.gif' width=75px height=75px>
+                        </td>
+                        <td>
+                            <input type="radio" name="face" value="X2" /><br />
+                        </td>
+                        <td>
+                            <img src='/static/pictures/X2.gif' width=75px height=75px>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" name="face" value="6" /><br />
+                        </td>
+                        <td>
+                            <img src='/static/pictures/6.gif' width=75px height=75px>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" name="face" value="9F" /><br />
+                        </td>
+                        <td>
+                            <img src='/static/pictures/9F.gif' width=75px height=75px>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="radio" name="face" value="BE" /><br />
+                        </td>
+                        <td>
+                            <img src='/static/pictures/BE.gif' width=75px height=75px>
+                        </td>
+                    </tr>
+                </table>
+                <input type="hidden" name="save" value="update_face"/>
+            </form>
+        {% endpart %}
+    {% endinclude %}
+</div>
+{% endblock %}
+
+{% block header_noauth %}
+<div id='profile' class='nametag'>
+	{% include "tecmo_outline_table.html" %}
+	{% part data %} 
+			<p><span class='header2light'>Welcome, new user. Please <a href='/login'>log in.</a></span></p>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}

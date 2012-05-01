@@ -1,0 +1,70 @@
+{% extends "base_team_block.html" %}
+{% load includetag %}
+{% block title%}{{ team.long }}{% endblock %}
+<!-- WHERE IS THE IS AUTH CHECK?! -->
+
+{% block playerinfo %}
+<div id='proteam' class='player'>
+{% include "tecmo_outline_table.html" %}
+	{% part data %} 
+	 <iframe src="/blue" width=500 height=340 frameborder=0 name="card">
+				  <p>Your browser does not support iframes.</p>
+	</iframe> 
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}
+
+{% block teaminfo %}
+<div id='proteam' class='roster'>
+	{% include "tecmo_outline_table.html" %}
+	{% part data %}
+	<table class="teaminsert" width=170 height=200>
+		{% for var in plist %}
+		<tr>
+			<td width=10>{{ var.pos }}</td>
+			<td>
+				<a href="/player/{{ var.id }}" target="card">{{ var }}</a></br>
+			</td>
+		</tr>
+		{% endfor %}
+	</table>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}
+
+{% block proteaminfo %}
+<div id='proteam' class='proteamstats'>
+	{% include "tecmo_outline_table.html" %}
+	{% part data %}
+	<table class="teaminsert" width=170 height=200>
+		<tr valign=top>
+			<td><center><span class='header2'>Record:</br>{{ team.wins}}/{{ team.loss }}/{{ team.tie }}</span></br></br></br>
+				<span class='header1'>Week {{ curweek }} Preview: <br/></span>{{ nextopponent.long }}<br/>
+				<a href="/team/{{ nextopponent.short }}"><img src="/static/pictures/helmets/{{ nextopponent.short }}.gif" width=75 height=75></a>
+				</center>
+			</td>
+		</tr>
+	</table>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}
+
+{% block helmet %}
+<div id='proteam' class='helmet'>
+	{% include "tecmo_outline_table.html" %}
+	{% part data %} 
+	<table bgcolor=black width=400>
+		<tr valign=center>
+			<td >
+			<img src="/static/pictures/helmets/{{ team.short }}.gif" width=75 height=75>
+			</td>
+			<th>{{ team.long }}</th>
+		<tr>
+	</table>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}

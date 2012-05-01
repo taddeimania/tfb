@@ -1,0 +1,40 @@
+{% extends "base_ladmin_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+{% block header_auth %}
+<div id='league_admin' class='draft_admin'>
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+            <table bgcolor=black width=400>
+                <tr valign=center>
+                    <th>Draft
+                    </th>
+                        <tr bgcolor='white'>
+                            <td>
+                                {% if ready_to_draft %}
+                                {% if not draft_data_exists %}<blockquote><li class='header1'><a href="/leagueadmin/create">Create Draft Data</a></li></blockquote>{% endif %}
+                                <blockquote><li class='header1'><a href="/draft">Enter Draft Picks</a></li></blockquote>
+                                <blockquote><li class='header1'>Confirm Draft Choices</li></blockquote>
+                                <blockquote><li class='header1'>Submit Draft</li></blockquote>
+                                {% endif %}
+                            </td>
+                        </tr>
+                </tr>
+            </table>
+        {% endpart %}
+    {% endinclude %}
+</div>
+{% endblock %}
+
+{% block header_noauth %}
+<div id='profile'>
+	{% include "tecmo_outline_table.html" %}
+	{% part class %}nametag{% endpart %}
+	{% part data %} 
+			<p><span class='header2light'>Welcome, new user. Please <a href='/login'>log in.</a></span></p>
+	{% endpart %}
+	{% endinclude %}
+</div>
+{% endblock %}

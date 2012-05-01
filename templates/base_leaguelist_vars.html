@@ -1,0 +1,27 @@
+{% extends "base_leaguelist_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+
+{% block header_auth %}
+
+<table width=100% bgcolor=black>
+	{% for team in teams %}
+    {% if forloop.first %}
+    <tr bgcolor=white>
+        <td> <span class='header2'>Teams in "{{ team.league.lname }}"</span></td>
+    </tr>
+    <tr bgcolor=white></tr><tr bgcolor=white></tr>
+    {% endif %}
+	<tr bgcolor=white>
+		<td> <span class='header2'>{% if team.name == '' %}TEAM NAME NOT SET{% else %}{{ team.name }}{% endif %} ( {{ team.owner.user.username }} )</span></td>
+	</tr>
+    {% empty %}
+    <tr bgcolor=white>
+        <td> <span class='header2'>Empty League</span></td>
+    </tr>
+	{% endfor %}
+</table>
+
+{% endblock %}

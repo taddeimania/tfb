@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+{% if user.is_authenticated %}
+	{% block header_auth %}{% endblock %}
+    {% block quick_roster %}{% endblock %}
+{% else %}
+	{% block header_noauth %}{% endblock %}
+{% endif %}
+
+{% endblock %}
