@@ -73,17 +73,24 @@ def my_team_page(request):
 
     return default_response(locals(), request, 'base_myteam_vars.html')
 
-def get_top_ten_for_pos(posid):
+def get_top_ten_for_pos(posid, user=None):
     CACHE_TIMEOUT = 360
     top_pos = "top{}s".format(posid)
     top_list = []
+    if not user:
+        search_criteria = Player.objects.filter(pos__startswith=posid.upper())
+    else:
+        search_criteria = logic.avail_list(user, 'QB')
     if not cache.get(top_pos):
-        for player in Player.objects.filter(pos__startswith=posid.upper()):
-            top_list.append(player.SeasonTotal())
-            top_list.sort(key=lambda x: x.Allfanpts, reverse=True)
-        top_list = top_list[:10]
-        cache.set(top_pos, top_list, CACHE_TIMEOUT)
-        return top_list
+        try:
+            for player in search_criteria:
+                top_list.append(player.SeasonTotal())
+                top_list.sort(key=lambda x: x.Allfanpts, reverse=True)
+            top_list = top_list[:10]
+            cache.set(top_pos, top_list, CACHE_TIMEOUT)
+            return top_list
+        except:
+            return
     else:
         return cache.get(top_pos)
 
@@ -110,35 +117,12 @@ def playerpage(request, arg=None):
     elif str(arg).upper() == 'TOPAVAIL':
         top = True
         avail = True
-        try:
-            user = request.user
-            for player in logic.avail_list(user, 'QB'):
-                topqbs.append(player.SeasonTotal())
-            topqbs.sort(key=lambda x: x.Allfanpts, reverse=True)
-            topqbs = topqbs[:10]
-
-            for player in logic.avail_list(user, 'RB'):
-                toprbs.append(player.SeasonTotal())
-            toprbs.sort(key=lambda x: x.Allfanpts, reverse=True)
-            toprbs = toprbs[:10]
-
-            for player in logic.avail_list(user, 'WR'):
-                topwrs.append(player.SeasonTotal())
-            topwrs.sort(key=lambda x: x.Allfanpts, reverse=True)
-            topwrs = topwrs[:10]
-
-            for player in logic.avail_list(user, 'TE'):
-                toptes.append(player.SeasonTotal())
-            toptes.sort(key=lambda x: x.Allfanpts, reverse=True)
-            toptes = toptes[:10]
-
-            for player in logic.avail_list(user, 'K'):
-                topks.append(player.SeasonTotal())
-            topks.sort(key=lambda x: x.Allfanpts, reverse=True)
-            topks = topks[:10]
-        except:
-            pass
-
+        user = request.user
+        topqbs = get_top_ten_for_pos('QB', user=user)
+        toprbs = get_top_ten_for_pos('RB', user=user)
+        topwrs = get_top_ten_for_pos('WR', user=user)
+        toptes = get_top_ten_for_pos('TE', user=user)
+        topks = get_top_ten_for_pos('K', user=user)
 
 
     elif str(arg).upper() in POS_LIST:
