@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
+from django.core.cache import cache
 from DisplayLeague import DisplayLeague
 import joel
 import sys
@@ -22,6 +23,7 @@ MAX_WR = 2
 MAX_TE = 1
 MAX_K = 1
 POS_LIST = ['QB', 'RB', 'RB', 'WR', 'WR', 'TE', 'K']
+CACHE_TIMEOUT = 30
 
 def default_response( context, request, template=None ):
     """ Returns a default response using the previous function's
@@ -71,6 +73,20 @@ def my_team_page(request):
 
     return default_response(locals(), request, 'base_myteam_vars.html')
 
+def get_top_ten_for_pos(posid):
+    CACHE_TIMEOUT = 360
+    top_pos = "top{}s".format(posid)
+    top_list = []
+    if not cache.get(top_pos):
+        for player in Player.objects.filter(pos__startswith=posid.upper()):
+            top_list.append(player.SeasonTotal())
+            top_list.sort(key=lambda x: x.Allfanpts, reverse=True)
+        top_list = top_list[:10]
+        cache.set(top_pos, top_list, CACHE_TIMEOUT)
+        return top_list
+    else:
+        return cache.get(top_pos)
+
 def playerpage(request, arg=None):
     """pylint """
     playerstats = []
@@ -85,30 +101,12 @@ def playerpage(request, arg=None):
 
     if str(arg).upper() == 'TOP':
         top = True
-        for player in Player.objects.filter(pos__startswith='QB'):
-            topqbs.append(player.SeasonTotal())
-        topqbs.sort(key=lambda x: x.Allfanpts, reverse=True)
-        topqbs = topqbs[:10]
+        topqbs = get_top_ten_for_pos('QB')
+        toprbs = get_top_ten_for_pos('RB')
+        topwrs = get_top_ten_for_pos('WR')
+        toptes = get_top_ten_for_pos('TE')
+        topks = get_top_ten_for_pos('K')
 
-        for player in Player.objects.filter(pos__startswith='RB'):
-            toprbs.append(player.SeasonTotal())
-        toprbs.sort(key=lambda x: x.Allfanpts, reverse=True)
-        toprbs = toprbs[:10]
-
-        for player in Player.objects.filter(pos__startswith='WR'):
-            topwrs.append(player.SeasonTotal())
-        topwrs.sort(key=lambda x: x.Allfanpts, reverse=True)
-        topwrs = topwrs[:10]
-
-        for player in Player.objects.filter(pos__startswith='TE'):
-            toptes.append(player.SeasonTotal())
-        toptes.sort(key=lambda x: x.Allfanpts, reverse=True)
-        toptes = toptes[:10]
-
-        for player in Player.objects.filter(pos__startswith='K'):
-            topks.append(player.SeasonTotal())
-        topks.sort(key=lambda x: x.Allfanpts, reverse=True)
-        topks = topks[:10]
     elif str(arg).upper() == 'TOPAVAIL':
         top = True
         avail = True
@@ -175,6 +173,7 @@ def playerpage(request, arg=None):
                 playerstats.sort(key=lambda x: x.week, reverse=False)
         except Player.DoesNotExist:
             pass
+
 
     return default_response(locals(), request, 'base_playerpage_vars.html')
 
@@ -449,6 +448,7 @@ def joinleague(request):
 
 class PlayerPageView(TemplateView):
     template_name = "base_player_vars.html"
+    curweek = logic.getweek()
 
     def get_user_league(self, user):
         try:
@@ -481,7 +481,7 @@ class PlayerPageView(TemplateView):
             return [False, None]
 
     def get_context_data(self, **kwargs):
-        self.curweek = logic.getweek()
+
         player_id = kwargs['player_id']
         self.player = Player.objects.get(pk=player_id)
         self.user = self.request.user
@@ -504,12 +504,31 @@ class PlayerPageView(TemplateView):
     def post(self, *args, **kwargs):
         player_id = kwargs['player_id']
         self.player = Player.objects.get(pk=player_id)
+        seasontotalstats, weekpts, health = self.get_stats_points_health()
         self.user = self.request.user
+        dropstatus = self.get_droppable_status()
         success = logic.drop_player(
-            self.player, Team.objects.get_my_team(self.user), self.user
+            self.player.id, Team.objects.get_my_team(self.user), self.user
         )
-        return success
+        return default_response({
+            'user': self.user,
+            'player': self.player,
+            'schedule': logic.getteamschedule(self.player.pro_team_id),
+            'weekfilter': Stats.objects.filter(player=self.player),
+            'curweek': self.curweek,
+            'seasontotalstats': seasontotalstats,
+            'weekpts': weekpts,
+            'health': health,
+            'dropbutton': dropstatus[0],
+            'owner': dropstatus[1]
+        }, self.request, self.template_name)
 
+    def get_template_vars(self, player_id):
+        self.player = Player.objects.get(pk=player_id)
+        weekpts = [_ for _ in Stats.objects.order_by('week').filter(player=self.player)]
+        schedule = logic.getteamschedule(self.player.pro_team_id)
+        seasontotalstats = self.player.SeasonTotal()
+        return self.player, weekpts, schedule, seasontotalstats
 
 def team_page(request, pro_team_id):
     """ Populate the base team vars template with team data that matches

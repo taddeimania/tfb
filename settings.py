@@ -85,8 +85,12 @@ CONTEXT_PROCESSORS = (
     'pybb.context_processors.processor',
 )
 
-PYBB_ENABLE_ANONYMOUS_POST = True
-PYBB_ANONYMOUS_USERNAME = 'Anonymous'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        }
+}
 
 LOGGING = {
     'version': 1,
