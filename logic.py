@@ -127,7 +127,7 @@ def drop_player(player, team, user):
     """
     player = Player.objects.get(pk=player)
     if not player.is_player_locked():
-        Roster.objects.get(week = getweek(), team = team.id, player = player).delete()
+        Roster.objects.get(week=getweek(), team=team.id, player=player).delete()
         add_record(user.userprofile.id, player.id, 'DROP')
     else:
         return "Cannot drop " + Player.objects.get(pk = player).player_name + ", he's already played this week"

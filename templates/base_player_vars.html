@@ -182,10 +182,10 @@
                                             <center>{{ forloop.counter }}</center>
                                         </td>
                                     {% endif %}
-                                {% if p.pro_team_id == var.away %}
-                                    <td>@ <a href="/team/{{ var.home }}" target="_parent">{{ var.home }}</a></td>
+                                {% if player.pro_team_id == var.away %}
+                                    <td>@ {{ var.home }}</td>
                                 {% else %}
-                                    <td><a href="/team/{{ var.away }}" target="_parent">{{ var.away }}</a></td>
+                                    <td>{{ var.away }}</td>
                                 {% endif %}
                                 </tr>
                             {% endfor %}
@@ -196,11 +196,11 @@
                     <td valign="top">
                         <table width="100%">
                             <tr valign="top">
-                                <td><center><span class='header1'>{{ p.player_name }}<br/>( {{ player.pos }} )</span><br/><header>{{ p.pro_team.long }}<br/></header></center></td>
+                                <td><center><span class='header1'>{{ player.player_name }}<br/>( {{ player.pos }} )</span><br/><header>{{ player.pro_team.long }}<br/></header></center></td>
                             </tr>
                             <tr valign="top">
-                                <td><center><span class='header1'>Owned By:</span></br><header><a href="/uteam/{{ owner.id }}" target=_parent>{{ owner.name }}</a></header></center><br/>
-                                    {% if dropbutton %}<form action='.' method='POST'>{% csrf_token %}<input type="hidden" name="del_player" value="{{ p.id }}"/><input type="submit" value="Drop" /></form>{% endif %}
+                                <td><center><span class='header1'>Owned By:</span></br><header><a href="/uteam/{{ owner.id }}" target=_parent>{{ owner.team.name }}</a></header></center><br/>
+                                    {% if dropbutton %}<form action='.' method='POST'>{% csrf_token %}<input type="hidden" name="del_player" value="{{ player.id }}"/><input type="submit" value="Drop" /></form>{% endif %}
                                 </td></tr>
                         </table>
                     </td>
@@ -213,7 +213,7 @@
 {% block dropconf %}
     <table width=100% bgcolor=black>
         <tr bgcolor=white>
-            <td width=50><img src="/static/pictures/{{ p.picture|upper }}.gif" width=50 height=50></td><td><span class='header1'><a href="/player/{{ p.id }}" target="card">{{ p.player_name}}</a></span></td>
+            <td width=50><img src="/static/pictures/{{ player.picture|upper }}.gif" width=50 height=50></td><td><span class='header1'><a href="/player/{{ player.id }}" target="card">{{ player.player_name}}</a></span></td>
         </tr>
         <tr bgcolor=white>
             <td width=50 colspan=2><span class='header2'>{% if success %}<center>{{ success }}</center>{% else %}<center>Player Dropped Successfully!</center>{% endif %}</span></td>

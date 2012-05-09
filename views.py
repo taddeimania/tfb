@@ -5,6 +5,8 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
+from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
 from DisplayLeague import DisplayLeague
 import joel
 import sys
@@ -35,11 +37,6 @@ def default_response( context, request, template=None ):
     return render_to_response(
         template, context, context_instance=RequestContext(request)
     )
-
-def livetest(request):
-    """ pylint lover
-    """
-    return default_response(locals(), request, 'livetest.html')
 
 def logout_user(request):
     """ Process logout request for user and redirect to login screen 
@@ -89,27 +86,27 @@ def playerpage(request, arg=None):
     if str(arg).upper() == 'TOP':
         top = True
         for player in Player.objects.filter(pos__startswith='QB'):
-            topqbs.append(player.SeasonTotal(player.id))
+            topqbs.append(player.SeasonTotal())
         topqbs.sort(key=lambda x: x.Allfanpts, reverse=True)
         topqbs = topqbs[:10]
 
         for player in Player.objects.filter(pos__startswith='RB'):
-            toprbs.append(player.SeasonTotal(player.id))
+            toprbs.append(player.SeasonTotal())
         toprbs.sort(key=lambda x: x.Allfanpts, reverse=True)
         toprbs = toprbs[:10]
 
         for player in Player.objects.filter(pos__startswith='WR'):
-            topwrs.append(player.SeasonTotal(player.id))
+            topwrs.append(player.SeasonTotal())
         topwrs.sort(key=lambda x: x.Allfanpts, reverse=True)
         topwrs = topwrs[:10]
 
         for player in Player.objects.filter(pos__startswith='TE'):
-            toptes.append(player.SeasonTotal(player.id))
+            toptes.append(player.SeasonTotal())
         toptes.sort(key=lambda x: x.Allfanpts, reverse=True)
         toptes = toptes[:10]
 
         for player in Player.objects.filter(pos__startswith='K'):
-            topks.append(player.SeasonTotal(player.id))
+            topks.append(player.SeasonTotal())
         topks.sort(key=lambda x: x.Allfanpts, reverse=True)
         topks = topks[:10]
     elif str(arg).upper() == 'TOPAVAIL':
@@ -118,27 +115,27 @@ def playerpage(request, arg=None):
         try:
             user = request.user
             for player in logic.avail_list(user, 'QB'):
-                topqbs.append(player.SeasonTotal(player.id))
+                topqbs.append(player.SeasonTotal())
             topqbs.sort(key=lambda x: x.Allfanpts, reverse=True)
             topqbs = topqbs[:10]
 
             for player in logic.avail_list(user, 'RB'):
-                toprbs.append(player.SeasonTotal(player.id))
+                toprbs.append(player.SeasonTotal())
             toprbs.sort(key=lambda x: x.Allfanpts, reverse=True)
             toprbs = toprbs[:10]
 
             for player in logic.avail_list(user, 'WR'):
-                topwrs.append(player.SeasonTotal(player.id))
+                topwrs.append(player.SeasonTotal())
             topwrs.sort(key=lambda x: x.Allfanpts, reverse=True)
             topwrs = topwrs[:10]
 
             for player in logic.avail_list(user, 'TE'):
-                toptes.append(player.SeasonTotal(player.id))
+                toptes.append(player.SeasonTotal())
             toptes.sort(key=lambda x: x.Allfanpts, reverse=True)
             toptes = toptes[:10]
 
             for player in logic.avail_list(user, 'K'):
-                topks.append(player.SeasonTotal(player.id))
+                topks.append(player.SeasonTotal())
             topks.sort(key=lambda x: x.Allfanpts, reverse=True)
             topks = topks[:10]
         except:
@@ -149,7 +146,7 @@ def playerpage(request, arg=None):
     elif str(arg).upper() in POS_LIST:
         pos = True
         for player in Player.objects.filter(pos__startswith=str(arg).upper):
-            playerstats.append(player.SeasonTotal(player.id))
+            playerstats.append(player.SeasonTotal())
         playerstats.sort(key=lambda x: x.Allfanpts, reverse=True)
     elif not arg:
         search = True
@@ -282,29 +279,6 @@ def matchup_page(request, matchup_id=None):
 
     return default_response(locals(), request, 'base_matchup_vars.html')
 
-def profile_page(request):
-    """ Process all of the profile related variables, apply logic checks for
-        users that aren't currently in a league:
-        
-        no team = user is not in a league because you cannot be in a league
-        without a valid team
-    """
-    user = request.user
-    try:
-        team = Team.objects.get(owner=user.userprofile.id)
-    except Team.DoesNotExist:
-        team = 'None'
-    if team != 'None':
-        league = League.objects.get(id=team.league_id)
-        roster = logic.roster_to_dict(
-            Roster.objects.filter(week=logic.getweek(), team=team.id)
-        )
-    else:
-        league = 'None'
-        roster = 'None'
-    
-    return default_response(locals(), request, 'base_profile_vars.html')
-
 def profileedit(request):
     """ Display and process profile editing page
     """
@@ -403,13 +377,11 @@ def list_player(request, posid):
         playerlist = logic.avail_list(user, posid)
         return default_response(locals(), request, 'base_list_vars.html')
 	
-def pickup(request):
+def pickup(request, posid):
     """ Checks authentication for adding a player page
     """
     user = request.user
     return default_response(locals(), request, 'base_pickup_vars.html')
-
-
 
 def league_list(request, league_id):
     """ Returns list of teams in your league.  Used for a modal popup.
@@ -475,50 +447,70 @@ def joinleague(request):
 
     return default_response(locals(), request, 'base_joinleague_vars.html')
 
-def home(request):
-    """ Sends user to the home.html page - no variables needed 
-    """
-    user = request.user
-    return default_response(locals(), request, 'home.html')
+class PlayerPageView(TemplateView):
+    template_name = "base_player_vars.html"
 
-def player_page(request, player_id):
-    """ Populate the base player vars template with player data that matches
-    	the requested player_id.
-    """
-    user = request.user
-    try:
-        userleague = Team.objects.get(owner=user.userprofile).league
-    except:
-        userleague = 0
-    player = Player.objects.get(pk=player_id)
-    schedule = logic.getteamschedule(player.pro_team_id)
-    weekfilter = Stats.objects.filter(player=player.id)
-    curweek = logic.getweek()
-    try:
-        seasontotalstats = Player.SeasonTotal(player, player.id)
-        points = Stats.objects.order_by('week').filter(player=player.id)
-        weekpts = [_ for _ in points]
-        if curweek == 1:
-            health = 'OK'
-        else:
-            health = Stats.objects.get(player=player.id, week=(curweek-1)).health
-    except:
-        pass
-    try:
-        owner = Team.objects.get_owner_for_player_this_week(
-            userleague, player
+    def get_user_league(self, user):
+        try:
+            league = Team.objects.get(owner=user.userprofile).league
+        except Exception:
+            league = None
+        return league
+
+    def get_stats_points_health(self):
+        try:
+            seasontotalstats = self.player.SeasonTotal()
+            points = Stats.objects.order_by('week').filter(player=self.player.id)
+            weekpts = [_ for _ in points]
+            if self.curweek == 1:
+                health = 'OK'
+            else:
+                health = Stats.objects.get(player=self.player, week=(self.curweek-1)).health
+            return seasontotalstats, weekpts, health
+        except Exception:
+            return None, None, None
+
+    def get_droppable_status(self):
+        try:
+
+            owner = Team.objects.get_owner_for_player_this_week(self.user_league, self.player)
+            if owner == self.user.userprofile:
+                return [True, owner]
+            return [False, owner]
+        except Exception:
+            return [False, None]
+
+    def get_context_data(self, **kwargs):
+        self.curweek = logic.getweek()
+        player_id = kwargs['player_id']
+        self.player = Player.objects.get(pk=player_id)
+        self.user = self.request.user
+        self.user_league = self.get_user_league(self.user)
+        seasontotalstats, weekpts, health = self.get_stats_points_health()
+        dropstatus = self.get_droppable_status()
+        return {
+            'user': self.user,
+            'player': self.player,
+            'schedule': logic.getteamschedule(self.player.pro_team_id),
+            'weekfilter': Stats.objects.filter(player=self.player),
+            'curweek': self.curweek,
+            'seasontotalstats': seasontotalstats,
+            'weekpts': weekpts,
+            'health': health,
+            'dropbutton': dropstatus[0],
+            'owner': dropstatus[1]
+        }
+
+    def post(self, *args, **kwargs):
+        player_id = kwargs['player_id']
+        self.player = Player.objects.get(pk=player_id)
+        self.user = self.request.user
+        success = logic.drop_player(
+            self.player, Team.objects.get_my_team(self.user), self.user
         )
-        if owner == Team.objects.get_my_team(user):
-            dropbutton = True
-            drop = request.POST.get('del_player','')
-            if drop:
-                success = logic.drop_player(
-                    drop, Team.objects.get_my_team(user), user
-                )
-    except:
-        owner = None
-    return default_response(locals(), request, 'base_player_vars.html')
-	
+        return success
+
+
 def team_page(request, pro_team_id):
     """ Populate the base team vars template with team data that matches
     	the requested pro_team_id
@@ -534,11 +526,6 @@ def team_page(request, pro_team_id):
     except Pro_Team.DoesNotExist:
         pass
     return default_response(locals(), request, 'base_playerpage_vars.html')
-	
-def blank(request):
-    """ Used for iframe landing pages... probably could be named better.
-    """
-    return render_to_response('blank.html')
 
 def transactions_page(request):
     """ Get latest 15 transactions for your league.
@@ -653,3 +640,31 @@ def draftpage(request, arg=None):
         except Draft.DoesNotExist:
             instructions = False
     return default_response(locals(), request, 'base_draft_vars.html')
+
+class ProfileView(TemplateView):
+    template_name = "base_profile_vars.html"
+
+    def get_team(self):
+        try:
+            return Team.objects.get(owner=self.user.userprofile.id)
+        except Team.DoesNotExist:
+            return 'None'
+
+    def get_context_data(self, **kwargs):
+        self.user = self.request.user
+        self.team = self.get_team()
+        return {
+            'user': self.user,
+            'team': self.team
+        }
+
+class HomeView(TemplateView):
+    template_name = "home.html"
+
+    def get_context_data(self, **kwargs):
+        return {
+            'user': self.request.user
+        }
+
+class BlankView(TemplateView):
+    template_name = "blank.html"

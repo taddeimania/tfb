@@ -1,3 +1,4 @@
+from telepathy._generated.errors import DoesNotExist
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -40,15 +41,14 @@ class Player(models.Model):
         except:
             return False
 
-    def SeasonTotal(self, player):
-        p = Player.objects.get(pk=player)
-        stats = Stats.objects.filter(player=p.id)
+    def SeasonTotal(self):
+        stats = Stats.objects.filter(player=self.id)
         try:
-            self.Bye = Stats.objects.get(player = p, tm2 ='BYE').week
+            self.Bye = Stats.objects.get(player=self.id, tm2='BYE').week
         except:
             self.Bye = "?"
         try:
-            self.Health = Stats.objects.get(players = p, week = int(getweek())-1).health
+            self.Health = Stats.objects.get(players=self.id, week=int(getweek())-1).health
         except:
             self.Health = "OK"
         self.Allpa = sum([x.pa for x in stats])
@@ -170,6 +170,13 @@ class UserProfile(models.Model):
             return True
         return False
 
+    @property
+    def team(self):
+        try:
+            return Team.objects.get(owner=self)
+        except DoesNotExist:
+            return None
+
     post_save.connect(create_user_profile, sender=User)
 
 class TeamManager(models.Manager):
@@ -177,7 +184,7 @@ class TeamManager(models.Manager):
     def get_owner_for_player_this_week(self, userleague, player):
         return self.get(
             league=userleague, roster__player=player, roster__week=getweek()
-        )
+        ).owner
 
     def get_my_team(self, user):
         return self.get(owner=user.userprofile)
