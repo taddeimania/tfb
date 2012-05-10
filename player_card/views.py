@@ -38,7 +38,6 @@ class PlayerPageView(TemplateView):
 
     def get_droppable_status(self):
         try:
-
             owner = player_models.Team.objects.get_owner_for_player_this_week(self.user_league, self.player)
             if owner == self.user.userprofile:
                 return [True, owner]
@@ -47,7 +46,6 @@ class PlayerPageView(TemplateView):
             return [False, None]
 
     def get_context_data(self, **kwargs):
-
         player_id = kwargs['player_id']
         self.player = player_models.Player.objects.get(pk=player_id)
         self.user = self.request.user

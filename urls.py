@@ -2,6 +2,7 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 from myproject import views as base_views
 from player_card import views as player_card_views
+from top_player_list import views as top_player_list
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -10,7 +11,7 @@ urlpatterns = patterns('',
 	url(r'^players/$', base_views.HomeView.as_view(), name='home'),
 	url(r'^blue/$', base_views.BlankView.as_view(), name='blank'),
 	url(r'^player/(?P<player_id>\w+)/$', player_card_views.PlayerPageView.as_view(), name='player'),
-    url(r'^uteam/(?P<team_id>\w+)/$', base_views.OtherTeamView.as_view(), name='uteam'),
+    url(r'^uteam/(?P<team_id>\w+)/$', base_views.NotMyTeamView.as_view(), name='uteam'),
     url(r'^about/$', 'myproject.views.about',name='about'),
     url(r'^uteam/$', 'myproject.views.my_team_page',name='myteam'),
     url(r'^myteam/$', 'myproject.views.my_team_page',name='myteam'),
@@ -32,8 +33,8 @@ urlpatterns = patterns('',
     url(r'^sysadmin/$', 'myproject.views.sysadmin',name='sysadmin'),
     url(r'^sysadmin/(?P<arg>\w+)/(?P<argval>.*?)$', 'myproject.views.sysadmin',name='sysadmin'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^playerpage/$','myproject.views.playerpage'),
-    url(r'^playerpage/(?P<arg>\w+)','myproject.views.playerpage'),
+    url(r'^playerpage/$','myproject.top_player_list.views.playerpage'),
+    url(r'^playerpage/(?P<arg>\w+)','myproject.top_player_list.views.playerpage'),
     url(r'^leaguelist/(?P<league_id>\w+)','myproject.views.league_list'),
     url(r'^transactions/$', 'myproject.views.transactions_page'),
 )

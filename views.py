@@ -1,13 +1,12 @@
 """make pylint happy"""
 from django.http import HttpResponseRedirect
-from django.utils import simplejson
+
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView, View
-from django.core.cache import cache
 from DisplayLeague import DisplayLeague
 import joel
 import sys
@@ -73,151 +72,6 @@ def my_team_page(request):
 
     return default_response(locals(), request, 'base_myteam_vars.html')
 
-def get_top_ten_for_pos(posid, user=None):
-    CACHE_TIMEOUT = 360
-    top_pos = "top{}s".format(posid)
-    top_list = []
-    if not user:
-        search_criteria = Player.objects.filter(pos__startswith=posid.upper())
-    else:
-        search_criteria = logic.avail_list(user, 'QB')
-    if not cache.get(top_pos):
-        try:
-            for player in search_criteria:
-                top_list.append(player.SeasonTotal())
-                top_list.sort(key=lambda x: x.Allfanpts, reverse=True)
-            top_list = top_list[:10]
-            cache.set(top_pos, top_list, CACHE_TIMEOUT)
-            return top_list
-        except:
-            return
-    else:
-        return cache.get(top_pos)
-
-def playerpage(request, arg=None):
-    """pylint """
-    playerstats = []
-    topqbs = []
-    toprbs = []
-    topwrs = []
-    toptes = []
-    topks = []
-
-    player = request.POST.get('playersearch','')
-    players = simplejson.dumps([x.player_name for x in Player.objects.all()])
-
-    if str(arg).upper() == 'TOP':
-        top = True
-        topqbs = get_top_ten_for_pos('QB')
-        toprbs = get_top_ten_for_pos('RB')
-        topwrs = get_top_ten_for_pos('WR')
-        toptes = get_top_ten_for_pos('TE')
-        topks = get_top_ten_for_pos('K')
-
-    elif str(arg).upper() == 'TOPAVAIL':
-        top = True
-        avail = True
-        user = request.user
-        topqbs = get_top_ten_for_pos('QB', user=user)
-        toprbs = get_top_ten_for_pos('RB', user=user)
-        topwrs = get_top_ten_for_pos('WR', user=user)
-        toptes = get_top_ten_for_pos('TE', user=user)
-        topks = get_top_ten_for_pos('K', user=user)
-
-
-    elif str(arg).upper() in POS_LIST:
-        pos = True
-        for player in Player.objects.filter(pos__startswith=str(arg).upper):
-            playerstats.append(player.SeasonTotal())
-        playerstats.sort(key=lambda x: x.Allfanpts, reverse=True)
-    elif not arg:
-        search = True
-        if player:
-            playersearch = True
-            search = False
-            try:
-                player = Player.objects.get(player_name=player)
-                arg = player.id
-            except Player.DoesNotExist:
-                pass
-            try:
-                playerobj = Player.objects.get(pk=arg)
-                for player in Stats.objects.filter(player=arg):
-                    playerstats.append(player)
-                    playerstats.sort(key=lambda x: x.week, reverse=False)
-            except Player.DoesNotExist:
-                pass
-        pass
-    else:
-        playersearch = True
-        try:
-            playerobj = Player.objects.get(pk=arg)
-            for player in Stats.objects.filter(player=arg):
-                playerstats.append(player)
-                playerstats.sort(key=lambda x: x.week, reverse=False)
-        except Player.DoesNotExist:
-            pass
-
-
-    return default_response(locals(), request, 'base_playerpage_vars.html')
-
-class OtherTeamView(TemplateView):
-    template_name = 'base_uteam_vars.html'
-    req_league = None
-
-    def get_template_data(self, **kwargs):
-        team_id = kwargs['team_id']
-        try:
-            self.team = Team.objects.get(
-                pk=team_id,
-                league=self.request.user.userprofile.team.league
-            )
-        except Team.DoesNotExist:
-            return self.fail()
-
-        roster = logic.roster_to_dict(
-            Roster.objects.filter(week=logic.getweek(), team=self.team)
-        )
-        owner = Team.objects.get(pk=team_id)
-        return {
-            'user': self.request.user,
-            'roster': roster,
-            'owner': owner
-        }
-
-    def get_context_data(self, *args, **kwargs):
-        return self.get_template_data(**kwargs)
-
-    def fail(self):
-        return {
-            'fail': True,
-            'failmessage': "Team Doesn't Exist"
-        }
-
-def uteam(request, team_id):
-    """ Send required variables to display another owners team
-    """
-    user = request.user
-
-    try:
-        req_league = Team.objects.get(pk=team_id).league
-    except Team.DoesNotExist:
-        fail = True
-        failmessage = "Team Doesn't Exist"
-        return default_response(locals(), request, 'base_uteam_vars.html')
-
-    if req_league == Team.objects.get(owner=user.userprofile).league:
-        roster = logic.roster_to_dict(
-            Roster.objects.filter(
-                week = logic.getweek(), team=team_id
-            )
-        )
-        owner = Team.objects.get(pk=team_id)
-    else:
-        fail = True
-        failmessage = "User's team not in your league."
-
-    return default_response(locals(), request, 'base_uteam_vars.html')
 
 def about(request):
     """ Nothing dynamic served up here, just a static about me page.
@@ -592,6 +446,32 @@ def draftpage(request, arg=None):
         except Draft.DoesNotExist:
             instructions = False
     return default_response(locals(), request, 'base_draft_vars.html')
+
+class NotMyTeamView(TemplateView):
+    template_name = 'base_uteam_vars.html'
+
+    def get_context_data(self, *args, **kwargs):
+        team_id = kwargs['team_id']
+        try:
+            self.team = Team.objects.get(
+                pk=team_id,
+                league=self.request.user.userprofile.team.league
+            )
+        except Team.DoesNotExist:
+            return {
+                'fail': True,
+                'failmessage': "Team Doesn't Exist"
+            }
+
+        roster = logic.roster_to_dict(
+            Roster.objects.filter(week=logic.getweek(), team=self.team)
+        )
+        owner = Team.objects.get(pk=team_id)
+        return {
+            'user': self.request.user,
+            'roster': roster,
+            'owner': owner
+        }
 
 class ProfileView(TemplateView):
     template_name = "base_profile_vars.html"
