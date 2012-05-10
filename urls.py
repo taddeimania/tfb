@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
-from myproject.views import ProfileView, HomeView, BlankView, PlayerPageView
-
+from myproject.views import ProfileView, HomeView, BlankView
+from player_card import views as player_card_views
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -9,7 +9,7 @@ urlpatterns = patterns('',
 	url(r'^home/$', HomeView.as_view(), name='home'),
 	url(r'^players/$', HomeView.as_view(), name='home'),
 	url(r'^blue/$', BlankView.as_view(), name='blank'),
-	url(r'^player/(?P<player_id>\w+)/$', PlayerPageView.as_view(), name='player'),
+	url(r'^player/(?P<player_id>\w+)/$', player_card_views.PlayerPageView.as_view(), name='player'),
     url(r'^uteam/(?P<team_id>\w+)/$', 'myproject.views.uteam',name='uteam'),
     url(r'^about/$', 'myproject.views.about',name='about'),
     url(r'^uteam/$', 'myproject.views.my_team_page',name='myteam'),
