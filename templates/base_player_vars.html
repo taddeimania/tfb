@@ -199,7 +199,7 @@
                                 <td><center><span class='header1'>{{ player.player_name }}<br/>( {{ player.pos }} )</span><br/><header>{{ player.pro_team.long }}<br/></header></center></td>
                             </tr>
                             <tr valign="top">
-                                <td><center><span class='header1'>Owned By:</span></br><header><a href="/uteam/{{ owner.id }}" target=_parent>{{ owner.team.name }}</a></header></center><br/>
+                                <td><center><span class='header1'>Owned By:</span></br><header><a href="/uteam/{{ owner.team.id }}" target=_parent>{{ owner.team.name }}</a></header></center><br/>
                                     {% if dropbutton %}<form action='.' method='POST'>{% csrf_token %}<input type="hidden" name="del_player" value="{{ player.id }}"/><input type="submit" value="Drop" /></form>{% endif %}
                                 </td></tr>
                         </table>

@@ -1,16 +1,16 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
-from myproject.views import ProfileView, HomeView, BlankView
+from myproject import views as base_views
 from player_card import views as player_card_views
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', HomeView.as_view(), name='home'),
-	url(r'^home/$', HomeView.as_view(), name='home'),
-	url(r'^players/$', HomeView.as_view(), name='home'),
-	url(r'^blue/$', BlankView.as_view(), name='blank'),
+    url(r'^$', base_views.HomeView.as_view(), name='home'),
+	url(r'^home/$', base_views.HomeView.as_view(), name='home'),
+	url(r'^players/$', base_views.HomeView.as_view(), name='home'),
+	url(r'^blue/$', base_views.BlankView.as_view(), name='blank'),
 	url(r'^player/(?P<player_id>\w+)/$', player_card_views.PlayerPageView.as_view(), name='player'),
-    url(r'^uteam/(?P<team_id>\w+)/$', 'myproject.views.uteam',name='uteam'),
+    url(r'^uteam/(?P<team_id>\w+)/$', base_views.OtherTeamView.as_view(), name='uteam'),
     url(r'^about/$', 'myproject.views.about',name='about'),
     url(r'^uteam/$', 'myproject.views.my_team_page',name='myteam'),
     url(r'^myteam/$', 'myproject.views.my_team_page',name='myteam'),
@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     url(r'^leagueadmin/(?P<arg>\w+)/$', 'myproject.views.leagueadmin',name='leagueadmin'),
 	url(r'^login/$', 'django.contrib.auth.views.login'),
 	url(r'^logout/$', 'myproject.views.logout_user',name='logout_user'),
-	url(r'^profile/$', ProfileView.as_view(),name='ProfileView'),
+	url(r'^profile/$', base_views.ProfileView.as_view(),name='ProfileView'),
     url(r'^profile/edit/$', 'myproject.views.profileedit',name='profileedit'),
 	url(r'^joinleague/$', 'myproject.views.joinleague',name='joinleague'),
 	url(r'^pickup/(?P<posid>\w+)/$', 'myproject.views.pickup',name='pickup'),

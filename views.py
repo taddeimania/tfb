@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, View
 from django.core.cache import cache
 from DisplayLeague import DisplayLeague
 import joel
@@ -160,6 +160,39 @@ def playerpage(request, arg=None):
 
 
     return default_response(locals(), request, 'base_playerpage_vars.html')
+
+class OtherTeamView(TemplateView):
+    template_name = 'base_uteam_vars.html'
+    req_league = None
+
+    def get_template_data(self, **kwargs):
+        team_id = kwargs['team_id']
+        try:
+            self.team = Team.objects.get(
+                pk=team_id,
+                league=self.request.user.userprofile.team.league
+            )
+        except Team.DoesNotExist:
+            return self.fail()
+
+        roster = logic.roster_to_dict(
+            Roster.objects.filter(week=logic.getweek(), team=self.team)
+        )
+        owner = Team.objects.get(pk=team_id)
+        return {
+            'user': self.request.user,
+            'roster': roster,
+            'owner': owner
+        }
+
+    def get_context_data(self, *args, **kwargs):
+        return self.get_template_data(**kwargs)
+
+    def fail(self):
+        return {
+            'fail': True,
+            'failmessage': "Team Doesn't Exist"
+        }
 
 def uteam(request, team_id):
     """ Send required variables to display another owners team
