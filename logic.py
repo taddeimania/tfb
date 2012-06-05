@@ -154,19 +154,18 @@ def stats_to_dict(curstats):
         'tm2':curstats.tm2,
         }
 
-def roster_to_dict(roster):
+def roster_to_dict(roster, blank_stats=None):
     """ Wow this was painful to write
     """
     roster_dict = {}
     pos_list_copy = ['QB','RB','RB','WR','WR','TE','K']
-
 
     for player in roster:
         week = roster[0].week
         pos = player.player.pos
         posid = pos
         if (s for s in pos_list_copy if pos in s):
-            if Stats.objects.filter(player=player.player, week=week) and (week <= getweek()):
+            if (Stats.objects.filter(player=player.player, week=week).exists() and (week <= getweek())) and not blank_stats:
                 info = stats_to_dict(Stats.objects.get(player=player.player, week=week))
             else:
                 info = {'name':player.player, 'id':player.player.id}

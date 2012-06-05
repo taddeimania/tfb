@@ -134,10 +134,12 @@ def matchup_page(request, matchup_id=None):
 
     if matchup.week > _week:
         team_one_roster = logic.roster_to_dict(
-            Roster.objects.filter(week=_week, team=team_one)
+            Roster.objects.filter(week=_week, team=team_one),
+            blank_stats=False
         )
         team_two_roster = logic.roster_to_dict(
-            Roster.objects.filter(week=_week, team=team_two)
+            Roster.objects.filter(week=_week, team=team_two),
+            blank_stats=False
         )
     else:
         team_one_roster = logic.roster_to_dict(
