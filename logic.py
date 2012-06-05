@@ -19,9 +19,11 @@ def avail_list(user, posid):
     team = Team.objects.get(owner = user.userprofile.id)
     plist = Player.objects.filter(pos__startswith=posid).exclude(roster__team__league = team.league,
         roster__week = getweek()).exclude(stats__week = getweek())
-    plist = [_ for _ in plist]
+    plist = [player.SeasonTotal() for player in plist]
     pbyes = Player.objects.filter(pos__startswith=posid, stats__week = getweek(), stats__tm2 = 'BYE').exclude(roster__team__league = team.league,
         roster__week = getweek())
+
+    plist.sort(key=lambda x: x.Allfanpts, reverse=True)
 
     for player in pbyes:
         plist.append(player)
@@ -125,12 +127,12 @@ def draft_avail_players(league):
 def drop_player(player, team, user):
     """ If business rules pass, this will drop a player... kind of wish this was a private method.
     """
-    player = Player.objects.get(pk=player)
-    if not player.is_player_locked():
-        Roster.objects.get(week=getweek(), team=team.id, player=player).delete()
-        add_record(user.userprofile.id, player.id, 'DROP')
+    player_drop = Player.objects.get(pk=player)
+    if not player_drop.is_player_locked():
+        Roster.objects.get(week=getweek(), team=team.id, player=player_drop).delete()
+        add_record(user.userprofile.id, player_drop.id, 'DROP')
     else:
-        return "Cannot drop " + Player.objects.get(pk = player).player_name + ", he's already played this week"
+        return "Cannot drop " + player_drop.player_name + ", he's already played this week"
 
 def stats_to_dict(curstats):
     """ Why is this a dictionary when it could be a beautiful object?
@@ -165,7 +167,7 @@ def roster_to_dict(roster):
         posid = pos
         if (s for s in pos_list_copy if pos in s):
             if Stats.objects.filter(player=player.player, week=week) and (week <= getweek()):
-                info = stats_to_dict(Stats.objects.get(player = player.player, week=week))
+                info = stats_to_dict(Stats.objects.get(player=player.player, week=week))
             else:
                 info = {'name':player.player, 'id':player.player.id}
             info.update({'pic':player.player.picture})
@@ -175,7 +177,6 @@ def roster_to_dict(roster):
             roster_dict.update({posid:info})
 
     return roster_dict
-
 
 def add_record(_userprofile, _player, _action):
     """ Who let the trailing underscore monster in here?

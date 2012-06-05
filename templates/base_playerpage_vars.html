@@ -16,18 +16,18 @@
 {% block header_auth %}
 <div id='research' class='stats'>
     <span class='header2light'>
-
         {% if playersearch %}
             <table>
                 <tr>
                     <td>
                         <img src="/static/pictures/{{ playerobj.picture|upper }}.gif" style="border: solid black 3px">
                     </td>
-                    <td valign="top">
-                         <span class='header2light'>{{ playerobj }} ( {{ playerobj.pos }} )<br/>{{ playerobj.pro_team.long }}<br/>Season Total Points: {{ season_total.Allfanpts }}</span>
+                    <td valign="top" style="padding: 30px;">
+                         <span class='header2light'>{{ playerobj }} ( {{ playerobj.pos }} )<br/>{{ playerobj.pro_team.long }}<br/></span><span class="header1light">Season Total Points: {{ season_total.Allfanpts }}<br/>Health: {{ playerobj.Health }}</span>
                     </td>
                 </tr>
-            </table> {% endif %}
+            </table>
+        {% endif %}
     </span>
     {% include "tecmo_outline_table.html" %}
         {% part data %}
@@ -59,7 +59,7 @@
                     <tr>
                         <td><br/>
                             <span class='header2light'><a href="/playerpage/top" class="dark">Top 10</a></span><br/>
-                            {% if user.is_authenticated %}
+                            {% if user.is_authenticated and user.userprofile.team%}
                             <span class='header2light'><a href="/playerpage/topavail" class="dark">Top 10 Available</a></span>
                             {% endif %}
                         </td>

@@ -6,25 +6,27 @@ from myproject.players import models as player_models
 import logic
 
 def get_top_ten_for_pos(posid, user=None):
-    CACHE_TIMEOUT = 1
-    top_pos = "top{}s".format(posid)
+    CACHE_TIMEOUT = 360
+    top_pos = {'cache_mode': "top{}s".format(posid)}
     top_list = []
     if not user:
         search_criteria = player_models.Player.objects.filter(pos__startswith=posid.upper())
     else:
         search_criteria = logic.avail_list(user, posid)
-    #if not cache.get(top_pos):
-    try:
-        for player in search_criteria:
-            top_list.append(player.SeasonTotal())
-            top_list.sort(key=lambda x: x.Allfanpts, reverse=True)
-        top_list = top_list[:10]
-        #cache.set(top_pos, top_list, CACHE_TIMEOUT)
-        return top_list
-    except Exception:
-        return
-    #else:
-    #    return cache.get(top_pos)
+        top_pos['cache_mode'] = "avail_top{}".format(posid)
+    if not cache.get(top_pos.get('cache_mode', None)):
+        try:
+            for player in search_criteria:
+                top_list.append(player.SeasonTotal())
+                top_list.sort(key=lambda x: x.Allfanpts, reverse=True)
+            top_list = top_list[:10]
+            cache.set(top_pos['cache_mode'], top_list, CACHE_TIMEOUT)
+            return top_list
+        except Exception:
+            return
+    else:
+        return cache.get(top_pos['cache_mode'])
+
 
 
 def get_player_stats(arg, playerstats):
