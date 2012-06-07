@@ -17,6 +17,7 @@ def create_matchup_data():  #no args lol
     shuffled_team_list = [0,0,0,0,0,0,0,0,0,0]
     i = 0
     all_leagues = League.objects.all()
+    all_leagues = [_ for _ in all_leagues]
     for league in all_leagues:
         if not league.is_valid_league():
             all_leagues.remove(league)

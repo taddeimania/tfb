@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load includetag %}
+{% block content %}
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <div style="width: 700px;">
+            <span class="header2light">Tecmo Fantasy Bowl Account Creation</span>
+            <hr/>
+            <form action="" method="post">{% csrf_token %}
+            {% for field in form %}
+                <table style="padding: 5px">
+                <tr>
+                    <td width="300px">
+                        <span class="header2light">{{ field.label_tag }}</span>
+                    </td>
+                    <td style="align: right;">
+                        {{ field }}
+                    </td>
+                </tr>
+                </table>
+            {% endfor %}
+            <input type="submit" value="Submit" />
+            </form>
+        </div>
+    {% endpart %}
+    {% endinclude %}
+{% endblock %}

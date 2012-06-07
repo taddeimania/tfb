@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load includetag %}
+{% block content %}
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <div style="width: 700px;">
+            <span class="header2light">Tecmo Fantasy Bowl Account Creation</span>
+            <hr/>
+            <span class="header2light">Woops!</span><br/>
+            <span class="header1light">Something went wrong with your activation. Email <a href="mailto:jtaddei@gmail.com">Joel</a></span>
+
+            <br/><br/><br/><br/><span class="header2">Supplied Key: {{ activation_key }}</span>
+        </div>
+    {% endpart %}
+    {% endinclude %}
+{% endblock %}

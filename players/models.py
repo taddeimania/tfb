@@ -112,15 +112,10 @@ class Stats(models.Model):
 class LeagueManager(models.Manager):
 
     def get_public(self):
-        return self.filter(invite_code = None)
+        return self.filter(invite_code=None)
 
-class DisplayLeague():
-
-    def __init__(self, i):
-        self.id = i.id
-        self.name = i.lname
-        self.teamcount = i.get_team_count()
-        self.maxteam = i.maxteam
+    def get_team_count(self, id):
+        return Team.objects.filter(league=id).count()
 
 class League(models.Model):
     lname = models.CharField(max_length=30)
@@ -152,9 +147,6 @@ class League(models.Model):
             return True
         else:
             return False
-
-    def get_team_count(self):
-        return self.objects.filter(league = self.id).count()
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)

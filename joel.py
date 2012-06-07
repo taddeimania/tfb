@@ -3,7 +3,7 @@ import menu
 import matchup
 from myproject.settings import PROJECT_ROOT
 
-path=PROJECT_ROOT + "/files"
+path = os.path.join(PROJECT_ROOT, 'files')
 
 def get_file_list():
     return sorted([d for d in os.listdir(path)])

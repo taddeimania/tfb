@@ -46,11 +46,11 @@
                             <a href="/matchup"><img src="/static/pictures/matchup.gif"></a>  |
                             <a href="/playerpage"><img src="/static/pictures/players.gif"></a>  |
                             <a href="/profile"><img src="/static/pictures/profile.gif"></a>
-                            {% else %}
+                        {% else %}
                             <a href="/home"><img src="/static/pictures/home.gif"></a>  |
                             <a href="/playerpage"><img src="/static/pictures/players.gif"></a>  |
                             <a href="/login"><img src="/static/pictures/login.gif"></a>
-                            {% endif %}
+                        {% endif %}
                     </td>
                 </tr>
             </table>
@@ -67,6 +67,7 @@
     </div>
 
     <!-- Main portlet -->
+        <a class="header2light" href="/logout">Logout</a>
     <div id='content-container'>
         {% block content %}{% endblock content %}
     </div>

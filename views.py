@@ -265,27 +265,49 @@ def joinleague(request):
     """ pylint
     """
     user = request.user
+    user_id = user.userprofile.id
     query = request.POST.get('invite_code')
     leaguejoin = request.POST.get('public_league')
 
     try:
-        alreadyinleague = Team.objects.get(owner=user.userprofile.id)
+        alreadyinleague = Team.objects.get(owner=user_id)
     except Team.DoesNotExist:
         alreadyinleague = None
     leaguelist = []
     for league in League.objects.all():
         if league.is_league_available():
-            teamcount = league.get_team_count()
+            teamcount = League.objects.get_team_count(league.id)
             disp_league = DisplayLeague(league)
             leaguelist.append(disp_league)
 
     if query:
-        user = UserProfile.objects.get(id=user.userprofile.id)
         try:
             league = League.objects.get(invite_code=query)
+            count = League.objects.get_team_count(league)
+            if count < league.maxteam:
+                team = Team(
+                    owner=user_id,
+                    league=league,
+                    name="",
+                    win=0,
+                    loss=0,
+                    slogan="",
+                    total_points=0,
+                    total_points_against=0
+                )
+                team.save()
+                success = True
+            else:
+                failmessage = True
+        except League.DoesNotExist:
+            failmessage = True
+
+
+    if leaguejoin:
+        try:
             team = Team(
                 owner=user,
-                league=league,
+                league=League.objects.get(pk=leaguejoin),
                 name="",
                 win=0,
                 loss=0,
@@ -295,27 +317,9 @@ def joinleague(request):
             )
             team.save()
             success = True
+            return league_page(request)
         except League.DoesNotExist:
             failmessage = True
-
-
-    if leaguejoin:
-        user = UserProfile.objects.get(id=user.userprofile.id)
-    try:
-        team = Team(
-            owner=user,
-            league=League.objects.get(pk=leaguejoin),
-            name="",
-            win=0,
-            loss=0,
-            slogan="",
-            total_points=0,
-            total_points_against=0
-        )
-        team.save()
-        success = True
-    except League.DoesNotExist:
-        failmessage = True
 
     return default_response(locals(), request, 'base_joinleague_vars.html')
 

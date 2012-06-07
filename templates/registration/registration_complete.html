@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load includetag %}
+{% block content %}
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <div style="width: 700px;">
+            <span class="header2light">Tecmo Fantasy Bowl Account Creation</span>
+            <hr/>
+            <span class="header1light">Your account has been created and an email has been delivered to the email you supplied.<br/>
+            Go ahead click the link in your email to activate your account.
+            </span>
+        </div>
+    {% endpart %}
+    {% endinclude %}
+{% endblock %}

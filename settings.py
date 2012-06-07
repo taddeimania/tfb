@@ -80,11 +80,12 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'registration',
 )
 CONTEXT_PROCESSORS = (
     'pybb.context_processors.processor',
 )
-
+ACCOUNT_ACTIVATION_DAYS = 7
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -109,3 +110,9 @@ LOGGING = {
         },
     }
 }
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'jtaddei@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv('EMAILPASS')
+EMAIL_PORT = 587

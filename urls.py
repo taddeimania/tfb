@@ -37,4 +37,5 @@ urlpatterns = patterns('',
     url(r'^playerpage/(?P<arg>\w+)','myproject.top_player_list.views.playerpage'),
     url(r'^leaguelist/(?P<league_id>\w+)','myproject.views.league_list'),
     url(r'^transactions/$', 'myproject.views.transactions_page'),
+    url(r'^accounts/', include('registration.backends.default.urls')),
 )

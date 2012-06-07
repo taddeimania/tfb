@@ -51,13 +51,15 @@
                     </td>
                 </tr>
             </table>
-            <input type="hidden" name="save" value="update"/><input type="submit" value="Submit" />
+            <input type="hidden" name="save" value="update"/><input type="submit" value="Update Profile" />
+            </form>
         {% endpart %}
     {% endinclude %}
 </div>
 <div id='profile_edit' class='face_box'>
     {% include "tecmo_outline_table.html" %}
         {% part data %}
+            <form action='' method='POST'>{% csrf_token %}
                 <table>
                     <tr>
                         <td>
@@ -111,8 +113,14 @@
                             <img src='/static/pictures/BE.gif' width=75px height=75px>
                         </td>
                     </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <br/><br/><input type="hidden" name="save" value="update_face"/><input type="submit" value="Change Face" />
+                        </td>
+                    </tr>
                 </table>
-                <input type="hidden" name="save" value="update_face"/>
+
             </form>
         {% endpart %}
     {% endinclude %}

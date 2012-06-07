@@ -1,0 +1,7 @@
+Thanks for showing your interest in registering for an account at Tecmo Fantasy Bowl!
+
+Click or Copy / Paste the link below to activate your account:
+
+http://www.tecmofantasybowl.com/accounts/activate/{{ activation_key}}
+
+Fantasy Football with Tecmo Super Bowl?  You may want to checkout the overview at http://www.tecmofantasybowl.com/about .

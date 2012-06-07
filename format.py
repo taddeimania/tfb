@@ -22,11 +22,10 @@ def scan_player (posid):
 
     for line in infile:
         line = line.strip()
+        line = line.replace(' ', '')
         line = line.split(',')
-        team = line[-4]
-        team = team.replace('.', '')
+        team = line[3].strip()
         posid = posid.replace('.','')
-        team = team.replace(' ', '', 1)
         formatline = team + line[1]
         formatline = formatline.replace("'", "")
         if formatline == posid:
@@ -132,6 +131,7 @@ def teamupdate(a, week):
         pt1.loss += 1
         pt2.wins += 1
 
+    print pt1.short, pt2.short, week
     schedule = Schedule.objects.get(away=pt1.short, home=pt2.short, week=week)
     schedule.awayscore = tm1score
     schedule.homescore = tm2score

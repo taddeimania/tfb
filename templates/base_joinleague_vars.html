@@ -63,7 +63,7 @@
                         {% csrf_token %}
                         {% for league in leaguelist %}
                         {% if forloop.first %}
-                        <Center><span class='header2light'>-OR-<br/>Join a public league<br/><br/></span></Center>
+                        <Center><span class='header2light'><hr/>- OR -<br/><hr/><br/>Join a public league<br/><br/></span></Center>
                         {% endif %}
                         <input type="radio" name="public_league" value="{{ league.id }}" />
                         <span class='header2light'><a class="various fancybox.iframe dark" href="/leaguelist/{{ league.id }}">{{ league.name }} {{ league.teamcount }}/{{ league.maxteam }}</a><br/></span>
@@ -73,7 +73,7 @@
                         </form>
                         {% endif %}
                         {% empty %}
-                            <br/><span class='header2light'>No leagues...  Create a league? Not yet</span>
+                            <br/><span class='header2light'><hr/><br/>No Public Leagues...  Create a league? Not yet</span>
                         {% endfor %}
                     </td>
                 </tr>
