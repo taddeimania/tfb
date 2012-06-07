@@ -1,11 +1,11 @@
 """make pylint happy"""
-import simplejson
 from django.http import HttpResponseRedirect
 
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
+from django.utils import simplejson
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView, View
 from DisplayLeague import DisplayLeague
