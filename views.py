@@ -1,5 +1,5 @@
 """make pylint happy"""
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -101,7 +101,7 @@ def sysadmin(request, arg=None, argval=None):
             week=logic.getweek()
         ): process_matchups = True
     else:
-        return HomeView().as_view()
+        return HttpResponse("ah, ah, ah... you didn't say the magic word.")
 
     return default_response(locals(), request, 'base_sysadmin_vars.html')
 
