@@ -266,7 +266,7 @@ def joinleague(request):
     """ pylint
     """
     user = request.user
-    user_id = user.userprofile.id
+    user_id = user.userprofile
     query = request.POST.get('invite_code')
     leaguejoin = request.POST.get('public_league')
 
