@@ -266,7 +266,7 @@ def joinleague(request):
     """ pylint
     """
     user = request.user
-    user_id = user.userprofile
+    user_id = user.userprofile.id
     query = request.POST.get('invite_code')
     leaguejoin = request.POST.get('public_league')
 
@@ -307,7 +307,7 @@ def joinleague(request):
     if leaguejoin:
         try:
             team = Team(
-                owner=user,
+                owner=user_id,
                 league=League.objects.get(pk=leaguejoin),
                 name="",
                 win=0,
