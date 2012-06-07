@@ -100,6 +100,8 @@ def sysadmin(request, arg=None, argval=None):
         if not file_list and Stats.objects.filter(
             week=logic.getweek()
         ): process_matchups = True
+    else:
+        return HomeView().as_view()
 
     return default_response(locals(), request, 'base_sysadmin_vars.html')
 
