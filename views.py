@@ -1,4 +1,5 @@
 """make pylint happy"""
+import simplejson
 from django.http import HttpResponseRedirect
 
 from django.template import RequestContext
