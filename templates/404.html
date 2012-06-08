@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load includetag %}
+
+{% block content%}
+<div id='profile' class='nametag'>
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <span class="header2light" style="width: 400px;">404 Error</span> <br/><br/><br/><br/><span class="header1light">Bo does not know where you were trying to go....</span>
+    {% endpart %}
+{% endinclude %}
+</div>
+{% endblock %}
