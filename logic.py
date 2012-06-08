@@ -65,6 +65,7 @@ def setplayertoroster(user,player):
        and is_player_available_in_your_league(user, player.id)\
        and player_on_my_roster(user, player.id)\
        and not user.userprofile.are_you_at_max_roster()\
+       and getweek() != 0\
     and ispositionopen(user,player.pos):
         T = Team.objects.get(owner = user.userprofile.id)
         r = Roster(week = getweek(), team = T, player = player)
