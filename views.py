@@ -320,7 +320,7 @@ def joinleague(request):
             )
             team.save()
             success = True
-            return league_page(request)
+            return profileedit(request)
         except League.DoesNotExist:
             failmessage = True
 
