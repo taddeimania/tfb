@@ -65,8 +65,10 @@
                         {% if forloop.first %}
                         <Center><span class='header2light'><hr/>- OR -<br/><hr/><br/>Join a public league<br/><br/></span></Center>
                         {% endif %}
+                        <label>
                         <input type="radio" name="public_league" value="{{ league.id }}" />
                         <span class='header2light'><a class="various fancybox.iframe dark" href="/leaguelist/{{ league.id }}">{{ league.name }} {{ league.teamcount }}/{{ league.maxteam }}</a><br/></span>
+                        </label>
                         <br/>
                         {% if forloop.last %}
                         <input type="submit" value="Join" style="font-size: 18px; font-family: Nintendo; width: 80px; height: 40px; font-weight: bold;"/>
