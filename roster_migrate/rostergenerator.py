@@ -87,7 +87,7 @@ def main():
             schedule[int(week)-1][1].append(away)
             schedule[int(week)-1][1].append(home)
 
-            sql = "INSERT INTO players_schedule VALUES ('{0}', 0, '{1}', 0, {2});\n".format(
+            sql = "INSERT INTO players_schedule VALUES (null, '{0}', 0, '{1}', 0, {2});\n".format(
                 away,
                 home,
                 week
