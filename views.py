@@ -7,7 +7,6 @@ from django.db.models import Q
 from django.contrib.auth import logout
 from django.utils import simplejson
 from django.views.generic import TemplateView
-from django.views.generic.base import RedirectView, View
 from DisplayLeague import DisplayLeague
 import joel
 import sys
@@ -300,6 +299,7 @@ def joinleague(request):
                 )
                 team.save()
                 success = True
+                return HttpResponseRedirect('/profile/edit')
             else:
                 failmessage = True
         except League.DoesNotExist:
@@ -320,7 +320,7 @@ def joinleague(request):
             )
             team.save()
             success = True
-            return profileedit(request)
+            return HttpResponseRedirect('/profile/edit')
         except League.DoesNotExist:
             failmessage = True
 
