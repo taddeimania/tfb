@@ -3,13 +3,13 @@ import os
 
 PROJECT_ROOT = os.path.dirname(__file__)
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 TEMPLATE_DEBUG = DEBUG
 
 AUTH_PROFILE_MODULE = 'pybb.Profile'
 
 ADMINS = (
-    ('', ''),
+    ('Joel Taddei', 'jtaddei@gmail.com'),
 )
 
 MANAGERS = ADMINS
