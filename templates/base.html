@@ -59,7 +59,7 @@
         </div>
 
         <div id='banner'>
-            <img src="/static/pictures/banner.gif" class="image"><br/>
+            <img src="/static/pictures/banner.gif" class="image">{% if user.is_authenticated %}<span class="header2light" style="padding:30px;"><a class="dark" href="/logout">Logout</a></span>{% endif %}<br/>
             <!-- Maintenance Banner -->
             <!-- <span class='header2light'><center>SITE IS UNDERGOING MAINTENANCE</center></span> -->
             <!-- -->
@@ -67,7 +67,6 @@
     </div>
 
     <!-- Main portlet -->
-        <a class="header2light" href="/logout">Logout</a>
     <div id='content-container'>
         {% block content %}{% endblock content %}
     </div>
