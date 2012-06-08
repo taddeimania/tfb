@@ -54,11 +54,11 @@ def to_sql(team, pos, name, face, counter):
 
 def main():
 
-    read_file = open('/home/joel/tfb_conv/tsb_raw.txt', 'r')
-    schedule_read_file = open('/home/joel/tfb_conv/schedule.txt', 'r')
-    write_file = open('/home/joel/tfb_conv/tsb_in.sql', 'a')
-    player_write_file = open('/home/joel/tfb_conv/players.csv', 'a')
-    schedule_write_file = open('/home/joel/tfb_conv/schedule.sql', 'a')
+    read_file = open('tsb_raw.txt', 'r')
+    schedule_read_file = open('schedule.txt', 'r')
+    write_file = open('tsb_in.sql', 'a')
+    player_write_file = open('players.csv', 'a')
+    schedule_write_file = open('schedule.sql', 'a')
     out_team = ''
     week = 1
     counter = 1000
