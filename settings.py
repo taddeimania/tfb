@@ -5,7 +5,7 @@ PROJECT_ROOT = os.path.dirname(__file__)
 
 DEBUG = os.getenv('DEBUG')
 TEMPLATE_DEBUG = DEBUG
-
+SEND_BROKEN_LINK_EMAILS = False
 AUTH_PROFILE_MODULE = 'pybb.Profile'
 
 ADMINS = (
