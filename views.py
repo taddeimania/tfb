@@ -8,7 +8,7 @@ from django.contrib.auth import logout
 from django.utils import simplejson
 from django.views.generic import TemplateView
 from DisplayLeague import DisplayLeague
-import joel
+import abstraction
 import sys
 import logic
 from players.models import Team, League, Roster, Player, Stats, Matchup, \
@@ -83,17 +83,17 @@ def sysadmin(request, arg=None, argval=None):
     """
     if request.user.is_superuser:
         if arg == 'process':
-            joel.process(argval)
+            abstraction.process(argval)
         if arg == 'matchup' and not argval:
-            joel.process_matchup()
+            abstraction.process_matchup()
         if arg == 'matchup' and argval == 'create':
-            joel.create_matchup_schedule()
+            abstraction.create_matchup_schedule()
         if arg == 'lock':
-            joel.create_locks(argval)
+            abstraction.create_locks(argval)
         if arg == 'recalc':
-            joel.recalculate_weekly_matchups()
+            abstraction.recalculate_weekly_matchups()
 
-        file_list = joel.get_file_list()
+        file_list = abstraction.get_file_list()
         lock_list = Schedule.objects.filter(week=logic.getweek())
         if not Matchup.objects.all(): create_matchup = True
         if not file_list and Stats.objects.filter(

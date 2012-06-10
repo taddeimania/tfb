@@ -4,3 +4,6 @@ south
 distribute
 postmarkup
 pytils
+django-registration
+python-memcached
+mock

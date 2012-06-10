@@ -1,13 +1,12 @@
 # Django settings for myproject project.
 import os
+import sys
 
 PROJECT_ROOT = os.path.dirname(__file__)
 
-DEBUG = False#os.getenv('DEBUG')
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 SEND_BROKEN_LINK_EMAILS = False
-AUTH_PROFILE_MODULE = 'pybb.Profile'
-
 ADMINS = (
     ('Joel Taddei', 'jtaddei@gmail.com'),
 )
@@ -23,11 +22,15 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+
 TIME_ZONE = 'America/Chicago'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
-USE_I18N = True
-USE_L10N = True
+USE_I18N = False
+USE_L10N = False
 MEDIA_ROOT = ''
 MEDIA_URL = ''
 STATIC_ROOT = PROJECT_ROOT
@@ -81,6 +84,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'registration',
+    'players',
+    'top_player_list',
 )
 CONTEXT_PROCESSORS = (
     'pybb.context_processors.processor',

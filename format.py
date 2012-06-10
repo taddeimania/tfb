@@ -1,37 +1,43 @@
-# 		Tecmo Fantasy Bowl
-# 		by: Joel Taddei, 2011
-# 		TSB Datafile input & SQL Statement Output functions
-#		   this is the raw backend i wrote first
-
 import menu
 import random
-from myproject.settings import PROJECT_ROOT
 from players.models import Stats, Player, Pro_Team, Schedule
 
 def scan_player (posid):
-    """Reads each line of the player roster CSV file.
-     Data stream input format:
-         1000,'QB1','First Last',0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'BUF','OPP','OK',0
 
-     Returns a PlayerID when PosID is found by concatenating BUF & QB1.
+    if posid[-1] != 'K':
+        if len(posid) == 6:
+            pos = posid[3:]
+        else:
+            pos = posid[2:]
+    elif posid[:-1] == 'P':
+        return [None, None]
+    else:
+        pos = 'K'
 
-     In this case the function would return: BUFQB1 & 1000.
-     """
+    team = posid.replace(pos, '')
 
-    infile = open(PROJECT_ROOT + '/players.csv', 'r')
+    try:
+        player = Player.objects.get(pro_team=team, pos=pos)
+        return player.id
+    except Exception:
+        return [None, None]
 
-    for line in infile:
-        line = line.strip()
-        line = line.replace(' ', '')
-        line = line.split(',')
-        team = line[3].strip()
-        posid = posid.replace('.','')
-        formatline = team + line[1]
-        formatline = formatline.replace("'", "")
-        if formatline == posid:
-            return posid, line[0]
 
-    infile.close()
+def calculate_bonuses(bonus, line):
+    if int(line[6]) > 299:
+        bonus += 3
+    if int(line[8]) > 99:
+        bonus += 3
+    if int(line[17]) > 99:
+        bonus += 3
+    return bonus
+
+
+def calc_fan_pts(bonus, line):
+    return (int(line[4]) * 6) - (int(line[5]) * 2) + (int(line[6]) / 20) + (int(line[8]) / 10) +\
+                  (int(line[9]) * 6) + (int(line[12]) * 6) + (int(line[15]) * 6) + (int(line[17]) / 10) +\
+                  (int(line[18]) * 6) + int(line[24]) + (int(line[25]) * 3) + bonus
+
 
 def update(filename, week):
     """Updates player and week_X tables with data from individual game files.
@@ -52,26 +58,18 @@ def update(filename, week):
         posid = line[0]
         pid1 = scan_player(posid)
         try:
-            if pid1[0] == line[0]:
+            if pid1:
                 healthINJ = str(line[-1])
                 try:
-                    # if a lock exists on a player prior to processing, lets delete it
-                    # this will occur if we did a real time broadcast of a game
-                    # and generated a lock
-                    Stats.objects.get(player=pid1[1], week=week).delete()
+                    Stats.objects.get(player=pid1, week=week).delete()
                 except Exception:
                     pass
                 try:
-                    healthINJ = Stats.objects.get(player=pid1[1], week=(int(week)-1)).health
+                    healthINJ = Stats.objects.get(player=pid1, week=(int(week)-1)).health
                 except Exception:
                     pass
                 bonus = 0
-                if int(line[6]) > 299:
-                    bonus += 3
-                elif int(line[8]) > 99:
-                    bonus += 3
-                elif int(line[17]) > 99:
-                    bonus += 3
+                bonus = calculate_bonuses(bonus, line)
                 tm2 = str(line[-2])
                 health = str(line[-1])
                 guid = random.randint(1, 2147486)
@@ -84,13 +82,12 @@ def update(filename, week):
                     line[17] = 0
                 if int(line[6]) < 0:
                     line[6] = 0
-                stat = Stats(player = Player.objects.get(pk=pid1[1]), week = week,
+                stat = Stats(player = Player.objects.get(pk=pid1), week = week,
                  pa = line[3], pc=line[2], pastd=line[4], intcp=line[5], pasyds=line[6], rec=line[7], recyds=line[8],
                  rectd=line[9],krtd=line[12], prtd=line[15], rusat=line[16], rusyds=line[17], rustd=line[18], xpm=line[24],
                  fgm=line[25],tm2 = tm2, health = health, guid = guid)
-                stat.fanpts = (int(line[4])*6) - (int(line[5])*2) + (int(line[6])/20) + (int(line[8])/10) + \
-                              (int(line[9])*6) + (int(line[12])*6) + (int(line[15])*6) + (int(line[17])/10) + \
-                              (int(line[18])*6) + int(line[24]) + (int(line[25])*3) + bonus
+
+                stat.fanpts = calc_fan_pts(bonus, line)
                 if healthINJ != 'OK' and stat.fanpts == 0:
                     stat.health = 'INJURED'
                 stat.save()
