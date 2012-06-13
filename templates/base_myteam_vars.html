@@ -72,7 +72,7 @@
                             <td ><span class='header2'><a class="various fancybox.iframe" href="/list/wr"><center>WR:</center></a></span></td>
                             <td >{% if roster.WR != None %}<img src="/static/pictures/{{ roster.WR.pic|upper }}.gif" width=50 height=50></td>
                                 <td><form action='.' method='POST'>{% csrf_token %}<span class='header2'><a class="various fancybox.iframe" href="/player/{{ roster.WR.id }}">{{ roster.WR.name}}</a></span></td><td width=1><input type="hidden" name="del_player" value="{{ roster.WR.id }}"/><input type="submit" value="Drop" /></form></td></td>
-                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a class="various fancybox.iframe" href="/list/wrb">Add WR</a></span></td><td></td>{% endif %}
+                                {% else %}<img src="/static/pictures/blank.gif" width=50 height=50></td><td><span class='header2'><a class="various fancybox.iframe" href="/list/wr">Add WR</a></span></td><td></td>{% endif %}
                         </tr>
                         <tr {% if roster.WR1.tm2 == 'BYE' %}bgcolor="#808080"{% else %}bgcolor="white"{% endif %}>
                             <td ><span class='header2'><a class="various fancybox.iframe" href="/list/wr"><center>WR:</center></a></span></td>
