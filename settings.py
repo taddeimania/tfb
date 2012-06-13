@@ -2,9 +2,9 @@
 import os
 import sys
 
-PROJECT_ROOT = os.path.dirname(__file__)
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SEND_BROKEN_LINK_EMAILS = False
 ADMINS = (
@@ -29,8 +29,8 @@ if 'test' in sys.argv:
 TIME_ZONE = 'America/Chicago'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
-USE_I18N = False
-USE_L10N = False
+USE_I18N = True
+USE_L10N = True
 MEDIA_ROOT = ''
 MEDIA_URL = ''
 STATIC_ROOT = PROJECT_ROOT

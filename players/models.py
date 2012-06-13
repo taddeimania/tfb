@@ -43,7 +43,7 @@ class Player(models.Model):
     def SeasonTotal(self):
         stats = Stats.objects.filter(player=self.id)
         try:
-            self.Bye = Stats.objects.get(player=self.id, tm2='BYE').week
+            self.Bye = self.pro_team.bye
         except:
             self.Bye = "?"
         try:

@@ -6,7 +6,7 @@ import format
 import os
 import random
 from myproject.settings import PROJECT_ROOT
-from players.models import Player, Curweek, Stats
+from players.models import Player, Curweek, Stats, Pro_Team
 
 path = PROJECT_ROOT + "/files/"
 
@@ -81,11 +81,10 @@ def insert_file(file):
 #only needed for new pro league creation, after players objects are created
 # THIS IS SUPER IMPORTANT FOR PLAYER CARDS TO DISPLAY CORRECTLY!!!!
 def create_bye_weeks():
-    week = 4
-    while 4 <= week <= 10:
-        byes = Player.objects.filter(pro_team__bye = week)
-        for var in byes:
-            guid = int(str(week) + '0' + str(random.randint(1, 9147483)))
-            byeweek = Stats(player = var, week = var.pro_team.bye, tm2 = 'BYE', health = 'OK', guid = guid)
+    teams = Pro_Team.objects.filter(bye__gt=0)
+    for team in teams:
+        players = Player.objects.filter(pro_team=team)
+        for player in players:
+            guid = int(str(team.bye) + '0' + str(random.randint(1, 9147483)))
+            byeweek = Stats(player=player, week=player.pro_team.bye, tm2='BYE', health='BYE', guid=guid)
             byeweek.save()
-        week += 1

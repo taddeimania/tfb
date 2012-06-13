@@ -67,7 +67,7 @@ class PlayerPageView(TemplateView):
             'dropbutton': dropstatus[0],
             'owner': dropstatus[1],
             'drop': self.drop,
-            'success': self.success
+            'success': self.success,
         }
 
     def post(self, *args, **kwargs):

@@ -92,6 +92,8 @@ def sysadmin(request, arg=None, argval=None):
             abstraction.create_locks(argval)
         if arg == 'recalc':
             abstraction.recalculate_weekly_matchups()
+        if arg == 'byes':
+            abstraction.create_byes()
 
         file_list = abstraction.get_file_list()
         lock_list = Schedule.objects.filter(week=logic.getweek())

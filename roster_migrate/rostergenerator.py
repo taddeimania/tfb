@@ -1,25 +1,36 @@
-TEAM_LIST = ['BUF', 'MIA', 'NE', 'NYJ', 'CIN', 'CLE', 'BAL', 'PIT', 'IND', 'HOU', 'JAX', 'TEN',
-             'DEN', 'KC', 'OAK', 'SD', 'WAS', 'NYG', 'PHI', 'DAL', 'CHI', 'DET', 'GB', 'MIN',
-             'TB', 'NO', 'ATL', 'CAR', 'SF', 'STL', 'SEA', 'ARZ']
+#TEAM_LIST = ['BUF', 'MIA', 'NE', 'NYJ', 'CIN', 'CLE', 'BAL', 'PIT', 'IND', 'HOU', 'JAX', 'TEN',
+#             'DEN', 'KC', 'OAK', 'SD', 'WAS', 'NYG', 'PHI', 'DAL', 'CHI', 'DET', 'GB', 'MIN',
+#             'TB', 'NO', 'ATL', 'CAR', 'SF', 'STL', 'SEA', 'ARZ']
+TEAM_LIST = ['BUF', 'MIA', 'NE', 'JET', 'CIN', 'CLE', 'PIT', 'IND', 'HOU','DEN', 'KC', 'RAI',
+             'SD', 'WAS', 'GIA', 'PHI', 'DAL', 'CHI', 'DET', 'GB', 'MIN','TB', 'NO', 'ATL',
+             'SF', 'RAM', 'SEA', 'PHX']
+#'cardinals': ('ARZ', 'Arizona Cardinals'),
+#'titans': ('TEN', 'Tennessee Titans'),
+#'jaguars': ('JAX', 'Jacksonville Jaguars'),
+#'texans': ('HOU', 'Houston Texans'),
+#'ravens': ('BAL', 'Baltimore Ravens'),
+#'raiders': ('OAK', 'Oakland Raiders'),
+#'panthers': ('CAR', 'Carolina Panthers'),
+#'rams': ('STL', 'St Louis Rams'),
+#'giants': ('GIA', 'New York Giants'),
+
+
+
 TEAM_DICT = {
 	'bills': ('BUF', 'Buffalo Bills'),
 	'dolphins': ('MIA', 'Miami Dolphins'),
 	'patriots': ('NE', 'New England Patriots'),
-	'jets': ('NYJ', 'New York Jets'),
+	'jets': ('JET', 'New York Jets'),
 	'bengals': ('CIN', 'Cininatti Bengals'),
 	'browns': ('CLE', 'Cleveland Browns'),
-	'ravens': ('BAL', 'Baltimore Ravens'),
 	'steelers': ('PIT', 'Pittsburgh Steelers'),
 	'colts': ('IND', 'Indianapolis Colts'),
-	'texans': ('HOU', 'Houston Texans'),
-	'jaguars': ('JAX', 'Jacksonville Jaguars'),
-	'titans': ('TEN', 'Tennessee Titans'),
 	'broncos': ('DEN', 'Denver Broncos'),
 	'chiefs': ('KC', 'Kansas City Chiefs'),
-	'raiders': ('OAK', 'Oakland Raiders'),
+	'raiders': ('RAI', 'Los Angeles Raiders'),
 	'chargers': ('SD', 'San Diego Chargers'),
 	'redskins': ('WAS', 'Washington Redskins'),
-	'giants': ('NYG', 'New York Giants'),
+	'giants': ('GIA', 'New York Giants'),
 	'eagles': ('PHI', 'Philidelphia Eagles'),
 	'cowboys': ('DAL', 'Dallas Cowboys'),
 	'bears': ('CHI', 'Chicago Bears'),
@@ -29,11 +40,11 @@ TEAM_DICT = {
 	'buccaneers': ('TB', 'Tampa Bay Buccaneers'),
 	'saints': ('NO', 'New Orleans Saints'),
 	'falcons': ('ATL', 'Atlanta Falcons'),
-	'panthers': ('CAR', 'Carolina Panthers'),
 	'49ers': ('SF', 'San Francisco 49ers'),
-	'rams': ('STL', 'St. Louis Rams'),
+	'rams': ('RAM', 'Los Angeles Rams'),
 	'seahawks': ('SEA', 'Seattle Seahawks'),
-	'cardinals': ('ARZ', 'Arizona Cardinals'),
+	'cardinals': ('PHX', 'Arizona Cardinals'),
+    'oilers': ('HOU', 'Houston Oilers'),
 }
 
 KEYWORDS = ['QB1', 'QB2', 'RB1', 'RB2', 'RB3', 'RB4', 'WR1', 'WR2', 'WR3', 'WR4', 'TE1', 'TE2', 'K']
@@ -54,8 +65,8 @@ def to_sql(team, pos, name, face, counter):
 
 def main():
 
-    read_file = open('tsb_raw.txt', 'r')
-    schedule_read_file = open('schedule.txt', 'r')
+    read_file = open('original_tsb_raw.txt', 'r')
+    schedule_read_file = open('1991_schedule.txt', 'r')
     write_file = open('tsb_in.sql', 'a')
     player_write_file = open('players.csv', 'a')
     schedule_write_file = open('schedule.sql', 'a')
