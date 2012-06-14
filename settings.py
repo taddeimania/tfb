@@ -5,7 +5,7 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 if os.getenv('DEBUG'):
-    DEBUG = False
+    DEBUG = True
 else:
     DEBUG = True
 TEMPLATE_DEBUG = DEBUG

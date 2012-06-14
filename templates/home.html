@@ -1,27 +1,76 @@
-{% extends "base_blank.html" %}
-{% block title %}Welcome to Tecmo Fantasy Bowl{% endblock %}
+{% extends "base.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
 
 {% block content %}
-<div id='home'>
-	<table background="/static/pictures/background.gif" width=652 height=417>
-		<tr>
-			<td>
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap.css" />
+    <div class="container">
+    <div class="row">
+        <div class="span8">
+            <div>
+                {% include "tecmo_outline_table.html" %}
+                    {% part data %}
+                        <table width="590px">
+                            <tr>
+                                <td>
+                                    <center><span class="header2light">Welcome to Tecmo Fantasy Bowl!</span><br/><br/></center>
+                                    <span style="color: white;" class="normal">If this is your first time here, be sure to check out the <a class="dark" href="/about">about page.</a></span>
+                                    <br/>
+                                    <hr/><center>
+                                    <img src="/static/pictures/0.gif" style="border: solid black 3px" height="75" width="75"> <img src="/static/pictures/1A.gif" style="border: solid black 3px" height="75" width="75">
+                                    <img src="/static/pictures/8B.gif" style="border: solid black 3px" height="75" width="75"> <img src="/static/pictures/50.gif" style="border: solid black 3px" height="75" width="75">
+                                    <img src="/static/pictures/93.gif" style="border: solid black 3px" height="75" width="75"> <img src="/static/pictures/88.gif" style="border: solid black 3px" height="75" width="75"></center>
+                                    <br/><br/>
+                                    <span class="header2light">Signing Up</span><br/><br/>
+                                    <span style="color: white;" class="normal">Signing up is easy.  Just go to the <a class="dark" href="/login">Login Page</a> and fill out the form.  Be sure to give a valid email address, it will be required for activation.
+                                    <br/><br/><br/>
+                                    <span class="header2light">Adding Players</span><br/><br/>
+                                    <span style="color: white;" class="normal">The season is currently in a preseason state - meaning you can poke around the site and add and drop players to your roster as you like but they will be erased when the "Free For All" pickups occur.
+                                    <br/><br/>When it looks like we've got some full leagues i'll clear your rosters and make you unable to add or drop anymore then I will set a date and time about a week out that the adding of players will be permitted.</span>
+                                    <br/><br/><br/>
+                                    <span class="header2light">Joining a League</span><br/><br/>
+                                    <span style="color: white;" class="normal">There are a few public leagues available to join so once you've created your account you can browse to the "League" button on your tool bar to see a list of available leagues.
+                                    <br/><br/>Right now communication to your follow league members is kind of limited.  In the future I will implement league-wide emails as well as a message board right on your league page.</span>
+                                    <br/><br/><br/>
+                                    <span class="header2light">Matchups</span><br/><br/>
+                                    <span style="color: white;" class="normal">I will generate the matchup schedule for the leagues 48 hours after the free for all pickups are started. Currently a league requires 10 and only 10 teams to be considered a valid league.
+                                    <br/><br/>I am currently working on allowing leagues of all number teams.  Keep an eye on the development blog for more news.</span>
 
-			</td>
-		</tr>
-	</table>
-	<table class="nav" width=200 height=165 valign="top" align="center">
-		<tr>
-			<td>
-				<a href="http://blog.tecmofantasybowl.com"><img src="/static/pictures/blog.gif"></a>
-				{% if user.is_authenticated %}
-				<a href="/profile"><img src="/static/pictures/mainprofile.gif"></a>
-				{% else %}
-				<a href="/login"><img src="/static/pictures/mainlogin.gif"></a>
-				{% endif %}
-			</td>
-		</tr>
-	</table>
-</div>
+                                </td>
+                            </tr>
+                        </table>
+                    {% endpart %}
+                {% endinclude %}
+            </div>
+        </div>
+        <div class="span3">
+            <div id='side_dev_notes'>
+                {% include "tecmo_outline_table.html" %}
+                    {% part data %}
+                        <table width="190px">
+                            <tr>
+                                <td><span class="normal" style="color: white;">Dev Note:<br/><span style="font-size: .8em;">"Welcome Newcomers"</span></span></td>
+                            </tr>
+                        </table>
+                    {% endpart %}
+                {% endinclude %}
+            </div>
+            <div id='rom' style="margin-top: 10px;">
+                {% include "tecmo_outline_table.html" %}
+                    {% part data %}
+                        <table width="190px">
+                            <tr>
+                                <td><span class="normal" style="color: white;">Current Roster:<br/><span style="font-size: .8em;"><a class="dark" href="/playerpage">Original 1991</a></span></span></td>
+                            </tr>
+                        </table>
+                    {% endpart %}
+                {% endinclude %}
+            </div>
+        </div>
+    </div>
+    </div>
 
+
+    <div></div>
 {% endblock %}
