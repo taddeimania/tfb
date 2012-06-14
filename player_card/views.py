@@ -8,7 +8,6 @@ class PlayerPageView(TemplateView):
     curweek = logic.getweek()
     success = None
     drop = False
-
     def get_template_vars(self, player_id):
         self.player = player_models.Player.objects.get(pk=player_id)
         weekpts = [_ for _ in player_models.Stats.objects.order_by('week').filter(player=self.player)]
