@@ -1,6 +1,7 @@
 from django.db.models import Q
 from players.models import Roster, Team, Player, Curweek, \
-    Schedule, Pro_Team, DraftPick, Stats, UserProfile, Transaction
+    Schedule, Pro_Team, Stats, UserProfile, Transaction
+from draft.models import DraftPick
 
 MAX_ROSTER = 7
 
@@ -8,9 +9,11 @@ def is_player_available_in_your_league(user, player_id):
     """ Is player available in your league. Returns True if you are allowed to add the requested
     	player to your roster, returns false if they are currently owned by another team.
     """
-    if Roster.objects.filter(week = getweek(),team__league = getleague(user),player__id = player_id).exists():
-        return False
-    return True
+    return False if Roster.objects.filter(
+        week=getweek(),
+        team__league=getleague(user),
+        player__id=player_id
+    ).exists() else  True
 
 
 def avail_list(user, posid):
@@ -122,7 +125,9 @@ def draft_avail_players(league):
         Gets a full list of players -> excludes players that currently have a draft pick entered for them
             in your league.
     """
-    return Player.objects.all().exclude(id__in=[x.player.id for x in DraftPick.objects.filter(draft_team__draft__league = league)])
+    return Player.objects.all().exclude(
+        id__in=[x.player.id for x in DraftPick.objects.filter(draft_team__draft__league = league)]
+    )
 
 
 def drop_player(player, team, user):

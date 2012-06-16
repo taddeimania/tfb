@@ -1,22 +1,25 @@
 """make pylint happy"""
+import os
 from django.http import HttpResponseRedirect, HttpResponse
-
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
-from django.utils import simplejson
 from django.views.generic import TemplateView
-from DisplayLeague import DisplayLeague
-import abstraction
 import sys
+from draft import draft
 import logic
+import matchup
+import menu
 from messages.models import Message
 from players.models import Team, League, Roster, Player, Stats, Matchup, \
     Schedule, UserProfile, Curweek, Transaction, \
-    Pro_Team, Draft, DraftTeam, DraftOrder, DraftPick
+    Pro_Team
+from settings import PROJECT_ROOT
+from draft.models import Draft
 
 # Global variables.  Messing with this could cause major problems.
+
 MAX_QB = 1
 MAX_RB = 2
 MAX_WR = 2
@@ -84,24 +87,23 @@ def sysadmin(request, arg=None, argval=None):
     """
     if request.user.is_superuser:
         if arg == 'process':
-            abstraction.process(argval)
+            menu.insert_file(file)
         if arg == 'matchup' and not argval:
-            abstraction.process_matchup()
+            matchup.process_weekly_matchups()
         if arg == 'matchup' and argval == 'create':
-            abstraction.create_matchup_schedule()
+            matchup.create_matchup_data()
         if arg == 'lock':
-            abstraction.create_locks(argval)
+            matchup.create_locks(argval)
         if arg == 'recalc':
-            abstraction.recalculate_weekly_matchups()
+            matchup.recalculate_weekly_matchups()
         if arg == 'byes':
-            abstraction.create_byes()
+            menu.create_bye_weeks()
 
-        file_list = abstraction.get_file_list()
+        file_list = sorted([d for d in os.listdir(os.path.join(PROJECT_ROOT, 'files'))])
         lock_list = Schedule.objects.filter(week=logic.getweek())
-        if not Matchup.objects.all(): create_matchup = True
-        if not file_list and Stats.objects.filter(
-            week=logic.getweek()
-        ): process_matchups = True
+        if not Matchup.objects.all().exists(): create_matchup = True
+        if not file_list and Stats.objects.filter(week=logic.getweek()):
+            process_matchups = True
     else:
         return HttpResponse("ah, ah, ah... you didn't say the magic word.")
 
@@ -266,6 +268,14 @@ def league_list(request, league_id):
     teams = Team.objects.filter(league=league_id)
     return default_response(locals(), request, 'base_leaguelist_vars.html')
 
+class DisplayLeague():
+
+    def __init__(self, league):
+        self.id = league.id
+        self.name = league.lname
+        self.teamcount = League.objects.get_team_count(league.id)
+        self.maxteam = league.maxteam
+
 def joinleague(request):
     """ pylint
     """
@@ -366,7 +376,6 @@ def leagueadmin(request, arg=None):
             try:
                 draft_data_exist = Draft.objects.get(league=league)
             except Draft.DoesNotExist:
-                import draft
                 draft.create_draft_data(user)
         try:
             draft_data_exists = Draft.objects.get(league=league)
@@ -374,90 +383,7 @@ def leagueadmin(request, arg=None):
             pass
     return default_response(locals(), request, 'base_ladmin_vars.html')
 
-class MockDraftTeam():
-    """ I'm sure there is a smarter way to do this.
-    """
-    def __init__(self, draftteam):
-        picks = list(
-            DraftPick.objects.order_by('round'
-            ).filter(draft_team=draftteam))
-        self.teamname = Team.objects.get(pk=draftteam.team.id).name
-        self.round_one = picks[0].player
-        self.round_two = picks[1].player
-        self.round_three = picks[2].player
-        self.round_four = picks[3].player
-        self.round_five = picks[4].player
-        self.round_six = picks[5].player
-        self.round_seven = picks[6].player
 
-def draftpage(request, arg=None):
-    """ Draft function isn't simple or small or easy to explain.
-    Some of this is hackish, some of it is neat.
-        Just understand that this is where the magic happens with the draft.
-    """
-    user = request.user
-    if Team.objects.get(owner = user.userprofile.id).iscommish == 'Y':
-        start = request.POST.get('start','')
-        next = request.POST.get('next','')
-        prev = request.POST.get('prev','')
-        confirm = request.POST.get('confirm','')
-        league = Team.objects.get(owner = user.userprofile.id).league
-        try:
-            draft_obj = Draft.objects.get(league=league)
-        except Draft.DoesNotExist:
-            draft_obj = ""
-        if start:
-            draft_obj.cur_round = 1
-            draft_obj.save()
-            order = DraftOrder.objects.order_by('position').filter(
-                draft_team__draft = Draft.objects.get(league=league)
-            )
-        elif next:
-            import draft
-            errors = draft.validate_form(request.POST, draft_obj)
-        elif prev:
-            draft_obj.cur_round -= 1
-            draft_obj.save()
-        elif confirm:
-            import draft
-            errors = draft.validate_draft_and_generate_roster(draft_obj)
-            #roster_exists = Roster.objects.filter(
-            #   team__league = league
-            # ).count > 1
-        try:
-            if Draft.objects.get(league=league).cur_round == 0:
-                instructions = True
-            elif Draft.objects.get(league=league).cur_round == 8  and confirm == '':
-                confirm_list = []
-                instructions = False
-                confirmation = True
-                teams = DraftTeam.objects.filter(draft=draft_obj)
-                for team in teams:
-                    mockteam = MockDraftTeam(team)
-                    confirm_list.append(mockteam)
-            elif confirm:
-                pass
-            else:
-                instructions = False
-                cur_round = Draft.objects.get(league=league).cur_round
-                order = DraftOrder.objects.order_by('position').filter(
-                    draft_team__draft=Draft.objects.get(league=league)
-                )
-                avail_players = simplejson.dumps(
-                    [x.player_name for x in logic.draft_avail_players(league)]
-                )
-                pick = {}
-                for team in order:
-                    player = DraftPick.objects.filter(
-                        round=cur_round, draft_team=team.draft_team
-                    )
-                    if player:
-                        player = [x.player for x in player]
-                        player = Player.objects.get(pk=player[0].id)
-                        pick.update({team.id:player})
-        except Draft.DoesNotExist:
-            instructions = False
-    return default_response(locals(), request, 'base_draft_vars.html')
 
 class NotMyTeamView(TemplateView):
     template_name = 'base_uteam_vars.html'

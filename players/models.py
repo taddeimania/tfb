@@ -236,23 +236,6 @@ class Matchup(models.Model):
     team_two_points = models.IntegerField()
     winner = models.ForeignKey(Team,related_name='winner', null=True)
 
-class Draft(models.Model):
-    league = models.ForeignKey(League)
-    cur_round = models.IntegerField()
-
-class DraftTeam(models.Model):
-    draft = models.ForeignKey(Draft)
-    team = models.ForeignKey(Team)
-
-class DraftOrder(models.Model):
-    draft_team = models.ForeignKey(DraftTeam)
-    position = models.IntegerField()
-
-class DraftPick(models.Model):
-    round = models.IntegerField()
-    draft_team = models.ForeignKey(DraftTeam)
-    player = models.ForeignKey(Player)
-
 #start rebuilding data to use this table
 class Season(models.Model):
     name = models.CharField( max_length=25 )
