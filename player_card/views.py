@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
-import logic
 from players import models as player_models
 from myproject.views import default_response
+from utility import logic
 
 class PlayerPageView(TemplateView):
     template_name = "base_player_vars.html"

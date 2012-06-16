@@ -1,6 +1,29 @@
-import menu
-from stat_mapper import MapPlayerStats
-from players.models import Stats, Pro_Team, Schedule
+import os
+from myproject.settings import PROJECT_ROOT
+from myproject.players.models import Stats, Pro_Team, Schedule
+from myproject.utility import logic
+from myproject.utility.stat_mapper import MapPlayerStats
+
+def clean(line):
+    """Cleans up input data from TSB data files to prepare data
+    """
+    line = line.strip()
+    line = line.replace('.', '', 1)
+    line = line.split(',')
+    return line
+
+def insert_file(file):
+    """ Insert individual files into stats
+    """
+    filename = file.replace("/", "")
+    full_file_path = "{}/files/{}".format(PROJECT_ROOT, filename)
+    week = logic.getweek()
+    if "player.txt" in file:
+        update(full_file_path, week)
+    else:
+        teamupdate(full_file_path, week)
+
+    os.remove(full_file_path)
 
 def update(filename, week):
     """Updates player and week_X tables with data from individual game files.
@@ -9,7 +32,7 @@ def update(filename, week):
     week = str(week)
 
     for line in infile:
-        line = menu.clean(line)
+        line = clean(line)
         stats = MapPlayerStats(line)
         stats.get_player_by_stat_file_id()
         try:

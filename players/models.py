@@ -148,6 +148,9 @@ class League(models.Model):
         else:
             return False
 
+    def team_count(self):
+        return Team.objects.filter(league=self).count()
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     userpic = models.CharField(max_length=2)

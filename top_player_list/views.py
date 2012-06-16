@@ -3,7 +3,9 @@ from django.utils import simplejson
 from django.views.generic.base import View, TemplateView
 from myproject import views as base_views
 from myproject.players import models as player_models
-import logic
+from myproject.utility import logic
+
+POS_LIST = ['QB', 'RB', 'RB', 'WR', 'WR', 'TE', 'K']
 
 def get_top_ten_for_pos(posid, user=None):
     CACHE_TIMEOUT = 360
@@ -62,7 +64,7 @@ def playerpage(request, arg=None):
         for pos in pos_list:
             player_list.append((pos, get_top_ten_for_pos(pos, user=request.user)))
 
-    elif str(arg).upper() in base_views.POS_LIST:
+    elif str(arg).upper() in POS_LIST:
         pos = True
         for player in player_models.Player.objects.filter(pos__startswith=str(arg).upper):
             playerstats.append(player.SeasonTotal())

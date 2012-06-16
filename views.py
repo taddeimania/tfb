@@ -1,31 +1,22 @@
 """make pylint happy"""
 import os
+import sys
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
-import sys
-from draft import draft
-import logic
-import matchup
-import menu
-from messages.models import Message
-from players.models import Team, League, Roster, Player, Stats, Matchup, \
+from myproject.draft import draft
+from myproject.messages.models import Message
+from myproject.players.models import Team, League, Roster, Player, Stats, Matchup, \
     Schedule, UserProfile, Curweek, Transaction, \
     Pro_Team
-from settings import PROJECT_ROOT
-from draft.models import Draft
+from myproject.settings import PROJECT_ROOT
+from myproject.draft.models import Draft
+from myproject.utility import logic, load_stats, matchup
 
 # Global variables.  Messing with this could cause major problems.
-
-MAX_QB = 1
-MAX_RB = 2
-MAX_WR = 2
-MAX_TE = 1
-MAX_K = 1
-POS_LIST = ['QB', 'RB', 'RB', 'WR', 'WR', 'TE', 'K']
 CACHE_TIMEOUT = 30
 
 def default_response( context, request, template=None ):
@@ -87,7 +78,7 @@ def sysadmin(request, arg=None, argval=None):
     """
     if request.user.is_superuser:
         if arg == 'process':
-            menu.insert_file(file)
+            load_stats.insert_file(file)
         if arg == 'matchup' and not argval:
             matchup.process_weekly_matchups()
         if arg == 'matchup' and argval == 'create':
@@ -97,7 +88,7 @@ def sysadmin(request, arg=None, argval=None):
         if arg == 'recalc':
             matchup.recalculate_weekly_matchups()
         if arg == 'byes':
-            menu.create_bye_weeks()
+            logic.create_bye_weeks()
 
         file_list = sorted([d for d in os.listdir(os.path.join(PROJECT_ROOT, 'files'))])
         lock_list = Schedule.objects.filter(week=logic.getweek())
@@ -382,8 +373,6 @@ def leagueadmin(request, arg=None):
         except Draft.DoesNotExist:
             pass
     return default_response(locals(), request, 'base_ladmin_vars.html')
-
-
 
 class NotMyTeamView(TemplateView):
     template_name = 'base_uteam_vars.html'

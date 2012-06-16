@@ -1,11 +1,11 @@
 import random
 from django.db.models import Q
-from players.models import League, Team, Roster, Curweek, Stats, Schedule, Player, Matchup
+from myproject.players.models import League, Team, Roster, Curweek, Stats, Schedule, Player, Matchup
 from myproject.settings import PROJECT_ROOT
 
 def create_matchup_schedule(list_of_teams, _league):
     # matchup logic sorted by spreadsheet.  Thanks @sarahtaddei for being a spreadsheet wizard
-    infile = open(PROJECT_ROOT + '/matchupschedule.csv', 'r')
+    infile = open(PROJECT_ROOT + '/utility/schedules/matchupschedule{}.csv'.format(str(_league.team_count())), 'r')
 
     for line in infile:
         line = line.split(',')
@@ -40,9 +40,6 @@ def create_matchup_data():  #no args lol
             shuffled_team_list.insert(seed[idx],team)
 
         create_matchup_schedule(shuffled_team_list, league)
-
-    import menu
-    menu.create_bye_weeks()
 
 
 def calc_matchup_results(matchup, t1, t2):
