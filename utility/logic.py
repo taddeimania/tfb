@@ -1,7 +1,7 @@
 from django.db.models import Q
-from myproject.players.models import Roster, Team, Player, Curweek, \
+from tfb.players.models import Roster, Team, Player, Curweek, \
     Schedule, Pro_Team, Stats, UserProfile, Transaction
-from myproject.draft.models import DraftPick
+from tfb.draft.models import DraftPick
 
 MAX_ROSTER = 7
 

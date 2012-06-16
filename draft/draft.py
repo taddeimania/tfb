@@ -1,6 +1,6 @@
 from utility.logic import draft_avail_players
-from myproject.players import models as player_models
-from myproject.draft import models as draft_models
+from tfb.players import models as player_models
+from tfb.draft import models as draft_models
 
 MAX_QB = 1
 MAX_RB = 2

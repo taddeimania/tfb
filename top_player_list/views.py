@@ -1,9 +1,9 @@
 from django.core.cache import cache
 from django.utils import simplejson
 from django.views.generic.base import View, TemplateView
-from myproject import views as base_views
-from myproject.players import models as player_models
-from myproject.utility import logic
+from tfb import views as base_views
+from tfb.players import models as player_models
+from tfb.utility import logic
 
 POS_LIST = ['QB', 'RB', 'RB', 'WR', 'WR', 'TE', 'K']
 

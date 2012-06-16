@@ -1,7 +1,7 @@
 from django.views.generic.base import TemplateView
-from myproject.players import models as player_models
-from myproject.views import default_response
-from myproject.utility import logic
+from tfb.players import models as player_models
+from tfb.views import default_response
+from tfb.utility import logic
 
 class PlayerPageView(TemplateView):
     template_name = "base_player_vars.html"

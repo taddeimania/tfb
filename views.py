@@ -7,14 +7,14 @@ from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
-from myproject.draft import draft
-from myproject.messages.models import Message
-from myproject.players.models import Team, League, Roster, Player, Stats, Matchup, \
+from tfb.draft import draft
+from tfb.messages.models import Message
+from tfb.players.models import Team, League, Roster, Player, Stats, Matchup, \
     Schedule, UserProfile, Curweek, Transaction, \
     Pro_Team
-from myproject.settings import PROJECT_ROOT
-from myproject.draft.models import Draft
-from myproject.utility import logic, load_stats, matchup
+from tfb.settings import PROJECT_ROOT
+from tfb.draft.models import Draft
+from tfb.utility import logic, load_stats, matchup
 
 # Global variables.  Messing with this could cause major problems.
 CACHE_TIMEOUT = 30

@@ -1,5 +1,5 @@
 from django.db import models
-from myproject.players import models as player_models
+from tfb.players import models as player_models
 
 class Draft(models.Model):
     league = models.ForeignKey(player_models.League)

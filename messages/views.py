@@ -1,5 +1,5 @@
 from django.views.generic.base import TemplateView
-from myproject.messages.models import Message
+from tfb.messages.models import Message
 
 class MessageView(TemplateView):
 

@@ -1,9 +1,9 @@
 from django.utils import simplejson
-from myproject.draft.draft import validate_form
-from myproject.players import models as player_models
-from myproject.draft import models as draft_models
-from myproject.views import default_response
-from myproject.utility import logic
+from tfb.draft.draft import validate_form
+from tfb.players import models as player_models
+from tfb.draft import models as draft_models
+from tfb.views import default_response
+from tfb.utility import logic
 
 class MockDraftTeam():
     """ I'm sure there is a smarter way to do this.

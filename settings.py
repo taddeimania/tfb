@@ -71,7 +71,7 @@ LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/profile'
 
 ROOT_URLCONF = (
-	'myproject.urls'
+	'tfb.urls'
 )
 
 TEMPLATE_DIRS = (

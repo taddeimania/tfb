@@ -1,7 +1,7 @@
 import random
 from django.db.models import Q
-from myproject.players.models import League, Team, Roster, Curweek, Stats, Schedule, Player, Matchup
-from myproject.settings import PROJECT_ROOT
+from tfb.players.models import League, Team, Roster, Curweek, Stats, Schedule, Player, Matchup
+from tfb.settings import PROJECT_ROOT
 
 def create_matchup_schedule(list_of_teams, _league):
     # matchup logic sorted by spreadsheet.  Thanks @sarahtaddei for being a spreadsheet wizard

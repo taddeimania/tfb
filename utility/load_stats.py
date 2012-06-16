@@ -1,8 +1,8 @@
 import os
-from myproject.settings import PROJECT_ROOT
-from myproject.players.models import Stats, Pro_Team, Schedule
-from myproject.utility import logic
-from myproject.utility.stat_mapper import MapPlayerStats
+from tfb.settings import PROJECT_ROOT
+from tfb.players.models import Stats, Pro_Team, Schedule
+from tfb.utility import logic
+from tfb.utility.stat_mapper import MapPlayerStats
 
 def clean(line):
     """Cleans up input data from TSB data files to prepare data
