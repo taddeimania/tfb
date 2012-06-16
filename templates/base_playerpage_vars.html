@@ -4,7 +4,8 @@
 {% block title %}Welcome to Tecmo Fantasy Bowl! {% endblock %}
 
 {% block head %}
-<script type="text/javascript">
+    <script src="/static/jquery.autocomplete.min.js"></script>
+    <script type="text/javascript">
     $(document).ready(function() {
         $( "#playersearch" ).autocomplete({
             source: {{ players|safe }}
