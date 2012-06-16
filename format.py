@@ -39,6 +39,14 @@ def calc_fan_pts(bonus, line):
                   (int(line[18]) * 6) + int(line[24]) + (int(line[25]) * 3) + bonus
 
 
+def map_line_to_stats(line):
+    stats = {
+        'posid': line[0],
+        'healthINJ': str(line[-1]),
+        'tm2': str(line[-2]),
+    }
+    return stats
+
 def update(filename, week):
     """Updates player and week_X tables with data from individual game files.
      Input stream format:
@@ -55,11 +63,11 @@ def update(filename, week):
 
     for line in infile:
         line = menu.clean(line)
-        posid = line[0]
-        pid1 = scan_player(posid)
+        stats = map_line_to_stats(line)
+        pid1 = scan_player(stats['posid'])
         try:
             if pid1:
-                healthINJ = str(line[-1])
+                healthINJ = stats['healthINJ']
                 try:
                     Stats.objects.get(player=pid1, week=week).delete()
                 except Exception:
@@ -70,8 +78,8 @@ def update(filename, week):
                     pass
                 bonus = 0
                 bonus = calculate_bonuses(bonus, line)
-                tm2 = str(line[-2])
-                health = str(line[-1])
+                tm2 = stats['tm2']
+                health = stats['healthINJ']
                 guid = random.randint(1, 2147486)
                 guid = week + '0' + str(guid)
                 guid = int(guid)
@@ -82,10 +90,27 @@ def update(filename, week):
                     line[17] = 0
                 if int(line[6]) < 0:
                     line[6] = 0
-                stat = Stats(player = Player.objects.get(pk=pid1), week = week,
-                 pa = line[3], pc=line[2], pastd=line[4], intcp=line[5], pasyds=line[6], rec=line[7], recyds=line[8],
-                 rectd=line[9],krtd=line[12], prtd=line[15], rusat=line[16], rusyds=line[17], rustd=line[18], xpm=line[24],
-                 fgm=line[25],tm2 = tm2, health = health, guid = guid)
+                stat = Stats(
+                    player=Player.objects.get(pk=pid1),
+                    week = week,
+                    pa = line[3],
+                    pc=line[2],
+                    pastd=line[4],
+                    intcp=line[5],
+                    pasyds=line[6],
+                    rec=line[7],
+                    recyds=line[8],
+                    rectd=line[9],
+                    krtd=line[12],
+                    prtd=line[15], 
+                    rusat=line[16],
+                    rusyds=line[17],
+                    rustd=line[18],
+                    xpm=line[24],
+                    fgm=line[25],
+                    tm2=tm2,
+                    health=health,
+                    guid=guid)
 
                 stat.fanpts = calc_fan_pts(bonus, line)
                 if healthINJ != 'OK' and stat.fanpts == 0:

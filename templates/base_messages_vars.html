@@ -39,7 +39,7 @@
                     <span class="normal">{{ form_errors }}</span>
                     <form action='.' method='POST'>{% csrf_token %}
                         <div class="ui-widget">
-                            <textarea style="font-family: sans-serif;" name="message_post" rows=3 cols=50></textarea><br/>
+                            <textarea style="font-family: sans-serif; resize: none;" name="message_post" rows=3 cols=50></textarea><br/>
                             <input type="hidden" name="message" value="message"/><input type="submit" value="Post" />
                         </div>
                     </form>

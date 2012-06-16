@@ -9,8 +9,15 @@ def create_matchup_schedule(list_of_teams, _league):
 
     for line in infile:
         line = line.split(',')
-        MU = Matchup(week = line[0], league = _league, team_one = list_of_teams[int(line[1])-1],
-            team_one_points = 0, team_two = list_of_teams[int(line[2])-1], team_two_points = 0, winner = None)
+        MU = Matchup(
+            week=line[0],
+            league=_league,
+            team_one=list_of_teams[int(line[1])-1],
+            team_one_points=0,
+            team_two=list_of_teams[int(line[2])-1],
+            team_two_points=0,
+            winner = None
+        )
         MU.save()
 
 def create_matchup_data():  #no args lol
@@ -19,6 +26,9 @@ def create_matchup_data():  #no args lol
     for league in league_qs:
         if league.is_valid_league():
             all_leagues.append(league)
+        else:
+            #disable league
+            pass
 
     for league in all_leagues:
         team_list = Team.objects.filter(league=league)
@@ -91,7 +101,7 @@ def calc_matchup_results(matchup, t1, t2):
 
 def process_weekly_matchups():
     week = Curweek.objects.get(pk=1)
-    MU = Matchup.objects.filter(week = week.curweek)
+    MU = Matchup.objects.filter(week=week.curweek)
     for matchup in MU:
         t1 = Team.objects.get(pk = matchup.team_one.id)
         t2 = Team.objects.get(pk = matchup.team_two.id)
