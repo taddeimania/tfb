@@ -1,6 +1,6 @@
 from django.core.cache import cache
 from django.utils import simplejson
-from django.views.generic.base import TemplateView, View
+from django.views.generic.base import View, TemplateView
 from myproject import views as base_views
 from myproject.players import models as player_models
 import logic
@@ -77,13 +77,28 @@ def playerpage(request, arg=None):
                 player = player_models.Player.objects.get(player_name=player)
                 arg = player.id
             except player_models.Player.DoesNotExist:
-                pass
+                maybe_list = player_models.Player.objects.filter(player_name__icontains=player)
+                return base_views.default_response(locals(), request, 'base_notfound_vars.html')
             playerobj, season_total = get_player_stats(arg, playerstats)
         pass
     else:
         playersearch = True
         playerobj, season_total = get_player_stats(arg, playerstats)
     return base_views.default_response(locals(), request, 'base_playerpage_vars.html')
+
+class PlayerNotFound(TemplateView):
+    template_name = "base_notfound_vars.html"
+
+    def redirect(self, request):
+        self.request = request
+        return self.get_context_data()
+
+    def get_context_data(self, **kwargs):
+        print self.request.POST
+        return {
+            'context': 'context',
+        }
+
 
 # WIP!
 

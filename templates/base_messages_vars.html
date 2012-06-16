@@ -1,0 +1,90 @@
+{% extends "base_messages_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}!{% endblock %}
+
+{% block join_a_league %}
+    <div id='league' class='topleft'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <p><span class='header2light'>Welcome, {{ user.first_name }}. Please <a href='/joinleague'>Join a league.</a></span></p>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}
+
+{% block header_noauth %}
+<div id='league' class='topleft'>
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <p><span class='header2light'>Welcome, new user. Please <a href='/login'>log in.</a></span></p>
+    {% endpart %}
+    {% endinclude %}  
+</div>
+{% endblock %}
+
+{% block create_message_block %}
+    <div id='league' style="float: right;">
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <table width=400 bgcolor=black cellpadding=5px>
+            <tr>
+                <td class="white">
+                    <span class="header2light">New Message:</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td bgcolor="white">
+                    <span class="normal">{{ form_errors }}</span>
+                    <form action='.' method='POST'>{% csrf_token %}
+                        <div class="ui-widget">
+                            <textarea style="font-family: sans-serif;" name="message_post" rows=3 cols=50></textarea><br/>
+                            <input type="hidden" name="message" value="message"/><input type="submit" value="Post" />
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    {% endpart %}
+    {% endinclude %}
+    </div>
+{% endblock %}
+
+{% block message_block %}
+    <div id='league'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table width=475 bgcolor=black cellpadding=5px>
+                    <tr>
+                        <td class="white" colspan="3">
+                            <span class="header2light">League Messages:</span>
+                        </td>
+                    </tr>
+                    {% for m in message_list %}
+                    <tr bgcolor="white">
+                        <td width="5%">
+                            <img src="/static/pictures/{{ m.user.userpic}}.gif" height="50" width="50">
+                        </td>
+                        <td width="95%">
+                        {{ m.user.team.name }} ({{ m.user.user.username }}) @ {{ m.timestamp }}:<br/><blockquote>{{ m.message }}</blockquote>
+                        </td>
+                        {% if user.userprofile == m.user %}
+                        <td>
+                            <form action='.' method='POST'>{% csrf_token %}
+                                <div class="ui-widget">
+                                    <input type="hidden" name="delete" value="{{ m.id }}"/><input type="submit" value="X" />
+                                </div>
+                            </form>
+                        </td>
+                        {% else %}
+                            <td>
+                            </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base_playerpage_block.html" %}
+{% load includetag %}
+
+{% block content %}
+    <div id='research' class='stats'>
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+            <table width=600>
+                <tr>
+                    <td colspan="2">
+                        <span class='header2light'>Player ' {{ player }} ' Not Found:</span><br/><br/>
+                        <span class='header1light'>Perhaps you meant one of these players?</span>
+                    </td>
+                </tr>
+                {% for player in maybe_list %}
+                <tr>
+                    <td colspan="2">
+                        <hr/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><center>
+                        <img src="/static/pictures/{{ player.picture|upper }}.gif" height=75 width=75 style="border: solid black 2px">
+                    </center></td>
+                    <td>
+                        <span class='header2light'><a class="dark" href="/playerpage/{{ player.id }}">{{ player }}</a></span><br/><br/>
+                        <span class='header1light'>Team: {{ player.pro_team }}</span><br/><br/>
+                        <span class='header1light'>Position: {{ player.pos }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endpart %}
+    {% endinclude %}
+{% load includetag %}
+
+
+{% endblock %}

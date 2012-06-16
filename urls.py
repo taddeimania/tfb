@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
+from messages import views as message_views
 from myproject import views as base_views
 from player_card import views as player_card_views
 from top_player_list import views as top_player_list
@@ -15,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^about/$', 'myproject.views.about',name='about'),
     url(r'^uteam/$', 'myproject.views.my_team_page',name='myteam'),
     url(r'^myteam/$', 'myproject.views.my_team_page',name='myteam'),
+    url(r'^messages/$', message_views.MessageView.as_view(),name='message'),
 	url(r'^league/$', 'myproject.views.league_page',name='league'),
     url(r'^league/(?P<week>\w+)/$', 'myproject.views.league_page',name='league'),
     url(r'^leagueadmin/$', 'myproject.views.leagueadmin',name='leagueadmin'),
@@ -34,6 +36,8 @@ urlpatterns = patterns('',
     url(r'^sysadmin/(?P<arg>\w+)/(?P<argval>.*?)$', 'myproject.views.sysadmin',name='sysadmin'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^playerpage/$','myproject.top_player_list.views.playerpage'),
+    url(r'^playernotfound/$', top_player_list.PlayerNotFound.as_view()),
+    url(r'^playerpage/(?P<arg>\w+)','myproject.top_player_list.views.playerpage'),
     url(r'^playerpage/(?P<arg>\w+)','myproject.top_player_list.views.playerpage'),
     url(r'^leaguelist/(?P<league_id>\w+)','myproject.views.league_list'),
     url(r'^transactions/$', 'myproject.views.transactions_page'),

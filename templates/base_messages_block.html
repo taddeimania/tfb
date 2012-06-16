@@ -4,10 +4,8 @@
 
 {% if user.is_authenticated %}
     {% if myteam != 'None' %}
-        {% block header_auth %}{% endblock %}
-        {% block weekly_matchups %}{% endblock %}
-        {% block transactions %}{% endblock %}
-        {% block messages %}{% endblock %}
+        {% block message_block %}{% endblock %}
+        {% block create_message_block %}{% endblock %}<br/>
     {% else %}
         {% block join_a_league %}{% endblock %}
     {% endif %}

@@ -17,7 +17,7 @@
             <tr>
 
                 {% for i in weeks %}
-              <td>
+              <td width=1%>
                   <span class='header2light'>
                       <a href="/league/{{ i }}" class='dark'>{{ i }}</a>
                   </span>
@@ -141,4 +141,27 @@
     {% endpart %}
     {% endinclude %}  
 </div>
+{% endblock %}
+
+{% block messages %}
+    <div id='league' class='matchup'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table width=350 bgcolor=black cellpadding=5px>
+                    <tr>
+                        <td class="white">
+                            Recent Messages: <a class="dark" href="/messages">(See More & Post)</a>
+                        </td>
+                    </tr>
+                    {% for m in recent_messages %}
+                    <tr bgcolor="white">
+                        <td>
+                            {{ m.user.team.name }} ({{ m.user.user.username }}) @ {{ m.timestamp }}:<br/><blockquote>{{ m.message }}</blockquote>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    </div>
 {% endblock %}

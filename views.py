@@ -11,6 +11,7 @@ from DisplayLeague import DisplayLeague
 import abstraction
 import sys
 import logic
+from messages.models import Message
 from players.models import Team, League, Roster, Player, Stats, Matchup, \
     Schedule, UserProfile, Curweek, Transaction, \
     Pro_Team, Draft, DraftTeam, DraftOrder, DraftPick
@@ -230,7 +231,7 @@ def league_page(request, week = None):
                 ).league)[:15]
             transactions = [_ for _ in transactions]
             matchups = Matchup.objects.filter(week=curweek, league=league)
-
+            recent_messages = Message.objects.filter(user__team__league=league).order_by('-timestamp')[:5]
         except Team.DoesNotExist, Matchup.DoesNotExist:
             nomatchup = True
 

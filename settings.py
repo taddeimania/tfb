@@ -89,6 +89,7 @@ INSTALLED_APPS = (
     'registration',
     'players',
     'top_player_list',
+    'messages',
 )
 CONTEXT_PROCESSORS = (
     'pybb.context_processors.processor',

@@ -14,21 +14,20 @@ def create_matchup_schedule(list_of_teams, _league):
         MU.save()
 
 def create_matchup_data():  #no args lol
-    shuffled_team_list = [0,0,0,0,0,0,0,0,0,0]
-    i = 0
-    all_leagues = League.objects.all()
-    all_leagues = [_ for _ in all_leagues]
-    for league in all_leagues:
-        if not league.is_valid_league():
-            all_leagues.remove(league)
+    all_leagues = []
+    league_qs = League.objects.all()
+    for league in league_qs:
+        if league.is_valid_league():
+            all_leagues.append(league)
 
     for league in all_leagues:
         team_list = Team.objects.filter(league=league)
-        seed = random.sample(range(1,11),10)
-        for team in team_list:
+        count = team_list.count()
+        shuffled_team_list = [0] * count
+        seed = random.sample(range(1, count+1),count)
+        for idx, team in enumerate(team_list):
             shuffled_team_list.remove(0)
-            shuffled_team_list.insert(seed[i],team)
-            i += 1
+            shuffled_team_list.insert(seed[idx],team)
 
         create_matchup_schedule(shuffled_team_list, league)
 
