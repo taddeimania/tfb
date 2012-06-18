@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
-from tfb.messages import views as message_views
 from tfb import views as base_views
+from tfb.messages import views as message_views
 from tfb.player_card import views as player_card_views
 from tfb.top_player_list import views as top_player_list
 from tfb.draft import views as draft_views
