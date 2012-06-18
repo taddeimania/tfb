@@ -133,7 +133,7 @@ class League(models.Model):
 
     def is_valid_league(self):
         teams = Team.objects.filter(league = self.id)
-        if teams.count() == 10:
+        if teams.count() == self.maxteam and teams.count() % 2 == 0:
             return True
         else:
             return False

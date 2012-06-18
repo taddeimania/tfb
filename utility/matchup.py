@@ -20,14 +20,15 @@ def create_matchup_schedule(list_of_teams, _league):
         )
         MU.save()
 
-def create_matchup_data():  #no args lol
+def create_matchup_data():
     all_leagues = []
     league_qs = League.objects.all()
     for league in league_qs:
         if league.is_valid_league():
             all_leagues.append(league)
         else:
-            #disable league
+            league.active = 'N'
+            league.save()
             pass
 
     for league in all_leagues:

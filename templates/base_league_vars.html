@@ -84,11 +84,11 @@
                     {% for mu in matchups %}
                     <tr>
                         <td rowspan="2">{{ forloop.counter }}</td>
-                        <td width=88%><a href="/matchup/{{ mu.id }}">{% if mu.team_one.name == '' %}No Name Set{% else %}{{ mu.team_one.name }}{% endif %}</a></td>
+                        <td width=88%><a href="/matchup/{{ mu.id }}">{% if mu.team_one.name == '' %}({{ mu.team_one.owner.user }}){% else %}{{ mu.team_one.name }}{% endif %}</a></td>
                         <td>{{ mu.team_one_points }}</td>
                     </tr>
                     <tr>
-                        <td width=88%><a href="/matchup/{{ mu.id }}">{% if mu.team_two.name == '' %}No Name Set{% else %}{{ mu.team_two.name }}{% endif %}</a></td>
+                        <td width=88%><a href="/matchup/{{ mu.id }}">{% if mu.team_two.name == '' %}({{ mu.team_two.owner.user }}){% else %}{{ mu.team_two.name }}{% endif %}</a></td>
                         <td>{{ mu.team_two_points }}</td>
                     </tr>
                     <tr>

@@ -35,7 +35,7 @@
     {% part data %}
     <table width=400 bgcolor=black cellpadding=5px>
         <tr>
-            <td colspan=3><span class='header2light'><a href="/uteam/{{ team_one.id }}" class='dark'>{{ team_one.name }}</a></span></td>
+            <td colspan=3><span class='header2light'><a href="/uteam/{{ team_one.id }}" class='dark'>{{ team_one.name }}</span><span class="header1light">({{ team_one.owner.user }})</span></a></td>
         </tr>
         <table bgcolor=black width=100% class='matchupstats'>
             <tr>
@@ -157,7 +157,7 @@
             {% part data %}
                 <table width=400 bgcolor=black cellpadding=5px>
                     <tr>
-                        <td colspan=3><span class='header2light'><a href="/uteam/{{ team_two.id }}" class='dark'>{{ team_two.name }}</a></span></td>
+                        <td colspan=3><span class='header2light'><a href="/uteam/{{ team_two.id }}" class='dark'>{{ team_two.name }}<span class="header1light"> ({{ team_two.owner.user }})</span></a></td>
                     </tr>
                     <table bgcolor=black width=100% class='matchupstats'>
                         <tr>
