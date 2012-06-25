@@ -16,10 +16,9 @@ from tfb.settings import PROJECT_ROOT
 from tfb.draft.models import Draft
 from tfb.utility import logic, load_stats, matchup
 
-# Global variables.  Messing with this could cause major problems.
 CACHE_TIMEOUT = 30
 
-def default_response( context, request, template=None ):
+def default_response(context, request, template=None):
     """ Returns a default response using the previous function's
         name as the template name if none
         was supplied.
@@ -28,7 +27,7 @@ def default_response( context, request, template=None ):
         template = "%s.html" % sys._getframe(1).f_code.co_name
 
     if not context.get('request'):
-        context.update({ 'request':request })
+        context.update({'request': request})
 
     return render_to_response(
         template, context, context_instance=RequestContext(request)

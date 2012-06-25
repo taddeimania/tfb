@@ -8,7 +8,7 @@ from tfb.draft import views as draft_views
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', base_views.HomeView.as_view(), name='home'),
+    url(r'^$', base_views.about, name='about'),
 	url(r'^home/$', base_views.HomeView.as_view(), name='home'),
 	url(r'^players/$', base_views.HomeView.as_view(), name='home'),
 	url(r'^blue/$', base_views.BlankView.as_view(), name='blank'),
