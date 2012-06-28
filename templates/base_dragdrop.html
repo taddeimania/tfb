@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load includetag %}
+
+{% block content%}
+    <style type="text/css">
+        div.player1 {
+            display: block;
+            overflow-y: scroll;
+            overflow-x: visible;
+            width: 450px;
+            border: 1px solid #B2B2B2;
+            list-style: none;
+            margin: 0 60px 0 0;
+            max-height: 400px;
+            padding: 4px 0;
+        }
+
+        .dropbox{
+            background: white;
+            width: 410px;
+            height: 50px;
+        }
+
+    </style>
+    <div class="drag_and_drop">
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+                <div id="player1" class="scrollbar player1">
+                    {% for player in player_list %}
+                    <div class="dragme" style="width:400px; border: solid 3px black; background: white; margin: 2px; "><img src="/static/pictures/helmets/{{ player.team|upper }}.gif" height="50" width="50" style="vertical-align: middle;">  <img src="/static/pictures/{{ player.pic|upper }}.gif" height="50" width="50" style="vertical-align: middle;"><span class="header2"> {{ player.name }}</span></div>
+                    {% endfor %}
+                </div>
+
+        {% endpart %}
+    {% endinclude %}
+    </div>
+
+    <div class="drag_and_drop">
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <div><span class="header2light">Drop your pick here:</span><br/><hr/></div>
+        <div id="drop-container">
+        <div id="dropme" class="dropbox"></div>
+        </div>
+        <div id="clear">Clear</div>
+    {% endpart %}
+    {% endinclude %}
+    </div>
+    </div>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="jquery.scroll.js"></script>
+    <script type="text/javascript">
+        $('.scrollbar').scrollbar();
+    </script>
+    <script type="text/javascript">
+
+        $( init );
+
+        $('#clear').live("click", function(){
+            $('#player1').append($('#drop-container').html())
+            $('#drop-container').html(($('<div>').attr('id', 'dropme').attr('class', 'dropbox ui-droppable')));
+            $( init );
+        });
+
+        function init() {
+            $('.dragme').draggable( {
+                cursor: 'move',
+                appendTo: 'body',
+                containment: 'window',
+                scroll: false,
+                helper: 'clone'
+            });
+
+            $('#dropme').droppable( {
+                drop: handleDropEvent
+            } );
+        }
+
+        function handleDropEvent( event, ui ) {
+            var draggable = ui.draggable;
+            console.log(draggable.html())
+            $('#dropme').replaceWith(draggable)
+        }
+
+    </script>
+{% endblock %}

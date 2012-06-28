@@ -144,17 +144,6 @@ th.draftconfirmheader{
     background-repeat: repeat-x;
 }
 
-#home{
-	position:absolute;
-	top:55px;
-	left:110px;
-}
-	#home .nav{
-		position:absolute;
-		top:180px;
-		left:100px;
-		border-width:0px;
-	}
 #joinleague{
     display:inline-block;
     vertical-align: top;
@@ -238,6 +227,14 @@ th.draftconfirmheader{
 		border-style:solid;
 		border-width: 2px;
 	}
+#demo1 {
+    display:inline-block;
+    vertical-align: top;
+    position:relative;
+    margin-top:10px;
+    margin-left:15px;
+}
+
 #profile {
     display:inline-block;
     vertical-align: top;
@@ -245,8 +242,8 @@ th.draftconfirmheader{
     margin-top:10px;
     margin-left:15px;
     }
-	.nametag {
-	}
+.nametag {
+}
 	.quickroster {
 		background-image:url('/static/pictures/tecmobg.gif');
 	}
@@ -327,6 +324,10 @@ tr.odd1{
         float:left;
 	}
 #sysadmin{
+    display:inline-block;
+    vertical-align: top;
+}
+.drag_and_drop{
     display:inline-block;
     vertical-align: top;
 }

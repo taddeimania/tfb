@@ -90,3 +90,17 @@ def draftpage(request, arg=None):
             instructions = False
 
     return default_response(locals(), request, 'base_draft_vars.html')
+
+
+def drag_and_drop(request):
+
+    players = player_models.Player.objects.filter(pos__startswith='QB')
+    player_list = [
+        {'id': player.id,
+                    'name': player.player_name,
+                    'pic': player.picture,
+                    'team': player.pro_team.short}
+        for player in players
+    ]
+
+    return default_response(locals(), request, 'base_dragdrop.html')
