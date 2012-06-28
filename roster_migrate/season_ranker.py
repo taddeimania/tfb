@@ -10,11 +10,6 @@ def calc_points(line):
 		       (int(line[10]) * 6) + int(line[26]) + (int(line[28]) * 3)
 
 def main():
-	conn = MySQLdb.connect (host = "localhost",
-                           user = "root",
-                           db = "jtaddei_tecmo")
-	cursor = conn.cursor ()
-
 	read_file = open('reformatted.csv', 'r')
 	write_file = open('player_ranking.sql', 'a')
 	player_list = []
@@ -28,8 +23,6 @@ def main():
 			player_list.append((points, name))
 			i += 1
 
-	cursor.close ()
-	conn.close ()
 	player_list.sort(reverse=True)
 	write_file.write("use jtaddei_tecmo;\n")
 	for idx, player in enumerate(player_list):
