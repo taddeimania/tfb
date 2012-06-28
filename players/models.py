@@ -241,14 +241,18 @@ class Matchup(models.Model):
 
 #start rebuilding data to use this table
 class Season(models.Model):
-    name = models.CharField( max_length=25 )
-    description = models.CharField( max_length=50 )
+    name = models.CharField(max_length=25)
+    description = models.CharField(max_length=50)
 
 class Trophy(models.Model):
-    name = models.CharField( max_length=25 )
-    description = models.CharField( max_length=50 )
+    name = models.CharField(max_length=25)
+    description = models.CharField(max_length=50)
 
 class TrophyAssignment(models.Model):
-    profile = models.ForeignKey( UserProfile )
-    season = models.ForeignKey( Season )
-    trophy = models.ForeignKey( Trophy )
+    profile = models.ForeignKey(UserProfile)
+    season = models.ForeignKey(Season)
+    trophy = models.ForeignKey(Trophy)
+
+class SeasonRanking(models.Model):
+    ranking = models.IntegerField()
+    player = models.ForeignKey(Player)
