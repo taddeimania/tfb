@@ -253,6 +253,16 @@ class TrophyAssignment(models.Model):
     season = models.ForeignKey(Season)
     trophy = models.ForeignKey(Trophy)
 
+class SeasonRankingManager(models.Manager):
+
+    def get_position(self, pos):
+        return self.filter(player__pos=pos)
+
 class SeasonRanking(models.Model):
     ranking = models.IntegerField()
     player = models.ForeignKey(Player)
+
+    objects = SeasonRankingManager()
+
+    class Meta:
+        ordering = ['ranking']
