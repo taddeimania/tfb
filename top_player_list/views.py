@@ -1,6 +1,7 @@
 from django.core.cache import cache
 from django.utils import simplejson
 from django.views.generic.base import View, TemplateView
+from players.models import SeasonRanking
 from tfb import views as base_views
 from tfb.players import models as player_models
 from tfb.utility import logic
@@ -57,6 +58,10 @@ def playerpage(request, arg=None):
         top = True
         for pos in pos_list:
             player_list.append((pos, get_top_ten_for_pos(pos)))
+
+    if str(arg).upper() == 'DRAFT':
+        draft = True
+        player_list = [x for x in SeasonRanking.objects.all()]
 
     elif str(arg).upper() == 'TOPAVAIL':
         top = True

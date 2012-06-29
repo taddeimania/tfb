@@ -127,6 +127,11 @@
                     {% endif %}
                 </td>
             </tr>
+            <tr>
+                <td><br/>
+                    <span class='header2light'><a href="/playerpage/draft" class="dark">(New) Pre-Draft Rankings</a></span><br/>
+                </td>
+            </tr>
         </table>
     {% endpart %}
 {% endinclude %}
@@ -258,4 +263,23 @@
             </div>
         {% endpart %}
     {% endinclude %}
+{% endblock %}
+
+{% block draft_block %}
+{% include "tecmo_outline_table.html" %}
+    {% part data %}
+        <table width=700 cellpadding=5px style="margin: 15px; background: black;">
+            <tr>
+                <span class="header2">Pre-Draft rankings</span>
+            </tr>
+            {% for projection in player_list %}
+            <tr bgcolor="black">
+                <td bgcolor="white" valign="middle"><span class="header2"><img src="/static/pictures/helmets/{{ projection.player.pro_team.short|upper }}.gif"></span></td>
+                <td bgcolor="white" width="15%"><img style="border: solid 3px black;" src="/static/pictures/{{ projection.player.picture|upper }}.gif"></td>
+                <td bgcolor="white"><span class="header2">#{{ forloop.counter }} {{ projection.player.pos }} - {{ projection.player }}</span></td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endpart %}
+{% endinclude %}
 {% endblock %}
