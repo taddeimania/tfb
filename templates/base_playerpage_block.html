@@ -1,5 +1,24 @@
 {% extends "base.html" %}
 
+
 {% block content%}
-{% block header_auth %}{% endblock %}
+
+    {% if search %}
+        {% block search_block %}{% endblock %}
+    {% else %}
+        {% block search_bar %}{% endblock %}
+    {% endif %}
+
+    {% if playersearch %}
+        {% block player_card %}{% endblock %}
+    {% endif %}
+
+    {% if top %}
+        {% block top_block %}{% endblock %}
+    {% endif %}
+
+    {% if pos and not top %}
+        {% block pos_block %}{% endblock %}
+    {% endif %}
+
 {% endblock %}
