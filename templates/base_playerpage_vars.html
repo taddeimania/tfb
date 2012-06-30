@@ -4,14 +4,14 @@
 {% block title %}Welcome to Tecmo Fantasy Bowl! {% endblock %}
 
 {% block head %}
-    <script src="/static/jquery.autocomplete.min.js"></script>
+    <script src="/static/jquery-ui-1.8.21.custom.min.js"></script>
     <script type="text/javascript">
     $(document).ready(function() {
-        $( "#playersearch" ).autocomplete({
+        $("#playersearch").autocomplete({
             source: {{ players|safe }}
         });
     });
-</script>
+    </script>
 {% endblock %}
 
 {% block search_bar %}
@@ -19,7 +19,7 @@
         <tr bgcolor="black">
             <form action='.' method='POST'>{% csrf_token %}
                 <div class="ui-widget">
-                    <input id="playersearch" type="text" name="playersearch" value="" size="25" maxlength="25"/><br/>
+                    <input id="playersearch1" type="text" name="playersearch" value="" size="25" maxlength="25"/><br/>
                     <input type="hidden" name="search" value="search"/><input type="submit" value="Search" />
                 </div>
             </form>
