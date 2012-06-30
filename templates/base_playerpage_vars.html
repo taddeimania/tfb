@@ -274,9 +274,8 @@
             </tr>
             {% for projection in player_list %}
             <tr bgcolor="black">
-                <td bgcolor="white" valign="middle"><span class="header2"><img src="/static/pictures/helmets/{{ projection.player.pro_team.short|upper }}.gif"></span></td>
                 <td bgcolor="white" width="15%"><img style="border: solid 3px black;" src="/static/pictures/{{ projection.player.picture|upper }}.gif"></td>
-                <td bgcolor="white"><span class="header2">#{{ forloop.counter }} {{ projection.player.pos }} - {{ projection.player }}</span></td>
+                <td bgcolor="white"><span class="header2">#{{ forloop.counter }} {{ projection.player }}</span><br/><br/><span class="header2" style="font-size: 2em;">{{ projection.player.pos }} - {{ projection.player.pro_team }}</span></td>
             </tr>
             {% endfor %}
         </table>
