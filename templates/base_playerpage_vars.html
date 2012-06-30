@@ -271,16 +271,55 @@
         <table width=700 cellpadding=5px style="margin: 15px; background: black;">
             <tr>
                 <td colspan=2 bgcolor="white">
-                    <center><span class="header2">Pre-Draft rankings</span></center>
+                    <center><span class="header2">Pre-Draft rankings<hr/>
+                    <a id="qb" class="ajax" href="#">QB</a> - <a id="rb" class="ajax"  href="#">RB</a> - <a id="wr" class="ajax"  href="#">WR</a> - <a id="te" class="ajax"  href="#">TE</a> - <a id="k" class="ajax"  href="#">K</a> - <a id="all" href="/playerpage/draft">ALL</a><br/></span></center>
+                    <div id="loading" style="display: none"><center><span class="header2">...LOADING...</span></center></div>
                 </td>
             </tr>
-            {% for projection in player_list %}
-            <tr bgcolor="black">
-                <td bgcolor="white" width="15%"><img style="border: solid 3px black;" src="/static/pictures/{{ projection.player.picture|upper }}.gif"></td>
-                <td bgcolor="white"><span class="header2">#{{ forloop.counter }} {{ projection.player }}</span><br/><br/><span class="header2" style="font-size: 2em;">{{ projection.player.pos }} - {{ projection.player.pro_team }}</span></td>
+
+            <tr>
+                <td>
+                <table id="player_space">
+                    <tr>
+                        {% for projection in player_list %}
+                            <tr bgcolor="black">
+                                <td bgcolor="white" width="15%"><img style="border: solid 3px black;" src="/static/pictures/{{ projection.player.picture|upper }}.gif"></td>
+                                <td bgcolor="white"><span class="header2">#{{ forloop.counter }} {{ projection.player }}</span><br/><br/><span class="header2" style="font-size: 2em;">{{ projection.player.pos }} - {{ projection.player.pro_team }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </td>
             </tr>
-            {% endfor %}
         </table>
     {% endpart %}
 {% endinclude %}
+    <script>
+    var $draft_space_table = $('#player_space');
+    $('.ajax').live('click', function(event){
+        var $trigger = this.id;
+            $('#loading').show();
+            $.ajax({
+                    type: "GET",
+                    url: '/playerpage/',
+                    data: $trigger,
+                    success: function (data){
+                            var i = 1;
+                            $('#loading').hide();
+                            $draft_space_table.empty();
+                            $.each(data, function (key, val) {
+                                $draft_space_table.append(
+                                '<tr bgcolor="black">' +
+                                '<td bgcolor="white" width="15%"><img style="border: solid 3px black;" src="/static/pictures/' + val.picture.toUpperCase() +  '.gif"></td>' +
+                                '<td bgcolor="white"><span class="header2">#' + i + ' ' + val.name + '</span><br/><br/><span class="header2" style="font-size: 2em;">' + val.position + ' - ' + val.team + '</span></td>' +
+                                '</tr>'
+                                );
+                            i++;
+                            });
+                    }
+            });
+            event.preventDefault();
+        }
+    );
+    </script>
 {% endblock %}

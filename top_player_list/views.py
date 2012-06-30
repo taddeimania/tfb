@@ -1,4 +1,5 @@
 from django.core.cache import cache
+from django.http import HttpResponse
 from django.utils import simplejson
 from django.views.generic.base import View, TemplateView
 from players.models import SeasonRanking
@@ -53,6 +54,19 @@ def playerpage(request, arg=None):
 
     player = request.POST.get('playersearch','')
     players = simplejson.dumps([x.player_name for x in player_models.Player.objects.all()])
+
+    if request.is_ajax():
+        position = request.GET.items()[0][0]
+        players = dict(
+            (player.ranking, {
+                'name': player.player.player_name,
+                'team': player.player.pro_team.long,
+                'picture': player.player.picture,
+                'position': player.player.pos
+            })
+            for player in SeasonRanking.objects.get_position(position)
+        )
+        return HttpResponse(simplejson.dumps(players), content_type='application/json')
 
     if str(arg).upper() == 'TOP':
         top = True

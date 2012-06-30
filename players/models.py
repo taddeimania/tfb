@@ -256,10 +256,9 @@ class TrophyAssignment(models.Model):
 class SeasonRankingManager(models.Manager):
 
     def get_position(self, pos):
-        if pos != "K":
-            return self.filter(player__pos__startswith=pos[:-1])
-        else:
-            return self.filter(player__pos='K')
+        if pos[-1] in [1, 2, 3, 4]:
+            pos = pos[:-1]
+        return self.filter(player__pos__startswith=pos.upper())
 
 class SeasonRanking(models.Model):
     ranking = models.IntegerField()
