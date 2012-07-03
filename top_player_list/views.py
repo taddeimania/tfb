@@ -42,7 +42,7 @@ def get_player_stats(arg, playerstats):
         season_total = playerobj.SeasonTotal()
         return playerobj, season_total
     except player_models.Player.DoesNotExist:
-        pass
+        return "Player Not Found", ""
 
 
 
