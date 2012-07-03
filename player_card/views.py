@@ -46,7 +46,12 @@ class PlayerPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         player_id = kwargs['player_id']
-        self.player = player_models.Player.objects.get(pk=player_id)
+        try:
+            self.player = player_models.Player.objects.get(pk=player_id)
+            self.schedule = logic.getteamschedule(self.player.pro_team_id)
+        except:
+            self.player = 0
+            self.schedule = []
         self.user = self.request.user
         self.user_league = self.get_user_league(self.user)
         return self.get_template_data()
@@ -57,7 +62,7 @@ class PlayerPageView(TemplateView):
         return {
             'user': self.user,
             'player': self.player,
-            'schedule': logic.getteamschedule(self.player.pro_team_id),
+            'schedule': self.schedule,
             'weekfilter': player_models.Stats.objects.filter(player=self.player),
             'curweek': self.curweek,
             'seasontotalstats': seasontotalstats,
