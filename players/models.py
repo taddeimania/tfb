@@ -76,6 +76,9 @@ class Schedule(models.Model):
     homescore = models.IntegerField()
     week = models.IntegerField()
 
+    def __unicode__(self):
+        return "{} at {} - week {}".format(self.home, self.away, self.week)
+
 class StatsManager(models.Manager):
 
     def get_current_opponent_by_player(self, player):
@@ -106,7 +109,7 @@ class Stats(models.Model):
 
     objects = StatsManager()
 
-    def __str__(self):
+    def __unicode__(self):
         return self.player.player_name
 
 class LeagueManager(models.Manager):
@@ -125,6 +128,9 @@ class League(models.Model):
     invite_code = models.CharField(max_length=30, null=True)
 
     objects = LeagueManager()
+
+    def __unicode__(self):
+        return self.lname
 
     def generate_hash(self):
         league = League.objects.get(pk=self.id)
@@ -154,6 +160,9 @@ class League(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     userpic = models.CharField(max_length=2)
+
+    def __unicode__(self):
+        return self.user.username
 
     def create_user_profile(sender, instance, created, **kwargs):
         if created:
@@ -192,8 +201,11 @@ class Team(models.Model):
     slogan = models.CharField(max_length=200)
     total_points = models.IntegerField()
     total_points_against = models.IntegerField()
-    iscommish = models.CharField(max_length=1, null=True)
+    iscommish = models.CharField(max_length=1, null=True, choices=(('Y', 'Yes'), ('N', 'No')))
     objects = TeamManager()
+
+    def __unicode__(self):
+        return self.name
 
     def calc_week_points(self, _week=None):
         total_points = 0
@@ -222,6 +234,9 @@ class Roster(models.Model):
 class Curweek(models.Model):
     curweek = models.IntegerField(default=0)
 
+    def __unicode__(self):
+        return str(self.curweek)
+
 class Transaction(models.Model):
     timestamp = models.DateTimeField()
     action = models.CharField(max_length=10)
@@ -239,19 +254,31 @@ class Matchup(models.Model):
     team_two_points = models.IntegerField()
     winner = models.ForeignKey(Team,related_name='winner', null=True)
 
+    def __unicode__(self):
+        return "{} vs. {}".format(self.team_one, self.team_two)
+
 #start rebuilding data to use this table
 class Season(models.Model):
     name = models.CharField(max_length=25)
     description = models.CharField(max_length=50)
 
+    def __unicode__(self):
+        return self.name
+
 class Trophy(models.Model):
     name = models.CharField(max_length=25)
     description = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.name
 
 class TrophyAssignment(models.Model):
     profile = models.ForeignKey(UserProfile)
     season = models.ForeignKey(Season)
     trophy = models.ForeignKey(Trophy)
+
+    def __unicode__(self):
+        return str(self.trophy)
 
 class SeasonRankingManager(models.Manager):
 
@@ -268,3 +295,6 @@ class SeasonRanking(models.Model):
 
     class Meta:
         ordering = ['ranking']
+
+    def __unicode__(self):
+        return "{} - {}".format(self.ranking, self.player)
