@@ -5,9 +5,9 @@ import sys
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 if os.getenv('DEBUG'):
-    DEBUG = True
+    DEBUG = False
 else:
-    DEBUG = True
+    DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 SEND_BROKEN_LINK_EMAILS = False
 ADMINS = (
