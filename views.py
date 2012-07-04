@@ -298,7 +298,8 @@ def joinleague(request):
                     loss=0,
                     slogan="",
                     total_points=0,
-                    total_points_against=0
+                    total_points_against=0,
+                    iscommish="N"
                 )
                 team.save()
                 success = True
@@ -319,7 +320,8 @@ def joinleague(request):
                 loss=0,
                 slogan="",
                 total_points=0,
-                total_points_against=0
+                total_points_against=0,
+                iscommish="N"
             )
             team.save()
             success = True
