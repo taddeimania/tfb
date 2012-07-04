@@ -2,6 +2,10 @@ from django.contrib import admin
 from tfb.players.models import SeasonRanking, Team, UserProfile, League, Schedule, Player, \
     Pro_Team, Stats, Roster, Curweek, Matchup, Trophy, TrophyAssignment, Season
 
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['user']
+
+
 class TeamAdmin(admin.ModelAdmin):
     list_display = ['name','league', 'iscommish']
     list_filter = ('league',)
@@ -34,7 +38,7 @@ class TrophyAssignmentAdmin(admin.ModelAdmin):
     list_display = ['trophy', 'profile', 'season']
 
 admin.site.register(SeasonRanking)
-admin.site.register(UserProfile)
+admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Season)
 admin.site.register(Curweek)
 admin.site.register(Trophy)
