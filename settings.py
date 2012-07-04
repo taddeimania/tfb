@@ -38,7 +38,6 @@ MEDIA_ROOT = ''
 MEDIA_URL = ''
 STATIC_ROOT = PROJECT_ROOT
 STATIC_URL = '/static/'
-ADMIN_MEDIA_PREFIX = '/admin_static/'
 STATICFILES_DIRS = (
 	STATIC_ROOT + '/static',
 )
