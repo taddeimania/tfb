@@ -293,7 +293,7 @@ def joinleague(request):
                 team = Team(
                     owner=user_id,
                     league=league,
-                    name="",
+                    name=user_id.user.username,
                     win=0,
                     loss=0,
                     slogan="",
@@ -314,7 +314,7 @@ def joinleague(request):
             team = Team(
                 owner=user_id,
                 league=League.objects.get(pk=leaguejoin),
-                name="",
+                name=user_id.user.username,
                 win=0,
                 loss=0,
                 slogan="",
