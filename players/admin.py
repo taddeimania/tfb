@@ -3,7 +3,7 @@ from tfb.players.models import SeasonRanking, Team, UserProfile, League, Schedul
     Pro_Team, Stats, Roster, Curweek, Matchup, Trophy, TrophyAssignment, Season
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user']
+    list_display = ['username']
 
 
 class TeamAdmin(admin.ModelAdmin):
