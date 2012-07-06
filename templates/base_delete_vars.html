@@ -1,0 +1,51 @@
+{% extends "base_delete_block.html" %}
+{% load includetag %}
+
+{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
+
+{% block header_auth %}
+    <div id='profile_edit' class='edit_box'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <table bgcolor="white" width="800" cellpadding="20px">
+                    <tr bgcolor="black">
+                        <td>
+                            <span class="header2light">Account Deactivation</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="normal">I'm sorry to see you go.  By clicking the button below you will be deleting your team from the league you are currently in.
+                                Your account will remain in the database but in an inactive status.  <br/><br/>
+                                If you'd prefer to have your account fully deleted let <a href="mailto:jtaddei@gmail.com">me know</a> and i'll be happy to do a full delete for you.<br/>
+                            <ul>
+                                <li>Deactivating your account after your draft <u>but before week 7</u> will drop your current roster to free agency and leave your team in an ownerless state.  A new owner can be assigned by <a href="mailto:jtaddei@gmail.com">request.</a></li>
+                                <br/><li>You cannot deactivate and reactivate your account in the same season.</li>
+                                <br/><li>You cannot deactivate after week 7.  You're stuck with your crappy team.</li>
+                                <br/><li>If you deactivate your account before your league's draft you will be fully removed from your league.</li>
+                            </ul>
+                            </span>
+                            <br/><br/><br/><center>
+                            <form action="." method='POST'>
+                                {% csrf_token %}
+                                <input type="submit" style="width:300px; height:100px; font-size: 4em; color: red;" id="deactivate" name="deactivate" value="Deactivate">
+                                <input type="hidden" name="del_account" value="del_account">
+                            </form>
+                            </center>
+                        </td>
+                    </tr>
+                </table>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}
+
+{% block header_noauth %}
+    <div id='profile' class='nametag'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <p><span class='header2light'>Welcome, new user. Please <a href='/login'>log in.</a></span></p>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}
