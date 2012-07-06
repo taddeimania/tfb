@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block header_auth %}
-<div id='profile' class='nametag'>
+<div class='profile'>
     {% include "tecmo_outline_table.html" %}
         {% part data %}
             <table bgcolor=black width=400>
@@ -60,6 +60,28 @@
     {% endinclude %}
 </div>
 
+<div class="profile">
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+    <table bgcolor=black width=500>
+        <tr bgcolor="white">
+            <td>
+                <center><blockquote><span class="header2">Trophies</span></blockquote></center>
+            </td>
+        </tr>
+        <tr style="background-image:url('/static/pictures/tecmobg.gif');">
+            <td>
+                <center>
+                    {% for trophy in trophies %}
+                        <img style="margin: 10px;" src="/static/pictures/trophies/{{ trophy.trophy.image }}" title="{{ trophy.trophy.description }}" height="95px" width="95px">
+                    {% endfor %}
+                </center>
+            </td>
+        </tr>
+    </table>
+    {% endpart %}
+    {% endinclude %}
+</div>
 {% endblock %}
 
 

@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
+from players.models import TrophyAssignment
 from tfb.draft import draft
 from tfb.messages.models import Message
 from tfb.players.models import Team, League, Roster, Player, Stats, Matchup, \
@@ -406,16 +407,15 @@ class ProfileView(TemplateView):
 
     def get_team(self):
         try:
-            return Team.objects.get(owner=self.user.userprofile.id)
+            return Team.objects.get(owner=self.request.user.userprofile.id)
         except Team.DoesNotExist:
             return 'None'
 
     def get_context_data(self, **kwargs):
-        self.user = self.request.user
-        self.team = self.get_team()
         return {
-            'user': self.user,
-            'team': self.team
+            'user': self.request.user,
+            'team': self.get_team(),
+            'trophies': [ _ for _ in TrophyAssignment.objects.filter(profile=self.request.user.userprofile)]
         }
 
 class HomeView(TemplateView):
