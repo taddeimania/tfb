@@ -42,7 +42,8 @@
                             <a href="/home"><img src="/static/pictures/home.gif"></a>  |
                             <a href="/league"><img src="/static/pictures/league.gif"></a>  |
                             <a href="/playerpage"><img src="/static/pictures/players.gif"></a>  |
-                            <a href="/profile"><img src="/static/pictures/profile.gif"></a>
+                            <a href="/profile"><img src="/static/pictures/profile.gif"></a>  |
+                            <a href="/logout"><img src="/static/pictures/logout.gif"></a>
                         {% else %}
                             <a href="/home"><img src="/static/pictures/home.gif"></a>  |
                             <a href="/playerpage"><img src="/static/pictures/players.gif"></a>  |
@@ -56,7 +57,7 @@
         </div>
 
         <div id='banner' style="margin-bottom: 20px">
-            <img src="/static/pictures/banner.gif" class="image">{% if user.is_authenticated %}<span class="header2light" style="padding:30px;"><a class="dark" href="/logout">Logout</a></span>{% endif %}<br/>
+            <img src="/static/pictures/banner.gif" class="image">
             <!-- Maintenance Banner -->
             <!-- <span class='header2light'><center>SITE IS UNDERGOING MAINTENANCE</center></span> -->
             <!-- -->
