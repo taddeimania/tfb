@@ -7,12 +7,11 @@ from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
-from players.models import TrophyAssignment
 from tfb.draft import draft
 from tfb.messages.models import Message
 from tfb.players.models import Team, League, Roster, Player, Stats, Matchup, \
     Schedule, UserProfile, Curweek, Transaction, \
-    Pro_Team
+    Pro_Team, TrophyAssignment
 from tfb.settings import PROJECT_ROOT
 from tfb.draft.models import Draft
 from tfb.utility import logic, load_stats, matchup
