@@ -1,4 +1,6 @@
 """make pylint happy"""
+from django.contrib.auth.models import User
+from django.views.generic.edit import DeleteView
 import os
 import sys
 from django.http import HttpResponseRedirect, HttpResponse
@@ -427,3 +429,34 @@ class HomeView(TemplateView):
 
 class BlankView(TemplateView):
     template_name = "blank.html"
+
+class DeleteAccountView(TemplateView):
+    template_name = "base_delete_vars.html"
+
+    def post(self, *args, **kwargs):
+        #drop roster for current week
+        week = logic.getweek()
+        team = Team.objects.get(owner=self.request.user.userprofile)
+        roster_list = Roster.objects.filter(week=week, team=team)
+        if week > 0 < 7:
+            free_agent = UserProfile.objects.get(username="free_agent")
+            for player in roster_list:
+                player.delete()
+            team.owner = free_agent
+            team.save()
+            user = User.objects.get(username=self.request.user.username)
+            user.is_active = 0
+            user.save()
+            logout(self.request)
+        elif week == 0:
+            for player in roster_list:
+                player.delete()
+            team.delete()
+            user = User.objects.get(username=self.request.user.username)
+            user.is_active = 0
+            user.save()
+            logout(self.request)
+        else:
+            pass
+
+        return HttpResponseRedirect('/')

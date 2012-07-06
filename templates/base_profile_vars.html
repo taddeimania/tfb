@@ -82,6 +82,20 @@
     {% endpart %}
     {% endinclude %}
 </div>
+
+<div class="profile">
+    {% include "tecmo_outline_table.html" %}
+        {% part data %}
+            <table bgcolor=black width=350 cellpadding="20px">
+                <tr bgcolor="white">
+                    <td>
+                       <span class="header2light"><a style="color: red;" href="/delete_account">Deactivate Account</a></span>
+                    </td>
+                </tr>
+            </table>
+    {% endpart %}
+    {% endinclude %}
+</div>
 {% endblock %}
 
 
