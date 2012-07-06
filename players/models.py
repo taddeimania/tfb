@@ -269,6 +269,7 @@ class Season(models.Model):
 class Trophy(models.Model):
     name = models.CharField(max_length=25)
     description = models.CharField(max_length=50)
+    image = models.CharField(max_length=25)
 
     def __unicode__(self):
         return self.name

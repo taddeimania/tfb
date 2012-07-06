@@ -1,17 +1,23 @@
+# -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        for profile in orm.UserProfile.objects.all():
-            profile.username = profile.user.username
-            profile.save()
+        # Adding field 'Trophy.image'
+        db.add_column('players_trophy', 'image',
+                      self.gf('django.db.models.fields.CharField')(default='beta.gif', max_length=25),
+                      keep_default=False)
+
 
     def backwards(self, orm):
-        pass
+        # Deleting field 'Trophy.image'
+        db.delete_column('players_trophy', 'image')
+
 
     models = {
         'auth.group': {
@@ -171,6 +177,7 @@ class Migration(DataMigration):
             'Meta': {'object_name': 'Trophy'},
             'description': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.CharField', [], {'max_length': '25'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '25'})
         },
         'players.trophyassignment': {
@@ -190,4 +197,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['players']
-    symmetrical = True

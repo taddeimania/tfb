@@ -235,7 +235,7 @@ th.draftconfirmheader{
     margin-left:15px;
 }
 
-#profile {
+.profile {
     display:inline-block;
     vertical-align: top;
     position:relative;
