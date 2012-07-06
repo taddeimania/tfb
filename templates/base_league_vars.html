@@ -4,6 +4,21 @@
 {% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}!{% endblock %}
 
 {% block header_auth %}
+<div id='league' class='weeks'>
+    {% include "tecmo_outline_table.html" %}
+    {% part data %}
+    <table>
+        <tr>
+            <td>
+                <a href="/myteam"><img src="/static/pictures/myteam.gif"></a>  |
+                <a href="/matchup"><img src="/static/pictures/matchup.gif"></a>  |
+                <a href="/messages"><img src="/static/pictures/messages.gif"></a>
+            </td>
+        </tr>
+    </table>
+    {% endpart %}
+    {% endinclude %}
+</div>
 {% if matchups %}
 <div id='league' class='weeks'>
     {% include "tecmo_outline_table.html" %}
