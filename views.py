@@ -433,6 +433,16 @@ class BlankView(TemplateView):
 class DeleteAccountView(TemplateView):
     template_name = "base_delete_vars.html"
 
+    def deactivate_team(self):
+        user = User.objects.get(username=self.request.user.username)
+        user.is_active = 0
+        user.save()
+        logout(self.request)
+
+    def cleanse_roster(self, roster_list):
+        for player in roster_list:
+            player.delete()
+
     def post(self, *args, **kwargs):
         #drop roster for current week
         week = logic.getweek()
@@ -440,22 +450,14 @@ class DeleteAccountView(TemplateView):
         roster_list = Roster.objects.filter(week=week, team=team)
         if week > 0 < 7:
             free_agent = UserProfile.objects.get(username="free_agent")
-            for player in roster_list:
-                player.delete()
+            self.cleanse_roster(roster_list)
             team.owner = free_agent
             team.save()
-            user = User.objects.get(username=self.request.user.username)
-            user.is_active = 0
-            user.save()
-            logout(self.request)
+            self.deactivate_team()
         elif week == 0:
-            for player in roster_list:
-                player.delete()
+            self.cleanse_roster(roster_list)
             team.delete()
-            user = User.objects.get(username=self.request.user.username)
-            user.is_active = 0
-            user.save()
-            logout(self.request)
+            self.deactivate_team()
         else:
             pass
 
