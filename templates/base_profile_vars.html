@@ -63,7 +63,7 @@
 <div class="profile">
     {% include "tecmo_outline_table.html" %}
     {% part data %}
-    <table bgcolor=black width=500>
+    <table bgcolor=black width=450>
         <tr bgcolor="white">
             <td>
                 <center><blockquote><span class="header2">Trophies</span></blockquote></center>
@@ -73,7 +73,10 @@
             <td>
                 <center>
                     {% for trophy in trophies %}
-                        <img style="margin: 10px;" src="/static/pictures/trophies/{{ trophy.trophy.image }}" title="{{ trophy.trophy.description }}" height="95px" width="95px">
+                        <img style="margin: 10px;" src="/static/pictures/trophies/{{ trophy.trophy.image }}" title="{{ trophy.trophy.description }}" height="100px" width="100px">
+                        <img style="margin: 10px;" src="/static/pictures/trophies/{{ trophy.trophy.image }}" title="{{ trophy.trophy.description }}" height="100px" width="100px">
+                        <img style="margin: 10px;" src="/static/pictures/trophies/{{ trophy.trophy.image }}" title="{{ trophy.trophy.description }}" height="100px" width="100px">
+                        <img style="margin: 10px;" src="/static/pictures/trophies/{{ trophy.trophy.image }}" title="{{ trophy.trophy.description }}" height="100px" width="100px">
                     {% endfor %}
                 </center>
             </td>
