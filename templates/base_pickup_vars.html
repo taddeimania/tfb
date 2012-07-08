@@ -1,9 +1,6 @@
 {% extends "base_pickup_block.html" %}
 {% load includetag %}
 
-{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
-
-
 {% block header_auth %}
 <div id='pickup' class='availplayers'>
 	{% include "tecmo_outline_table.html" %}

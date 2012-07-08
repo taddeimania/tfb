@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load includetag %}
+
+{% block content%}
+    <div id='profile' class='nametag'>
+        {% include "tecmo_outline_table.html" %}
+            {% part data %}
+                <span class="header2light" style="width: 400px;">500 Error</span> <br/><br/><br/><br/><span class="header1light">You tried to access a page but Okoye just took it down...</span>
+            {% endpart %}
+        {% endinclude %}
+    </div>
+{% endblock %}
