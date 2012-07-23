@@ -79,7 +79,7 @@ def sysadmin(request, arg=None, argval=None):
     """
     if request.user.is_superuser:
         if arg == 'process':
-            load_stats.insert_file(file)
+            load_stats.insert_file(argval)
         if arg == 'matchup' and not argval:
             matchup.process_weekly_matchups()
         if arg == 'matchup' and argval == 'create':

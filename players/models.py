@@ -104,6 +104,7 @@ class Stats(models.Model):
     fgm = models.IntegerField(default=0)					# line[-7]
     tm2 = models.CharField(max_length=3)					# tm2
     health = models.CharField(max_length=10)
+    condition = models.CharField(max_length=10)
     fanpts = models.IntegerField(default=0)
     guid = models.IntegerField(primary_key=True)
 

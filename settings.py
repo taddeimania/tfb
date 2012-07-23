@@ -91,6 +91,9 @@ INSTALLED_APPS = (
     'top_player_list',
     'messages',
     'draft',
+    'tfb.livedraft',
+    'django_socketio',
+    'stat_parse'
 )
 CONTEXT_PROCESSORS = (
     'pybb.context_processors.processor',
@@ -126,3 +129,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'jtaddei@gmail.com'
 EMAIL_HOST_PASSWORD = os.getenv('EMAILPASS')
 EMAIL_PORT = 587
+
+SOCKETIO_HOST = "127.0.0.1"
+SOCKETIO_PORT = 9000
