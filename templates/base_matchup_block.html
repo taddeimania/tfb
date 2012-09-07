@@ -3,11 +3,11 @@
 {% block content%}
 
 {% if user.is_authenticated %}
-    {% if matchup %}<span class='header2light'>Week {{ matchup.week }} Matchup</span><br/>
+{#    {% if matchup %}<span class='header2light'>Week {{ matchup.week }} Matchup</span><br/>#}
         {% block team_one %}{% endblock %}
         {% block team_two %}{% endblock %}
         {% block weekly_matchups %}{% endblock %}
-        {% else %}<br/><br/><span class='header2light' style="padding: 20px;">No Matchup Data Created Yet  (Preseason)</span><br/>{% endif %}
+{#        {% else %}<br/><br/><span class='header2light' style="padding: 20px;">No Matchup Data Created Yet  (Preseason)</span><br/>{% endif %}#}
 {% else %}
 	{% block header_noauth %}{% endblock %}
 {% endif %}

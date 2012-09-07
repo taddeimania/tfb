@@ -247,18 +247,6 @@ class Transaction(models.Model):
     owner = models.ForeignKey(UserProfile)
     player = models.ForeignKey(Player)
 
-class Matchup(models.Model):
-    week = models.IntegerField()
-    league = models.ForeignKey(League)
-    team_one = models.ForeignKey(Team,related_name='team_one')
-    team_one_points = models.IntegerField()
-    team_two = models.ForeignKey(Team,related_name='team_two')
-    team_two_points = models.IntegerField()
-    winner = models.ForeignKey(Team,related_name='winner', null=True)
-
-    def __unicode__(self):
-        return "{} vs. {}".format(self.team_one, self.team_two)
-
 #start rebuilding data to use this table
 class Season(models.Model):
     name = models.CharField(max_length=25)

@@ -1,4 +1,3 @@
-# Django settings for myproject project.
 import os
 import sys
 
@@ -20,7 +19,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('TFBNAME'),
         'USER': os.getenv('TFBNAME'),
-        'PASSWORD': os.getenv('TFBPASS'),
+        'PASSWORD': 'tecmo83',
         'HOST': '',
         'PORT': '',
     }
@@ -91,8 +90,9 @@ INSTALLED_APPS = (
     'top_player_list',
     'messages',
     'draft',
-    'tfb.livedraft',
-    'django_socketio',
+    'matchup',
+    #'tfb.livedraft',
+    #'django_socketio',
     'stat_parse'
 )
 CONTEXT_PROCESSORS = (

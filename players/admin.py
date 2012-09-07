@@ -1,6 +1,5 @@
 from django.contrib import admin
-from tfb.players.models import SeasonRanking, Team, UserProfile, League, Schedule, Player, \
-    Pro_Team, Stats, Roster, Curweek, Matchup, Trophy, TrophyAssignment, Season
+from tfb.players import models as player_models
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ['username']
@@ -29,25 +28,19 @@ class RosterAdmin(admin.ModelAdmin):
     search_fields = ['player', 'team']
     list_filter = ('team',)
 
-class MatchupAdmin(admin.ModelAdmin):
-    list_display = ['week', 'team_one', 'team_two']
-    search_fields = ['player', 'team']
-    list_filter = ('league',)
-
 class TrophyAssignmentAdmin(admin.ModelAdmin):
     list_display = ['trophy', 'profile', 'season']
 
-admin.site.register(SeasonRanking)
-admin.site.register(UserProfile, UserProfileAdmin)
-admin.site.register(Season)
-admin.site.register(Curweek)
-admin.site.register(Trophy)
-admin.site.register(TrophyAssignment, TrophyAssignmentAdmin)
-admin.site.register(Matchup, MatchupAdmin)
-admin.site.register(Roster, RosterAdmin)
-admin.site.register(Stats, StatsAdmin)
-admin.site.register(Pro_Team)
-admin.site.register(Player, PlayerAdmin)
-admin.site.register(Schedule, ScheduleAdmin)
-admin.site.register(League)
-admin.site.register(Team, TeamAdmin)
+admin.site.register(player_models.SeasonRanking)
+admin.site.register(player_models.UserProfile, UserProfileAdmin)
+admin.site.register(player_models.Season)
+admin.site.register(player_models.Curweek)
+admin.site.register(player_models.Trophy)
+admin.site.register(player_models.TrophyAssignment, TrophyAssignmentAdmin)
+admin.site.register(player_models.Roster, RosterAdmin)
+admin.site.register(player_models.Stats, StatsAdmin)
+admin.site.register(player_models.Pro_Team)
+admin.site.register(player_models.Player, PlayerAdmin)
+admin.site.register(player_models.Schedule, ScheduleAdmin)
+admin.site.register(player_models.League)
+admin.site.register(player_models.Team, TeamAdmin)
