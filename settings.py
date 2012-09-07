@@ -19,7 +19,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv('TFBNAME'),
         'USER': os.getenv('TFBNAME'),
-        'PASSWORD': 'tecmo83',
+        'PASSWORD': os.getenv('TFBPASS'),
         'HOST': '',
         'PORT': '',
     }
