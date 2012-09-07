@@ -41,38 +41,31 @@ def logout_user(request):
     logout(request)
     return HttpResponseRedirect("/login")
 
-def my_team_page(request):
-    """ Send required variables to display your team
-    """
-    user = request.user
-    query = request.POST.get('del_player', '')
-    try:
+class MyTeamView(TemplateView):
+    template_name = "base_myteam_vars.html"
+
+    def post(self, *args):
+        user = self.request.user
         team = Team.objects.get(owner=user.userprofile.id)
-    except Team.DoesNotExist:
-        team = 'None'
+        player_to_drop = self.request.POST['del_player']
+        logic.drop_player(player_to_drop, team, user)
+        return HttpResponseRedirect("")
 
-    if query:
-        drop_reason = logic.drop_player(query, team, user)
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        try:
+            team = Team.objects.get(owner=user.userprofile.id)
+            league = team.league
+            roster = logic.roster_to_dict(Roster.objects.filter(week=logic.getweek(), team__owner=user.userprofile))
+        except Team.DoesNotExist:
+            team = 'None'
+            league = 'None'
+            roster = 'None'
 
-    if team != 'None':
-        league = League.objects.get(id=team.league_id)
-        roster = logic.roster_to_dict(
-            Roster.objects.filter(
-                week = logic.getweek(), team__owner=user.userprofile
-            )
-        )
-    else:
-        league = 'None'
-        roster = 'None'
+        return {"user": user, "league": league, "roster": roster, "team": team}
 
-
-    return default_response(locals(), request, 'base_myteam_vars.html')
-
-
-def about(request):
-    """ Nothing dynamic served up here, just a static about me page.
-    """
-    return default_response(locals(), request, 'base_about.html')
+class AboutView(TemplateView):
+    template_name = 'base_about.html'
 
 def sysadmin(request, arg=None, argval=None):
     """ pylint
