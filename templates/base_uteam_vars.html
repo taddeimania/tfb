@@ -1,8 +1,5 @@
-{% extends "base_uteam_block.html" %}
+{% extends "base_common_block.html" %}
 {% load includetag %}
-
-{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
-
 {% block head %}
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/source/jquery.fancybox.css" type="text/css" media="screen" />
@@ -28,17 +25,14 @@
     </script>
 {% endblock %}
 
-{% block slogan %}
+{% block header_auth %}
     <div id='uteam' class='slogan'>
         {% include "tecmo_outline_table.html" %}
-        {% part data %}
-            <span class="header2light">{% if owner.slogan %}"{{ owner.slogan }}"{% else %}"Too lame to have a slogan."{% endif %}</span>
-        {% endpart %}
+            {% part data %}
+                <span class="header2light">{% if owner.slogan %}"{{ owner.slogan }}"{% else %}"Too lame to have a slogan."{% endif %}</span>
+            {% endpart %}
         {% endinclude %}
     </div>
-{% endblock %}
-
-{% block uteam_roster %}
     <div id='profile' class='uteam_roster'>
         {% include "tecmo_outline_table.html" %}
             {% part data %}

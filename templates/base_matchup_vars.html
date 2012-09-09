@@ -1,8 +1,6 @@
 {% extends "base_matchup_block.html" %}
 {% load includetag %}
 
-{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}!{% endblock %}
-
 {% block head %}
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/source/jquery.fancybox.css" type="text/css" media="screen" />
@@ -272,6 +270,7 @@
         {% endinclude %}
     </div>
 {% endblock %}
+
 {% block header_noauth %}
 <div id='league' class='topleft'>
     {% include "tecmo_outline_table.html" %}

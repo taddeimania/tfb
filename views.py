@@ -1,22 +1,19 @@
-"""make pylint happy"""
 from django.contrib.auth.models import User
-from django.views.generic.edit import DeleteView
 import os
 import sys
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.db.models import Q
 from django.contrib.auth import logout
 from django.views.generic import TemplateView
+from tfb.matchup import matchup_logic
 from tfb.draft import draft
 from tfb.messages.models import Message
-from tfb.players.models import Team, League, Roster, Player, Stats, Matchup, \
-    Schedule, UserProfile, Curweek, Transaction, \
-    Pro_Team, TrophyAssignment
+from tfb.matchup import models as matchup_models
+from tfb.players import models as player_models
 from tfb.settings import PROJECT_ROOT
 from tfb.draft.models import Draft
-from tfb.utility import logic, load_stats, matchup
+from tfb.utility import logic, load_stats
 
 CACHE_TIMEOUT = 30
 
@@ -41,157 +38,82 @@ def logout_user(request):
     logout(request)
     return HttpResponseRedirect("/login")
 
-def my_team_page(request):
-    """ Send required variables to display your team
-    """
-    user = request.user
-    query = request.POST.get('del_player', '')
-    try:
-        team = Team.objects.get(owner=user.userprofile.id)
-    except Team.DoesNotExist:
-        team = 'None'
+class HomeView(TemplateView):
+    template_name = "home.html"
 
-    if query:
-        drop_reason = logic.drop_player(query, team, user)
+    def get_context_data(self, **kwargs):
+        return {
+            'user': self.request.user
+        }
 
-    if team != 'None':
-        league = League.objects.get(id=team.league_id)
-        roster = logic.roster_to_dict(
-            Roster.objects.filter(
-                week = logic.getweek(), team__owner=user.userprofile
+class BlankView(TemplateView):
+    template_name = "blank.html"
+
+class AboutView(TemplateView):
+    template_name = 'base_about.html'
+
+
+class MyTeamView(TemplateView):
+    template_name = "base_myteam_vars.html"
+
+    def post(self, *args):
+        user = self.request.user
+        team = player_models.Team.objects.get(owner=user.userprofile.id)
+        player_to_drop = self.request.POST['del_player']
+        logic.drop_player(player_to_drop, team, user)
+        return HttpResponseRedirect("")
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        try:
+            team = player_models.Team.objects.get(owner=user.userprofile.id)
+            league = team.league
+            roster = logic.roster_to_dict(
+                player_models.Roster.objects.filter(week=logic.getweek(), team__owner=user.userprofile)
             )
-        )
-    else:
-        league = 'None'
-        roster = 'None'
+        except player_models.Team.DoesNotExist:
+            team = 'None'
+            league = 'None'
+            roster = 'None'
 
-
-    return default_response(locals(), request, 'base_myteam_vars.html')
-
-
-def about(request):
-    """ Nothing dynamic served up here, just a static about me page.
-    """
-    return default_response(locals(), request, 'base_about.html')
+        return {"user": user, "league": league, "roster": roster, "team": team}
 
 def sysadmin(request, arg=None, argval=None):
     """ pylint
     """
     if request.user.is_superuser:
         if arg == 'process':
-            load_stats.insert_file(file)
+            load_stats.insert_file(argval)
         if arg == 'matchup' and not argval:
-            matchup.process_weekly_matchups()
+            matchup_logic.process_weekly_matchups()
         if arg == 'matchup' and argval == 'create':
-            matchup.create_matchup_data()
+            matchup_logic.create_matchup_data()
         if arg == 'lock':
-            matchup.create_locks(argval)
+            matchup_logic.create_locks(argval)
         if arg == 'recalc':
-            matchup.recalculate_weekly_matchups()
+            matchup_logic.recalculate_weekly_matchups()
         if arg == 'byes':
-            logic.create_bye_weeks()
+            pass
+#            logic.create_bye_weeks()
 
         file_list = sorted([d for d in os.listdir(os.path.join(PROJECT_ROOT, 'files'))])
-        lock_list = Schedule.objects.filter(week=logic.getweek())
-        if not Matchup.objects.all().exists(): create_matchup = True
-        if not file_list and Stats.objects.filter(week=logic.getweek()):
+        lock_list = player_models.Schedule.objects.filter(week=logic.getweek())
+        if not matchup_models.Matchup.objects.all().exists(): create_matchup = True
+        if not file_list and player_models.Stats.objects.filter(week=logic.getweek()):
             process_matchups = True
     else:
         return HttpResponse("ah, ah, ah... you didn't say the magic word.")
 
     return default_response(locals(), request, 'base_sysadmin_vars.html')
 
-def matchup_page(request, matchup_id=None):
-    """ Display variables used for the matchup page
-    """
-    user = request.user
-    _week = logic.getweek()
-    if not matchup_id:
-        try:
-            matchup = Matchup.objects.get(
-                Q(team_one__owner=user.userprofile, week=_week) |
-                Q(team_two__owner=user.userprofile, week=_week)
-            )
-        except Matchup.DoesNotExist:
-            return default_response(locals(), request, 'base_matchup_vars.html')
-    else:
-        matchup = Matchup.objects.get(pk=matchup_id)
-    try:
-        allmatchups = Matchup.objects.filter(week=matchup.week, league=matchup.league)
-    except Matchup.DoesNotExist:
-        pass
-    team_one = matchup.team_one
-    team_two = matchup.team_two
-    try:
-        t1pts = team_one.calc_week_points(matchup.week)
-    except Team.DoesNotExist:
-        t1pts = 0
-    try:
-        t2pts = team_two.calc_week_points(matchup.week)
-    except Team.DoesNotExist:
-        t2pts = 0
-
-    if matchup.week > _week:
-        team_one_roster = logic.roster_to_dict(
-            Roster.objects.filter(week=_week, team=team_one),
-            blank_stats=True
-        )
-        team_two_roster = logic.roster_to_dict(
-            Roster.objects.filter(week=_week, team=team_two),
-            blank_stats=True
-        )
-    else:
-        team_one_roster = logic.roster_to_dict(
-            Roster.objects.filter(week=matchup.week, team=team_one)
-        )
-        team_two_roster = logic.roster_to_dict(
-            Roster.objects.filter(week=matchup.week, team=team_two)
-        )
-
-    return default_response(locals(), request, 'base_matchup_vars.html')
-
-def profileedit(request):
-    """ Display and process profile editing page
-    """
-    user = request.user
-    profile = UserProfile.objects.get(pk=user.userprofile.id)
-    query = request.POST.get('save', '')
-    success = False
-
-    try:
-        team = Team.objects.get(owner=user.userprofile.id)
-    except Team.DoesNotExist:
-        team = 'None'
-
-    if query == 'update':
-        user.first_name = request.POST.get('first_name','')
-        user.last_name = request.POST.get('last_name','')
-        user.save()
-        # this is in case they try to update
-        # their profile without belonging to a league
-        if team != 'None':
-            team.name = request.POST.get('team_name','')
-            team.slogan = request.POST.get('team_slogan','')
-            team.save()
-        success = True
-
-    if query == 'update_face':      # Update user's face picture
-        profile.userpic = request.POST.get('face')
-        if profile.userpic:
-            profile.save()
-        else:
-            profile.userpic = UserProfile.objects.get(user=user).userpic
-
-    return default_response(locals(), request, 'base_profile_edit_vars.html')
-
 #post beta function
-def create_league(request):
-    """ pylint
-    """
-    # L = League(lname = request.POST.get('lname'),
-    # lslogan = request.POST.get('lslogan'), maxteam=10, active='Y')
-    # L.generate_hash()
-    return default_response(locals(), request, 'base.html')
+#def create_league(request):
+#    """ pylint
+#    """
+#    # L = League(lname = request.POST.get('lname'),
+#    # lslogan = request.POST.get('lslogan'), maxteam=10, active='Y')
+#    # L.generate_hash()
+#    return default_response(locals(), request, 'base.html')
 
 def league_page(request, week = None):
     """ pylint
@@ -199,19 +121,19 @@ def league_page(request, week = None):
     user = request.user
     weeks = range(1, 18)
     try:
-        myteam = Team.objects.get(owner=user.userprofile.id)
-    except Team.DoesNotExist:
+        myteam = player_models.Team.objects.get(owner=user.userprofile.id)
+    except player_models.Team.DoesNotExist:
         myteam = 'None'
 
     if myteam != 'None':
-        league = League.objects.get(team__owner=user.userprofile.id)
-        teams = Team.objects.order_by(
+        league = player_models.League.objects.get(team__owner=user.userprofile.id)
+        teams = player_models.Team.objects.order_by(
             'win','total_points', 'total_points_against'
         ).filter(league = league.id)
         teams = [_ for _ in teams]
 
         try:
-            curweek = Curweek.objects.get(pk=1).curweek
+            curweek = player_models.Curweek.objects.get(pk=1).curweek
             # more work is needed here so you can
             # have it use 2 different curweeks
             # for roster display and matchup display
@@ -220,13 +142,13 @@ def league_page(request, week = None):
             #    curweek -= 1
             if week:
                 curweek = week
-            transactions = Transaction.objects.order_by('-id').filter(
-                league = Team.objects.get(owner=user.userprofile
+            transactions = player_models.Transaction.objects.order_by('-id').filter(
+                league = player_models.Team.objects.get(owner=user.userprofile
                 ).league)[:15]
             transactions = [_ for _ in transactions]
-            matchups = Matchup.objects.filter(week=curweek, league=league)
+            matchups = matchup_models.Matchup.objects.filter(week=curweek, league=league)
             recent_messages = Message.objects.filter(user__team__league=league).order_by('-timestamp')[:5]
-        except Team.DoesNotExist, Matchup.DoesNotExist:
+        except player_models.Team.DoesNotExist, matchup_models.Matchup.DoesNotExist:
             nomatchup = True
 
     return default_response(locals(), request, 'base_league_vars.html')
@@ -240,7 +162,7 @@ def list_player(request, posid):
     query = request.POST.get('player_id', '')
     
     if query:
-        player = Player.objects.get(pk=query)
+        player = player_models.Player.objects.get(pk=query)
         success = logic.setplayertoroster(user, player)
         return default_response(locals(), request, 'base_list_vars.html')
     
@@ -257,7 +179,7 @@ def pickup(request, posid):
 def league_list(request, league_id):
     """ Returns list of teams in your league.  Used for a modal popup.
     """
-    teams = Team.objects.filter(league=league_id)
+    teams = player_models.Team.objects.filter(league=league_id)
     return default_response(locals(), request, 'base_leaguelist_vars.html')
 
 class DisplayLeague():
@@ -265,7 +187,7 @@ class DisplayLeague():
     def __init__(self, league):
         self.id = league.id
         self.name = league.lname
-        self.teamcount = League.objects.get_team_count(league.id)
+        self.teamcount = player_models.League.objects.get_team_count(league.id)
         self.maxteam = league.maxteam
 
 def joinleague(request):
@@ -277,22 +199,22 @@ def joinleague(request):
     leaguejoin = request.POST.get('public_league')
 
     try:
-        alreadyinleague = Team.objects.get(owner=user_id)
-    except Team.DoesNotExist:
+        alreadyinleague = player_models.Team.objects.get(owner=user_id)
+    except player_models.Team.DoesNotExist:
         alreadyinleague = None
     leaguelist = []
-    for league in League.objects.all():
+    for league in player_models.League.objects.all():
         if league.is_league_available():
-            teamcount = League.objects.get_team_count(league.id)
+            teamcount = player_models.League.objects.get_team_count(league.id)
             disp_league = DisplayLeague(league)
             leaguelist.append(disp_league)
 
     if query:
         try:
-            league = League.objects.get(invite_code=query)
-            count = League.objects.get_team_count(league)
+            league = player_models.League.objects.get(invite_code=query)
+            count = player_models.League.objects.get_team_count(league)
             if count < league.maxteam:
-                team = Team(
+                team = player_models.Team(
                     owner=user_id,
                     league=league,
                     name=user_id.user.username,
@@ -308,15 +230,15 @@ def joinleague(request):
                 return HttpResponseRedirect('/profile/edit')
             else:
                 failmessage = True
-        except League.DoesNotExist:
+        except player_models.League.DoesNotExist:
             failmessage = True
 
 
     if leaguejoin:
         try:
-            team = Team(
+            team = player_models.Team(
                 owner=user_id,
-                league=League.objects.get(pk=leaguejoin),
+                league=player_models.League.objects.get(pk=leaguejoin),
                 name=user_id.user.username,
                 win=0,
                 loss=0,
@@ -328,7 +250,7 @@ def joinleague(request):
             team.save()
             success = True
             return HttpResponseRedirect('/profile/edit')
-        except League.DoesNotExist:
+        except player_models.League.DoesNotExist:
             failmessage = True
 
     return default_response(locals(), request, 'base_joinleague_vars.html')
@@ -337,15 +259,15 @@ def team_page(request, pro_team_id):
     """ Populate the base team vars template with team data that matches
     	the requested pro_team_id
     """
-    team = Pro_Team.objects.get(short=pro_team_id)
+    team = player_models.Pro_Team.objects.get(short=pro_team_id)
     user = request.user
     schedule = logic.getteamschedule(pro_team_id)
-    players = Player.objects.filter(pro_team=pro_team_id)
+    players = player_models.Player.objects.filter(pro_team=pro_team_id)
     plist = list(players)
     curweek = logic.getweek()
     try:
         nextopponent = logic.getproteamopponent(pro_team_id, curweek)
-    except Pro_Team.DoesNotExist:
+    except player_models.Pro_Team.DoesNotExist:
         pass
     return default_response(locals(), request, 'base_playerpage_vars.html')
 
@@ -353,8 +275,8 @@ def transactions_page(request):
     """ Get latest 15 transactions for your league.
     """
     user = request.user
-    transactions = Transaction.objects.order_by('-id').filter(
-        league = Team.objects.get(owner = user.userprofile).league
+    transactions = player_models.Transaction.objects.order_by('-id').filter(
+        league = player_models.Team.objects.get(owner = user.userprofile).league
     )[:15]
     transactions = [_ for _ in transactions]
     return default_response(locals(), request, 'base_transactions_vars.html')
@@ -363,9 +285,9 @@ def leagueadmin(request, arg=None):
     """ Commish's Tools page.  This should grow quickly... soon.
     """
     user = request.user
-    if Team.objects.get(owner=user.userprofile.id).iscommish == 'Y':
-        league = Team.objects.get(owner=user.userprofile.id).league
-        ready_to_draft = (Team.objects.filter(league=league).count() == 10)
+    if player_models.Team.objects.get(owner=user.userprofile.id).iscommish == 'Y':
+        league = player_models.Team.objects.get(owner=user.userprofile.id).league
+        ready_to_draft = (player_models.Team.objects.filter(league=league).count() == 10)
         if arg == 'create':
             try:
                 draft_data_exist = Draft.objects.get(league=league)
@@ -383,82 +305,22 @@ class NotMyTeamView(TemplateView):
     def get_context_data(self, *args, **kwargs):
         team_id = kwargs['team_id']
         try:
-            self.team = Team.objects.get(
+            self.team = player_models.Team.objects.get(
                 pk=team_id,
                 league=self.request.user.userprofile.team.league
             )
-        except Team.DoesNotExist:
+        except player_models.Team.DoesNotExist:
             return {
                 'fail': True,
                 'failmessage': "Team Doesn't Exist"
             }
 
         roster = logic.roster_to_dict(
-            Roster.objects.filter(week=logic.getweek(), team=self.team)
+            player_models.Roster.objects.filter(week=logic.getweek(), team=self.team)
         )
-        owner = Team.objects.get(pk=team_id)
+        owner = player_models.Team.objects.get(pk=team_id)
         return {
             'user': self.request.user,
             'roster': roster,
             'owner': owner
         }
-
-class ProfileView(TemplateView):
-    template_name = "base_profile_vars.html"
-
-    def get_team(self):
-        try:
-            return Team.objects.get(owner=self.request.user.userprofile.id)
-        except Team.DoesNotExist:
-            return 'None'
-
-    def get_context_data(self, **kwargs):
-        return {
-            'user': self.request.user,
-            'team': self.get_team(),
-            'trophies': [ _ for _ in TrophyAssignment.objects.filter(profile=self.request.user.userprofile)]
-        }
-
-class HomeView(TemplateView):
-    template_name = "home.html"
-
-    def get_context_data(self, **kwargs):
-        return {
-            'user': self.request.user
-        }
-
-class BlankView(TemplateView):
-    template_name = "blank.html"
-
-class DeleteAccountView(TemplateView):
-    template_name = "base_delete_vars.html"
-
-    def deactivate_team(self):
-        user = User.objects.get(username=self.request.user.username)
-        user.is_active = 0
-        user.save()
-        logout(self.request)
-
-    def cleanse_roster(self, roster_list):
-        for player in roster_list:
-            player.delete()
-
-    def post(self, *args, **kwargs):
-        #drop roster for current week
-        week = logic.getweek()
-        team = Team.objects.get(owner=self.request.user.userprofile)
-        roster_list = Roster.objects.filter(week=week, team=team)
-        if week > 0 < 7:
-            free_agent = UserProfile.objects.get(username="free_agent")
-            self.cleanse_roster(roster_list)
-            team.owner = free_agent
-            team.save()
-            self.deactivate_team()
-        elif week == 0:
-            self.cleanse_roster(roster_list)
-            team.delete()
-            self.deactivate_team()
-        else:
-            pass
-
-        return HttpResponseRedirect('/')

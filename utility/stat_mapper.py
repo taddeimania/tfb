@@ -6,22 +6,25 @@ class MapPlayerStats(object):
     def __init__(self, line):
         self.posid = line[0]
         self.healthINJ = str(line[-1])
+        self.condition = str(line[-3])
         self.tm2 = str(line[-2]).replace('.','')
-        self.pa = line[3]
+        self.pa = line[1]
         self.pc = line[2]
-        self.pastd = line[4]
-        self.intcp = line[5]
-        self.pasyds = line[6]
-        self.rec = line[7]
-        self.recyds = line[8]
-        self.rectd = line[9]
-        self.krtd = line[12]
-        self.prtd = line[15]
-        self.rusat = line[16]
-        self.rusyds = line[17]
-        self.rustd = line[18]
-        self.xpm = line[24]
-        self.fgm = line[25]
+        self.pastd = line[3]
+        self.intcp = line[4]
+        self.pasyds = line[5]
+        self.rec = line[6]
+        self.recyds = line[7]
+        self.rectd = line[8]
+        self.rusat = line[9]
+        self.rusyds = line[10]
+        self.rustd = line[11]
+        self.krtd = line[14]
+        self.prtd = line[17]
+        self.xpa = line[18]
+        self.xpm = line[19]
+        self.fga = line[20]
+        self.fgm = line[21]
 
     def calc_fan_pts(self, bonus):
         return (int(self.pastd) * 6) - (int(self.intcp) * 2) + (int(self.pasyds) / 20) + (int(self.recyds) / 10) +\
@@ -48,12 +51,13 @@ class MapPlayerStats(object):
 
     def get_player_by_stat_file_id(self):
 
-        if self.posid[-1] != 'K':
+        posid_ = self.posid[-1]
+        if posid_ != 'K':
             if len(self.posid) == 6:
                 pos = self.posid[3:]
             else:
                 pos = self.posid[2:]
-        elif self.posid[:-1] == 'P':
+        elif posid_ == 'P':
             return [None, None]
         else:
             pos = 'K'
@@ -82,15 +86,16 @@ class MapPlayerStats(object):
             rec=self.rec,
             recyds=self.recyds,
             rectd=self.rectd,
-            krtd=self.krtd,
-            prtd=self.prtd,
             rusat=self.rusat,
             rusyds=self.rusyds,
             rustd=self.rustd,
+            krtd=self.krtd,
+            prtd=self.prtd,
             xpm=self.xpm,
             fgm=self.fgm,
             tm2=self.tm2,
             health=self.healthINJ,
             guid=self.construct_guid(week),
-            fanpts=self.calc_fan_pts(self.calculate_bonuses())
+            fanpts=self.calc_fan_pts(self.calculate_bonuses()),
+            condition=self.condition,
         )

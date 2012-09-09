@@ -1,11 +1,7 @@
 {% extends "base_leaguelist_block.html" %}
 {% load includetag %}
 
-{% block title %}Welcome to Tecmo Fantasy Bowl {{ user.username }}! {% endblock %}
-
-
 {% block header_auth %}
-
 <table width=100% bgcolor=black>
 	{% for team in teams %}
     {% if forloop.first %}
