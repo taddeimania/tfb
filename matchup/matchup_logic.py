@@ -135,10 +135,10 @@ def create_locks(pro_team_matchup):
 
 def recalculate_weekly_matchups():
     week = logic.getweek()
-    MU = matchup_models.Matchup.objects.filter(week = week.curweek)
+    MU = matchup_models.Matchup.objects.filter(week=week)
     for matchup in MU:
-        t1 = player_models.Team.objects.get(pk = matchup.team_one.id)
-        t2 = player_models.Team.objects.get(pk = matchup.team_two.id)
+        t1 = player_models.Team.objects.get(pk=matchup.team_one.id)
+        t2 = player_models.Team.objects.get(pk=matchup.team_two.id)
         t1pts = t1.calc_week_points()
         t2pts = t2.calc_week_points()
 
