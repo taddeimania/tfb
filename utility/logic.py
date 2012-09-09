@@ -64,14 +64,13 @@ def setplayertoroster(user,player):
     """ Applies a pro player to your roster and apply all logic
     	constraints before player is added.
     """
-    user_team = Team.objects.get(owner=user.userprofile.id)
     if not player.is_player_locked()\
        and is_player_available_in_your_league(user, player.id)\
        and player_on_my_roster(user, player.id)\
-       and not user_team.are_you_at_max_roster()\
+       and not user.userprofile.are_you_at_max_roster()\
     and ispositionopen(user,player.pos):
 #       and getweek() != 0\
-        player_to_roster = Roster(week=getweek(), team=user_team, player=player)
+        player_to_roster = Roster(week=getweek(), team=Team.objects.get(owner=user.userprofile.id), player=player)
         player_to_roster.save()
         add_record(user.userprofile.id, player.id, 'ADD')
         return "success"
