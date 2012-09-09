@@ -51,6 +51,3 @@ def parser(infile):
     stat_list = set_stats(hexfile)
     game_result = get_results(hexfile)
     return {'stats': stat_list, 'game_result': game_result}
-
-if __name__ == "__main__":
-    main()

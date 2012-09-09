@@ -81,7 +81,10 @@ def teamupdate(result, week):
         pt2.wins += 1
 
     print pt1.short, pt2.short, week
-    schedule = Schedule.objects.get(home=pt1.short, away=pt2.short, week=week)
+    try:
+        schedule = Schedule.objects.get(home=pt1.short, away=pt2.short, week=week)
+    except:
+        schedule = Schedule.objects.get(home=pt2.short, away=pt1.short, week=week)
     schedule.homescore = tm1score
     schedule.awayscore = tm2score
 
