@@ -1,4 +1,5 @@
 from django.utils import simplejson
+from tfb.draft.draft import validate_draft_and_generate_roster
 from tfb.draft.draft import validate_form
 from tfb.players import models as player_models
 from tfb.draft import models as draft_models
@@ -50,8 +51,7 @@ def draftpage(request, arg=None):
             draft_obj.cur_round -= 1
             draft_obj.save()
         elif confirm:
-            import draft.draft
-            errors = draft.validate_draft_and_generate_roster(draft_obj)
+            errors = validate_draft_and_generate_roster(draft_obj)
             #roster_exists = Roster.objects.filter(
             #   team__league = league
             # ).count > 1
