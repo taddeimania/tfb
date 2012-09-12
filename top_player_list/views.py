@@ -72,6 +72,7 @@ def playerpage(request, arg=None):
         top = True
         for pos in pos_list:
             player_list.append((pos, get_top_ten_for_pos(pos)))
+        return base_views.default_response(locals(), request, 'base_playerpage_vars.html')
 
     if str(arg).upper() == 'DRAFT':
         draft = True
