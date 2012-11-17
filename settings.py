@@ -90,7 +90,8 @@ INSTALLED_APPS = (
     'matchup',
     #'tfb.livedraft',
     #'django_socketio',
-    'stat_parse'
+    'stat_parse',
+    'tecmo_player',
 )
 CONTEXT_PROCESSORS = (
     'pybb.context_processors.processor',

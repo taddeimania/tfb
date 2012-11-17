@@ -1,6 +1,7 @@
 import os
 from tfb.settings import PROJECT_ROOT
-from tfb.players.models import Stats, Pro_Team, Schedule
+from tfb.players.models import Stats
+from tfb.tecmo_player.models import Pro_Team, Schedule
 from tfb.utility import logic
 from tfb.utility.stat_mapper import MapPlayerStats
 from tfb.stat_parse import parser

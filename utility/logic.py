@@ -1,6 +1,6 @@
 from django.db.models import Q
-from tfb.players.models import Roster, Team, Player, Curweek, \
-    Schedule, Pro_Team, Stats, UserProfile, Transaction
+from tfb.players.models import Roster, Team, Player, Curweek, Stats, UserProfile, Transaction
+from tfb.tecmo_player.models import Schedule, Pro_Team
 from tfb.draft.models import DraftPick
 
 MAX_ROSTER = 7
@@ -13,7 +13,7 @@ def is_player_available_in_your_league(user, player_id):
         week=getweek(),
         team__league=getleague(user),
         player__id=player_id
-    ).exists() else  True
+    ).exists() else True
 
 
 def avail_list(user, posid):

@@ -11,6 +11,7 @@ from tfb.draft import draft
 from tfb.messages.models import Message
 from tfb.matchup import models as matchup_models
 from tfb.players import models as player_models
+from tfb.tecmo_player import models as tecmo_player_models
 from tfb.settings import PROJECT_ROOT
 from tfb.draft.models import Draft
 from tfb.utility import logic, load_stats
@@ -97,9 +98,9 @@ def sysadmin(request, arg=None, argval=None):
 #            logic.create_bye_weeks()
 
         file_list = sorted([d for d in os.listdir(os.path.join(PROJECT_ROOT, 'files'))])
-        lock_list = player_models.Schedule.objects.filter(week=logic.getweek())
+        lock_list = tecmo_player_models.Schedule.objects.filter(week=logic.getweek())
         if not matchup_models.Matchup.objects.all().exists(): create_matchup = True
-        if not file_list and player_models.Stats.objects.filter(week=logic.getweek()):
+        if not file_list and tecmo_player_models.Stats.objects.filter(week=logic.getweek()):
             process_matchups = True
     else:
         return HttpResponse("ah, ah, ah... you didn't say the magic word.")
@@ -116,8 +117,6 @@ def sysadmin(request, arg=None, argval=None):
 #    return default_response(locals(), request, 'base.html')
 
 def league_page(request, week = None):
-    """ pylint
-    """
     user = request.user
     weeks = range(1, 18)
     try:
@@ -162,7 +161,7 @@ def list_player(request, posid):
     query = request.POST.get('player_id', '')
     
     if query:
-        player = player_models.Player.objects.get(pk=query)
+        player = tecmo_player_models.Player.objects.get(pk=query)
         success = logic.setplayertoroster(user, player)
         return default_response(locals(), request, 'base_list_vars.html')
     
@@ -262,7 +261,7 @@ def team_page(request, pro_team_id):
     team = player_models.Pro_Team.objects.get(short=pro_team_id)
     user = request.user
     schedule = logic.getteamschedule(pro_team_id)
-    players = player_models.Player.objects.filter(pro_team=pro_team_id)
+    players = tecmo_player_models.Player.objects.filter(pro_team=pro_team_id)
     plist = list(players)
     curweek = logic.getweek()
     try:
