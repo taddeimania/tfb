@@ -1,6 +1,9 @@
 django
 MySQL-python
 south
+distribute
+postmarkup
+pytils
 django-registration
 python-memcached
 mock

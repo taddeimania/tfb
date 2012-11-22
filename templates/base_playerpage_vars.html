@@ -35,8 +35,8 @@
                         <td colspan="3"></td>
                         <td class="white" colspan="5" style="text-align: center">Passing</td>
                         <td class="white" colspan="3" style="text-align: center">Receiving</td>
-                        <td class="white" colspan="3" style="text-align: center">Rushing</td>
                         <td class="white" colspan="2" style="text-align: center">Special</td>
+                        <td class="white" colspan="3" style="text-align: center">Rushing</td>
                         <td class="white" colspan="2" style="text-align: center">Kicking</td>
                         <td class="white" style="text-align: center"></td>
                     </tr>
@@ -49,14 +49,14 @@
                         <td class='white'>TD</td>
                         <td class='white'>INT</td>
                         <td class='white'>YDs</td>
-                        <td class='white'>REC</td>
+                        <td class='white'>#</td>
                         <td class='white'>YDs</td>
                         <td class='white'>TDs</td>
+                        <td class='white'>KRTD</td>
+                        <td class='white'>PRTD</td>
                         <td class='white'>ATT</td>
                         <td class='white'>YDs</td>
                         <td class='white'>TD</td>
-                        <td class='white'>KRTD</td>
-                        <td class='white'>PRTD</td>
                         <td class='white'>XP</td>
                         <td class='white'>FG</td>
                         <td class='white'>Points</td>
@@ -74,11 +74,11 @@
                         <td>{{ player.Allrec }}</td>
                         <td>{{ player.Allrecyds }}</td>
                         <td>{{ player.Allrectd }}</td>
+                        <td>{{ player.Allkrtd }}</td>
+                        <td>{{ player.Allprtd }}</td>
                         <td>{{ player.Allrusat }}</td>
                         <td>{{ player.Allrusyds }}</td>
                         <td>{{ player.Allrustd }}</td>
-                        <td>{{ player.Allkrtd }}</td>
-                        <td>{{ player.Allprtd }}</td>
                         <td>{{ player.Allxpm }}</td>
                         <td>{{ player.Allfgm }}</td>
                         <td>{{ player.Allfanpts }}</td>
@@ -143,8 +143,8 @@
                     <td colspan="2"></td>
                     <td class="white" colspan="5" style="text-align: center">Passing</td>
                     <td class="white" colspan="3" style="text-align: center">Receiving</td>
-                    <td class="white" colspan="3" style="text-align: center">Rushing</td>
                     <td class="white" colspan="2" style="text-align: center">Special</td>
+                    <td class="white" colspan="3" style="text-align: center">Rushing</td>
                     <td class="white" colspan="2" style="text-align: center">Kicking</td>
                     <td class="white" style="text-align: center"></td>
                 </tr>
@@ -159,11 +159,11 @@
                     <td class='white' width="5%">#</td>
                     <td class='white' width="5%">YDs</td>
                     <td class='white' width="5%">TDs</td>
+                    <td class='white' width="5%">KRTD</td>
+                    <td class='white' width="5%">PRTD</td>
                     <td class='white' width="5%">ATT</td>
                     <td class='white' width="5%">YDs</td>
                     <td class='white' width="5%">TD</td>
-                    <td class='white' width="5%">KRTD</td>
-                    <td class='white' width="5%">PRTD</td>
                     <td class='white' width="5%">XP</td>
                     <td class='white' width="5%">FG</td>
                     <td class='white' width="5%">Points</td>
@@ -180,11 +180,11 @@
                     <td>{{ player.Allrec }}</td>
                     <td>{{ player.Allrecyds }}</td>
                     <td>{{ player.Allrectd }}</td>
+                    <td>{{ player.Allkrtd }}</td>
+                    <td>{{ player.Allprtd }}</td>
                     <td>{{ player.Allrusat }}</td>
                     <td>{{ player.Allrusyds }}</td>
                     <td>{{ player.Allrustd }}</td>
-                    <td>{{ player.Allkrtd }}</td>
-                    <td>{{ player.Allprtd }}</td>
                     <td>{{ player.Allxpm }}</td>
                     <td>{{ player.Allfgm }}</td>
                     <td>{{ player.Allfanpts }}</td>
@@ -210,16 +210,7 @@
                             </td>
                         </tr>
                     </table>
-                    <table width=850 cellpadding=5px style="margin: 15px; background: white;">
-                        <tr bgcolor="black">
-                            <td colspan="3"></td>
-                            <td class="white" colspan="5" style="text-align: center">Passing</td>
-                            <td class="white" colspan="3" style="text-align: center">Receiving</td>
-                            <td class="white" colspan="3" style="text-align: center">Rushing</td>
-                            <td class="white" colspan="2" style="text-align: center">Special</td>
-                            <td class="white" colspan="2" style="text-align: center">Kicking</td>
-                            <td class="white" style="text-align: center"></td>
-                        </tr>
+                    <table width=850 cellpadding=5px style="margin: 15px; background: black;">
                         <tr bgcolor="black">
                             <td class="white" width="5%">#</td>
                             <td class="white" width="5%">INJ</td>
@@ -229,14 +220,14 @@
                             <td class='white' width="5%">TD</td>
                             <td class='white' width="5%">INT</td>
                             <td class='white' width="5%">YDs</td>
-                            <td class='white' width="5%">REC</td>
+                            <td class='white' width="5%">#</td>
                             <td class='white' width="5%">YDs</td>
                             <td class='white' width="5%">TDs</td>
+                            <td class='white' width="5%">KRTD</td>
+                            <td class='white' width="5%">PRTD</td>
                             <td class='white' width="5%">ATT</td>
                             <td class='white' width="5%">YDs</td>
                             <td class='white' width="5%">TD</td>
-                            <td class='white' width="5%">KRTD</td>
-                            <td class='white' width="5%">PRTD</td>
                             <td class='white' width="5%">XP</td>
                             <td class='white' width="5%">FG</td>
                             <td class='white' width="5%">Points</td>
@@ -254,11 +245,11 @@
                             <td>{{ week.rec }}</td>
                             <td>{{ week.recyds }}</td>
                             <td>{{ week.rectd }}</td>
+                            <td>{{ week.krtd }}</td>
+                            <td>{{ week.prtd }}</td>
                             <td>{{ week.rusat }}</td>
                             <td>{{ week.rusyds }}</td>
                             <td>{{ week.rustd }}</td>
-                            <td>{{ week.krtd }}</td>
-                            <td>{{ week.prtd }}</td>
                             <td>{{ week.xpm }}</td>
                             <td>{{ week.fgm }}</td>
                             <td>{{ week.fanpts }}</td>
